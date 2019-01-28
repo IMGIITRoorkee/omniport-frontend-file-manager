@@ -1,0 +1,8 @@
+{
+    "nomenclature": {
+        "name": "file_manager",
+        "verboseName": "[[app_display_name]]"
+    },
+    "baseUrl": "/file_manager",
+    "source": "file_manager/src/index"
+}
