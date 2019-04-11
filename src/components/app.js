@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Scrollbars } from 'react-custom-scrollbars'
-import { Segment, Container } from 'semantic-ui-react'
-
+// import { isMobile, isBrowser } from 'react-device-detect'
 import { AppHeader, AppFooter, AppMain, getTheme } from 'formula_one'
+import { Route, Switch } from "react-router-dom"
+import { Scrollbars } from 'react-custom-scrollbars'
+import AppEditor from "./app-editor"
+import AppDisplayFile from "./app-display-file"
 
 import main from 'formula_one/src/css/app.css'
 import blocks from '../css/app.css'
@@ -22,39 +24,24 @@ class App extends Component {
         link: 'https://pradumangoyal.github.io'
       }
     ]
-
+    const { match } = this.props
     return (
       <div styleName='main.app'>
         <AppHeader appName='file_manager' mode='app' />
         <AppMain>
-          <div styleName='main.app-main'>
-            <Scrollbars autoHide>
-              <Container styleName='blocks.content-div'>
-                <center>
-                  <Segment compact color={getTheme()}>
-                    <h1>Congratulations!</h1>
-                    <p styleName='blocks.logo'>
-                      <img src='/branding/site/logo.svg' />
-                    </p>
-                    <p>
-                      You have successfully initiated <em>file_manager</em> and
-                      taken the first step to building your
-                      <strong> Omniport</strong> app.
-                    </p>
-                    <p>
-                      Edit <code>./src/components/app.js</code> and make this
-                      app do magical things. We can't wait to see what you make.
-                    </p>
-                    <p>
-                      Greetings,
-                      <br />
-                      Team Omniport
-                    </p>
-                  </Segment>
-                </center>
-              </Container>
-            </Scrollbars>
-          </div>
+          <Scrollbars>
+            <Switch>
+            <Route
+              path={`${match.path}`}
+              component={AppEditor}
+            />
+            <Route
+              exact
+              path={`${match.path}/file`}
+              component={AppDisplayFile}
+            />
+            </Switch>
+          </Scrollbars>
         </AppMain>
         <AppFooter creators={creators} />
       </div>
