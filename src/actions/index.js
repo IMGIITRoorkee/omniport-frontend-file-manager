@@ -18,9 +18,10 @@ export const setfiles = () => {
         .get(urlFilesList(),{ headers:headers })
         .then(res => {
           dispatch({
-            type: 'SET_FILE_SUCCESS',
+            type: 'CURRENT_DATA',
             payload: {
-              data: res.data.results[0].files
+              data: res.data.results[0],
+              folder: res.data.results[0].folderName
             }
           })
         })

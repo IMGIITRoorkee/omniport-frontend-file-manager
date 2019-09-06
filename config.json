@@ -1,7 +1,7 @@
 {
     "nomenclature": {
         "name": "file_manager",
-        "verboseName": "File maneger"
+        "verboseName": "File manager"
     },
     "baseUrl": "/file_manager",
     "source": "file_manager/src/index",

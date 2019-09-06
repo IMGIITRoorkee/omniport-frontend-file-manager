@@ -6,9 +6,10 @@ import { Route, Switch } from "react-router-dom"
 import { Scrollbars } from 'react-custom-scrollbars'
 import AppEditor from "./app-editor"
 import AppDisplayFile from "./app-display-file"
+import Test from './index'
 
 import main from 'formula_one/src/css/app.css'
-import blocks from '../css/app.css'
+import blocks from './css/app.css'
 
 class App extends Component {
   render () {
@@ -32,13 +33,18 @@ class App extends Component {
           <Scrollbars>
             <Switch>
             <Route
-              path={`${match.path}`}
+              exact path={`${match.path}/`}
               component={AppEditor}
             />
             <Route
               exact
               path={`${match.path}/file`}
               component={AppDisplayFile}
+            />
+            <Route
+              exact
+              path={`${match.path}/test`}
+              component={Test}
             />
             </Switch>
           </Scrollbars>

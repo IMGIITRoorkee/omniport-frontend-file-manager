@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux'
 import fileReducer from './fileReducer'
+import testReducer from './test'
 
 const rootReducers = combineReducers({
-  files:fileReducer
+  files:fileReducer,
+  test: testReducer
 })
 
 export default rootReducers
