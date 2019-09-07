@@ -1,13 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Icon } from 'semantic-ui-react'
+import { fetchFiles, setSelected } from '../actions/index'
+import { getFileIcon } from '../utils/get-file-icon'
+import { getTheme } from 'formula_one'
 import Bar from './bar'
-import { setfiles } from '../../actions/index'
 import Progress from './progress'
 import index from './css/index.css'
-import { getFileIcon } from '../../utils/get-file-icon'
-import { getTheme } from 'formula_one'
-
 class Test extends Component {
   constructor(props) {
     super(props)
@@ -16,12 +15,14 @@ class Test extends Component {
     }
   }
   componentDidMount() {
-    this.props.SetFiles()
+    this.props.fetchFiles()
   }
-  handleClick = (id, index) => {
+  handleClick = (pk, fileName, link, index) => {
+    const { setSelected } = this.props
     this.setState({
       active: index
     })
+    setSelected({ pk, fileName, link })
   }
   handledoubleClick = () => {
     // console.log('dahsgdhj')
@@ -40,30 +41,31 @@ class Test extends Component {
               <Table.HeaderCell>Public</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
-            <Table.Body styleName='index.table-body'>
-              {currentData &&
-                currentData.files &&
-                currentData.files.map((file, index) => (
-                  <Table.Row
-                    key={index}
-                    active={active === index}
-                    onClick={() => this.handleClick(file.id, index)}
-                    onDoubleClick={() => this.handledoubleClick(file.id, index)}
-                  >
-                    <Table.Cell>
-                      <Icon
-                        size="large"
-                        name={getFileIcon(file.path)}
-                        color={getTheme()}
-                      />
-                      {file.fileName}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {file.isPublic === 'true' ? 'True' : 'False'}
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-            </Table.Body>
+          <Table.Body styleName="index.table-body">
+            {currentData &&
+              currentData.files &&
+              currentData.files.map((file, index) => (
+                <Table.Row
+                  key={index}
+                  active={active === index}
+                  styleName="index.table-row"
+                  onClick={() =>
+                    this.handleClick(file.id, file.fileName, file.upload, index)
+                  }
+                  onDoubleClick={() => this.handledoubleClick(file.id, index)}
+                >
+                  <Table.Cell>
+                    <Icon
+                      size="large"
+                      name={getFileIcon(file.path)}
+                      color={getTheme()}
+                    />
+                    {file.fileName}
+                  </Table.Cell>
+                  <Table.Cell>{file.isPublic ? 'True' : 'False'}</Table.Cell>
+                </Table.Row>
+              ))}
+          </Table.Body>
         </Table>
       </React.Fragment>
     )
@@ -72,15 +74,18 @@ class Test extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentData: state.test.currentData,
-    progress: state.test.progressArray
+    currentData: state.files.currentData,
+    progress: state.files.progressArray
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    SetFiles: () => {
-      dispatch(setfiles())
+    fetchFiles: () => {
+      dispatch(fetchFiles())
+    },
+    setSelected: pk => {
+      dispatch(setSelected(pk))
     }
   }
 }

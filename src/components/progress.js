@@ -38,7 +38,7 @@ class Progress extends Component {
 
 const mapStateToProps = state => {
   return {
-    progress: state.test.progressArray
+    progress: state.files.progressArray
   }
 }
 
