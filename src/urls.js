@@ -19,3 +19,7 @@ export function urlUploadFile() {
 export function urlDeleteFile(pk) {
   return `${urlBase()}delete_file/${pk}/`
 }
+
+export function urlEditFile(pk) {
+  return `${urlBase()}edit_file/${pk}/`
+}

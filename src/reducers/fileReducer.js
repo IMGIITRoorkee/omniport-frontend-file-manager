@@ -5,6 +5,8 @@ import {
   UPLOAD_FILE_FAILURE,
   UPLOAD_FILE_REQUEST,
   UPLOAD_FILE_SUCCESS,
+  LAST_VISITED,
+  TABULATION,
   SET_SELECTED
 } from '../constants/index'
 
@@ -18,7 +20,9 @@ const initialState = {
   selectedData: '',
   progressArray: [],
   topLevel: '',
-  isLoading: false
+  lastVisited: '',
+  isLoading: false,
+  tabular: false
 }
 
 const fileReducer = (state = initialState, action) => {
@@ -29,6 +33,7 @@ const fileReducer = (state = initialState, action) => {
         isfetching: true
       }
     case FETCH_FILE_SUCCESS:
+      state.topLevel = action.payload.folder
       state.currentData = action.payload.data
       state.currentFolder = action.payload.folder
       let check = state.progressArray.indexOf(action.payload.folder)
@@ -69,6 +74,16 @@ const fileReducer = (state = initialState, action) => {
           fileName: action.payload.fileName,
           link: action.payload.link
         }
+      }
+    case LAST_VISITED:
+      return {
+        ...state,
+        lastVisited: action.payload
+      }
+    case TABULATION:
+      return {
+        ...state,
+        tabular: action.payload
       }
     default:
       return state

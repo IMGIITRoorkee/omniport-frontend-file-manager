@@ -1,6 +1,11 @@
 import axios from 'axios'
 import { getCookie } from 'formula_one'
-import { urlFilesList, urlUploadFile, urlDeleteFile } from '../urls'
+import {
+  urlFilesList,
+  urlUploadFile,
+  urlDeleteFile,
+  urlEditFile
+} from '../urls'
 import {
   FETCH_FILE_FAILURE,
   FETCH_FILE_REQUEST,
@@ -11,6 +16,13 @@ import {
   DELETE_FILE_FAILURE,
   DELETE_FILE_REQUEST,
   DELETE_FILE_SUCCESS,
+  EDIT_FILE_FAILURE,
+  EDIT_FILE_REQUEST,
+  EDIT_FILE_SUCCESS,
+  FETCH_FILE_FOLDER_FAILURE,
+  FETCH_FILE_FOLDER_REQUEST,
+  FETCH_FILE_FOLDER_SUCCESS,
+  TABULATION,
   SET_SELECTED
 } from '../constants/index'
 
@@ -105,10 +117,82 @@ export const deleteFile = (data, callback) => {
   }
 }
 
-export const setSelected = (data) => {
+export const fetchFilesFolder = data => {
+  let headers = {
+    'X-CSRFToken': getCookie('csrftoken')
+  }
+  return dispatch => {
+    dispatch({
+      type: FETCH_FILE_FOLDER_REQUEST
+    })
+    axios
+      .get(urlFilesList(data), { headers: headers })
+      .then(res => {
+        dispatch({
+          type: FETCH_FILE_FOLDER_SUCCESS,
+          payload: res.data
+        })
+      })
+      .catch(err => {
+        dispatch({
+          type: FETCH_FILE_FOLDER_FAILURE,
+          payload: {
+            error: err
+          }
+        })
+      })
+  }
+}
+
+export const editFile = (pk, data, callback) => {
+  let headers = {
+    'X-CSRFToken': getCookie('csrftoken')
+  }
+  return dispatch => {
+    dispatch({
+      type: EDIT_FILE_REQUEST
+    })
+    axios
+      .put(urlEditFile(pk), data, { headers: headers })
+      .then(res => {
+        dispatch({
+          type: EDIT_FILE_SUCCESS
+        })
+        callback()
+      })
+      .catch(err => {
+        dispatch({
+          type: EDIT_FILE_FAILURE,
+          payload: {
+            error: err
+          }
+        })
+      })
+  }
+}
+
+export const setSelected = data => {
   return dispatch => {
     dispatch({
       type: SET_SELECTED,
+      payload: data
+    })
+  }
+}
+
+export const lastVisited = data => {
+  return dispatch => {
+    dispatch({
+      type: LAST_VISITED,
+      payload: data
+    })
+  }
+}
+
+export const tabulation = data => {
+  return dispatch => {
+    dispatch({
+      type: TABULATION,
       payload: data
     })
   }

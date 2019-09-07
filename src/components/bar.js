@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Segment, Button } from 'semantic-ui-react'
-import { deleteFile, fetchFiles } from '../actions/index'
+import {
+  deleteFile,
+  fetchFiles,
+  lastVisited,
+  fetchFilesFolder,
+  tabulation
+} from '../actions/index'
 import file from './css/file.css'
 import Upload from './app-upload'
 
@@ -12,7 +18,6 @@ class Bar extends Component {
   }
   handleDownload = () => {
     const { isSelected, selectedData } = this.props
-    console.log(selectedData)
     if (isSelected) {
       let link = document.createElement('a')
       link.download = selectedData.fileName
@@ -22,23 +27,43 @@ class Bar extends Component {
       document.body.removeChild(link)
     }
   }
+  handleBack = () => {
+    const { fetchFilesFolder, lastVisited } = this.props
+    fetchFilesFolder(lastVisited, this.successBackCallback)
+  }
+  successBackCallback = () => {
+    const { currentFolder, lastVisitedAct } = this.props
+    lastVisitedAct(currentFolder)
+  }
+  handleEdit = () => {}
   handleDelete = () => {
     const { isSelected, selectedData, deleteFile } = this.props
     isSelected ? deleteFile(selectedData.pk, this.successCallback) : null
+  }
+  handleTabulation = () => {
+    const { tabulation, tabular } = this.props
+    tabulation(!tabular)
   }
   successCallback = () => {
     this.props.fetchFiles()
   }
   render() {
-    const { isSelected } = this.props
+    const { isSelected, topLevel, currentFolder, lastVisited } = this.props
     return (
       <Segment styleName="file.navbar">
         <div styleName="file.navbar-first">
           <div>
-            <Button onClick={this.handleClick} icon="angle left" />
+            <Button
+              disabled={topLevel === currentFolder}
+              onClick={this.handleBack}
+              icon="angle left"
+            />
           </div>
           <div>
-            <Button icon="angle right" />
+            <Button disabled={lastVisited === ''} icon="angle right" />
+          </div>
+          <div>
+            <Button onClick={this.handleTabulation} icon="table" />
           </div>
         </div>
         <div styleName="file.navbar-first">
@@ -47,6 +72,13 @@ class Bar extends Component {
           </div>
           <div>
             <Upload />
+          </div>
+          <div>
+            <Button
+              disabled={!isSelected}
+              onClick={this.handleEdit}
+              icon="edit"
+            />
           </div>
           <div>
             <Button
@@ -71,7 +103,11 @@ class Bar extends Component {
 const mapStateToProps = state => {
   return {
     isSelected: state.files.isSelected,
-    selectedData: state.files.selectedData
+    selectedData: state.files.selectedData,
+    topLevel: state.files.topLevel,
+    currentFolder: state.files.currentFolder,
+    lastVisited: state.files.lastVisited,
+    tabular: state.files.tabular
   }
 }
 
@@ -82,6 +118,15 @@ const mapDispatchToProps = dispatch => {
     },
     deleteFile: (pk, callback) => {
       dispatch(deleteFile(pk, callback))
+    },
+    lastVisitedAct: data => {
+      dispatch(lastVisited(data))
+    },
+    fetchFilesFolder: (data, callback) => {
+      dispatch(fetchFilesFolder(data, callback))
+    },
+    tabulation: bool => {
+      dispatch(tabulation(bool))
     }
   }
 }
