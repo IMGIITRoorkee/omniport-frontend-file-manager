@@ -95,8 +95,8 @@ const mapDispatchToProps = dispatch => {
     fetchFiles: () => {
       dispatch(fetchFiles())
     },
-    setSelected: pk => {
-      dispatch(setSelected(pk))
+    setSelected: data => {
+      dispatch(setSelected(data))
     }
   }
 }

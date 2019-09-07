@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { fetchFiles } from '../actions/index'
 import FileCard from './file-card'
+import grid from './css/grid-view.css'
 
 class GridView extends Component {
   constructor(props) {
@@ -16,18 +17,20 @@ class GridView extends Component {
   render() {
     const { currentData } = this.props
     return (
-      <React.Fragment>
+      <div styleName="grid.view-parent">
         {currentData &&
           currentData.files &&
           currentData.files.map((file, index) => (
             <FileCard
               key={index}
+              index={index}
+              id={file.id}
               fileName={file.fileName}
               link={file.path}
               isPublic={file.isPublic}
             />
           ))}
-      </React.Fragment>
+      </div>
     )
   }
 }

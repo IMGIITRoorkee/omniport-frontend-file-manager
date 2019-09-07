@@ -7,7 +7,9 @@ import {
   UPLOAD_FILE_SUCCESS,
   LAST_VISITED,
   TABULATION,
-  SET_SELECTED
+  SET_SELECTED,
+  SET_GRID_VIEW_ACTIVE_INDEX,
+  UNSET_SELECTED
 } from '../constants/index'
 
 const initialState = {
@@ -22,7 +24,8 @@ const initialState = {
   topLevel: '',
   lastVisited: '',
   isLoading: false,
-  tabular: false
+  tabular: false,
+  gridViewActiveIndex: ''
 }
 
 const fileReducer = (state = initialState, action) => {
@@ -75,6 +78,13 @@ const fileReducer = (state = initialState, action) => {
           link: action.payload.link
         }
       }
+    case UNSET_SELECTED:
+      return {
+        ...state,
+        isSelected: false,
+        selectedData: '',
+        gridViewActiveIndex: ''
+      }
     case LAST_VISITED:
       return {
         ...state,
@@ -84,6 +94,11 @@ const fileReducer = (state = initialState, action) => {
       return {
         ...state,
         tabular: action.payload
+      }
+    case SET_GRID_VIEW_ACTIVE_INDEX:
+      return {
+        ...state,
+        gridViewActiveIndex: action.payload
       }
     default:
       return state

@@ -6,7 +6,8 @@ import {
   fetchFiles,
   lastVisited,
   fetchFilesFolder,
-  tabulation
+  tabulation,
+  unsetSelected
 } from '../actions/index'
 import file from './css/file.css'
 import Upload from './app-upload'
@@ -28,8 +29,9 @@ class Bar extends Component {
     }
   }
   handleBack = () => {
-    const { fetchFilesFolder, lastVisited } = this.props
+    const { fetchFilesFolder, lastVisited, unsetSelected } = this.props
     fetchFilesFolder(lastVisited, this.successBackCallback)
+    unsetSelected()
   }
   successBackCallback = () => {
     const { currentFolder, lastVisitedAct } = this.props
@@ -37,12 +39,14 @@ class Bar extends Component {
   }
   handleEdit = () => {}
   handleDelete = () => {
-    const { isSelected, selectedData, deleteFile } = this.props
+    const { isSelected, selectedData, deleteFile, unsetSelected } = this.props
     isSelected ? deleteFile(selectedData.pk, this.successCallback) : null
+    unsetSelected()
   }
   handleTabulation = () => {
-    const { tabulation, tabular } = this.props
+    const { tabulation, tabular, unsetSelected } = this.props
     tabulation(!tabular)
+    unsetSelected()
   }
   successCallback = () => {
     this.props.fetchFiles()
@@ -127,6 +131,9 @@ const mapDispatchToProps = dispatch => {
     },
     tabulation: bool => {
       dispatch(tabulation(bool))
+    },
+    unsetSelected: () => {
+      dispatch(unsetSelected())
     }
   }
 }

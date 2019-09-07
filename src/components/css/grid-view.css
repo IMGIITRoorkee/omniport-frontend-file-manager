@@ -1,0 +1,31 @@
+.view-parent {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  flex-wrap: wrap;
+}
+
+.file-card {
+  width: 16%;
+  padding: 1em;
+}
+
+.file-card:hover {
+  cursor: pointer;
+}
+
+.card-active {
+  background: red;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+}
+
+.file-name{
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  margin-top:0.5em;
+}

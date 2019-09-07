@@ -23,7 +23,9 @@ import {
   FETCH_FILE_FOLDER_REQUEST,
   FETCH_FILE_FOLDER_SUCCESS,
   TABULATION,
-  SET_SELECTED
+  SET_SELECTED,
+  SET_GRID_VIEW_ACTIVE_INDEX,
+  UNSET_SELECTED
 } from '../constants/index'
 
 export const fetchFiles = () => {
@@ -180,6 +182,14 @@ export const setSelected = data => {
   }
 }
 
+export const unsetSelected = () => {
+  return dispatch => {
+    dispatch({
+      type: UNSET_SELECTED
+    })
+  }
+}
+
 export const lastVisited = data => {
   return dispatch => {
     dispatch({
@@ -194,6 +204,15 @@ export const tabulation = data => {
     dispatch({
       type: TABULATION,
       payload: data
+    })
+  }
+}
+
+export const setGridViewActiveIndex = index => {
+  return dispatch => {
+    dispatch({
+      type: SET_GRID_VIEW_ACTIVE_INDEX,
+      payload: index
     })
   }
 }
