@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {
-  Button,
-  Modal
-} from 'semantic-ui-react'
+import { Button, Modal } from 'semantic-ui-react'
 import { fetchFiles } from '../actions/index'
-import Test from './index'
+import Manager from './manager'
 import main from './css/app.css'
 
 class AppDisplayFile extends Component {
@@ -15,9 +12,9 @@ class AppDisplayFile extends Component {
   render() {
     return (
       <React.Fragment>
-        <Modal size='fullscreen' trigger={<Button>Show Modal</Button>}>
-          <Modal.Content styleName='main.content' scrolling>
-            <Test />
+        <Modal size="fullscreen" trigger={<Button>Show Modal</Button>}>
+          <Modal.Content styleName="main.content" scrolling>
+            <Manager />
           </Modal.Content>
         </Modal>
       </React.Fragment>

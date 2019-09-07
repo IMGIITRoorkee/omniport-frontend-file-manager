@@ -24,4 +24,5 @@
 
 .content{
     max-height: 90vh !important;
+    min-height: 90vh !important;
 }

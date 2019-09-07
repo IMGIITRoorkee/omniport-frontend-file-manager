@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { fetchFiles } from '../actions/index'
 import FileCard from './file-card'
 import grid from './css/grid-view.css'
 
@@ -10,9 +9,6 @@ class GridView extends Component {
     this.state = {
       active: ''
     }
-  }
-  componentDidMount() {
-    this.props.fetchFiles()
   }
   render() {
     const { currentData } = this.props
@@ -43,14 +39,7 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => {
-  return {
-    fetchFiles: () => {
-      dispatch(fetchFiles())
-    },
-    setSelected: pk => {
-      dispatch(setSelected(pk))
-    }
-  }
+  return {}
 }
 
 export default connect(

@@ -13,9 +13,7 @@ import {
 } from '../constants/index'
 
 const initialState = {
-  isFetching: false,
   error: '',
-  isuploading: false,
   currentFolder: '',
   currentData: '',
   isSelected: false,
@@ -23,7 +21,6 @@ const initialState = {
   progressArray: [],
   topLevel: '',
   lastVisited: '',
-  isLoading: false,
   tabular: false,
   gridViewActiveIndex: ''
 }
@@ -33,7 +30,7 @@ const fileReducer = (state = initialState, action) => {
     case FETCH_FILE_REQUEST:
       return {
         ...state,
-        isfetching: true
+        isLoading: true
       }
     case FETCH_FILE_SUCCESS:
       state.topLevel = action.payload.folder
@@ -45,23 +42,23 @@ const fileReducer = (state = initialState, action) => {
         : state.progressArray.slice(0, check)
       return {
         ...state,
-        isfetching: false
+        isLoading: false
       }
     case FETCH_FILE_FAILURE:
       return {
         ...state,
-        isfetching: false,
+        isLoading: false,
         error: action.payload.error
       }
     case UPLOAD_FILE_REQUEST:
       return {
         ...state,
-        isuploading: true
+        isLoading: true
       }
     case UPLOAD_FILE_SUCCESS:
       return {
         ...state,
-        isuploading: false
+        isLoading: false
       }
     case UPLOAD_FILE_FAILURE:
       return {

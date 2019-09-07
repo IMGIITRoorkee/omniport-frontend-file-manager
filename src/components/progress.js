@@ -4,13 +4,11 @@ import { Breadcrumb } from 'semantic-ui-react'
 import index from './css/index.css'
 
 class Progress extends Component {
-  componentDidMount() {}
   handleClick = data => {
     // console.log(data, 'dajgsjk')
   }
   render() {
     const { progress } = this.props
-    console.log(progress,'dasjhdjik')
     return (
       <div>
         <Breadcrumb>
