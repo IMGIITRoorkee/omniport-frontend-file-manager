@@ -9,15 +9,11 @@ import {
   tabulation,
   unsetSelected
 } from '../actions/index'
-import file from './css/file.css'
 import Upload from './app-upload'
 import Edit from './edit-file'
 
+import file from './css/file.css'
 class Bar extends Component {
-  componentDidMount() {}
-  handleClick = () => {
-    // console.log("sdjagk")
-  }
   handleDownload = () => {
     const { isSelected, selectedData } = this.props
     if (isSelected) {
@@ -81,9 +77,9 @@ class Bar extends Component {
           </div>
         </div>
         <div styleName="file.navbar-first">
-          <div>
+          {/* <div>
             <Button onClick={this.handleClick} icon="add square" />
-          </div>
+          </div> */}
           <div>
             <Upload />
           </div>

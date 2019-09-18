@@ -1,12 +1,39 @@
 import React, { Component } from 'react'
+import Loadable from 'react-loadable'
 import { connect } from 'react-redux'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { fetchFiles } from '../actions/index'
-import Bar from './bar'
-import Progress from './progress'
-import GridView from './grid-view'
-import TabularView from './tabular-view'
 import index from './css/index.css'
+
+const Loading = ({ error }) => {
+  if (error) return <div>Error loading component</div>
+  else
+    return (
+      <Dimmer active inverted>
+        <Loader inverted content="Loading" />
+      </Dimmer>
+    )
+}
+
+const Bar = Loadable({
+  loader: () => import('./bar'),
+  loading: Loading
+})
+
+const Progress = Loadable({
+  loader: () => import('./progress'),
+  loading: Loading
+})
+
+const GridView = Loadable({
+  loader: () => import('./grid-view'),
+  loading: Loading
+})
+
+const TabularView = Loadable({
+  loader: () => import('./tabular-view'),
+  loading: Loading
+})
 
 class Manager extends Component {
   componentDidMount() {
