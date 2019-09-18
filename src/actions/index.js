@@ -158,7 +158,12 @@ export const editFile = (pk, data, callback) => {
       .put(urlEditFile(pk), data, { headers: headers })
       .then(res => {
         dispatch({
-          type: EDIT_FILE_SUCCESS
+          type: EDIT_FILE_SUCCESS,
+          payload: {
+            id: res.data.id,
+            isPublic: res.data.isPublic,
+            fileName: res.data.fileName
+          }
         })
         callback()
       })

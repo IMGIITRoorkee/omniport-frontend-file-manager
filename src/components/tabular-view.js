@@ -13,12 +13,12 @@ class TabularView extends Component {
       active: ''
     }
   }
-  handleClick = (pk, fileName, link, index) => {
+  handleClick = (pk, fileName, link, index, isPublic) => {
     const { setSelected } = this.props
     this.setState({
       active: index
     })
-    setSelected({ pk, fileName, link })
+    setSelected({ pk, fileName, link, isPublic })
   }
   handledoubleClick = () => {
     // console.log('dahsgdhj')
@@ -43,7 +43,13 @@ class TabularView extends Component {
                 active={active === index}
                 styleName="index.table-row"
                 onClick={() =>
-                  this.handleClick(file.id, file.fileName, file.upload, index)
+                  this.handleClick(
+                    file.id,
+                    file.fileName,
+                    file.upload,
+                    index,
+                    file.isPublic
+                  )
                 }
                 onDoubleClick={() => this.handledoubleClick(file.id, index)}
               >

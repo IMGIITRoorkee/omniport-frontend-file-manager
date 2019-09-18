@@ -1,36 +1,33 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Checkbox, Button, Modal } from 'semantic-ui-react'
-import { uploadFile, fetchFiles } from '../actions/index'
-import './css/appupload.css'
+import { editFile } from '../actions/index'
 
-class AppUpload extends Component {
+class EditFile extends Component {
   constructor(props) {
     super(props)
     this.state = {
       fileName: '',
       isPublic: false,
-      fileData: '',
       showModal: false
     }
   }
-  fileInputRef = React.createRef()
-  handleImageChange = e => {
-    e.preventDefault()
-    let reader = new FileReader()
-    let file = e.target.files[0]
-    reader.onloadend = () => {
+  componentDidUpdate(prevProps) {
+    const { selectedData } = this.props
+    if (
+      JSON.stringify(prevProps.selectedData) !== JSON.stringify(selectedData)
+    ) {
       this.setState({
-        fileName: file.name,
-        fileData: file,
-        showModal: true
+        fileName: selectedData.fileName,
+        isPublic: selectedData.isPublic
       })
     }
-    if (file) {
-      reader.readAsDataURL(file)
-    }
   }
-
+  handleEdit = () => {
+    this.setState({
+      showModal: true
+    })
+  }
   handleChange = e => {
     const name = e.target.name
     const value = e.target.value
@@ -38,15 +35,14 @@ class AppUpload extends Component {
   }
   handleSubmit = e => {
     e.preventDefault()
-    let { fileName, fileData, isPublic } = this.state
-    const { uploadFile } = this.props
+    let { fileName, isPublic } = this.state
+    const { selectedData, editFile } = this.props
 
-    if (fileName && fileData) {
+    if (fileName) {
       var formData = new FormData()
-      fileData ? formData.append('upload', fileData) : void 0
       formData.append('file_name', fileName)
       formData.append('is_public', isPublic)
-      uploadFile(formData, this.successCallback)
+      editFile(selectedData.pk, formData, this.successCallback)
     }
   }
   handleCheck = () => {
@@ -55,7 +51,6 @@ class AppUpload extends Component {
     })
   }
   successCallback = () => {
-    this.props.fetchFiles()
     this.setState({
       showModal: false
     })
@@ -67,19 +62,10 @@ class AppUpload extends Component {
   }
   render() {
     const { fileName, showModal, isPublic } = this.state
-    const { isUploading } = this.props
+    const { isLoading, isSelected } = this.props
     return (
       <React.Fragment>
-        <Button
-          icon="upload"
-          onClick={() => this.fileInputRef.current.click()}
-        />
-        <input
-          ref={this.fileInputRef}
-          type="file"
-          hidden
-          onChange={this.handleImageChange}
-        />
+        <Button disabled={!isSelected} icon="edit" onClick={this.handleEdit} />
 
         {showModal ? (
           <Modal
@@ -90,9 +76,9 @@ class AppUpload extends Component {
             onClose={this.close}
             closeIcon
           >
-            <Modal.Header>Uploading file</Modal.Header>
+            <Modal.Header>Editing file</Modal.Header>
             <Modal.Content>
-              <Form encType="multiple/form-data" onSubmit={this.handleSubmit}>
+              <Form onSubmit={this.handleSubmit}>
                 <Form.Field>
                   <label>File Name</label>
                   <input
@@ -109,7 +95,7 @@ class AppUpload extends Component {
                     label="Public"
                   />
                 </Form.Field>
-                <Button loading={isUploading} type="submit">
+                <Button loading={isLoading} type="submit">
                   Submit
                 </Button>
               </Form>
@@ -123,17 +109,16 @@ class AppUpload extends Component {
 
 const mapStateToProps = state => {
   return {
-    isUploading: state.files.isUploading
+    isSelected: state.files.isSelected,
+    selectedData: state.files.selectedData,
+    isLoading: state.files.isLoading,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchFiles: () => {
-      return dispatch(fetchFiles())
-    },
-    uploadFile: (data, callback) => {
-      return dispatch(uploadFile(data, callback))
+    editFile: (pk, data, callback) => {
+      return dispatch(editFile(pk, data, callback))
     }
   }
 }
@@ -141,4 +126,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AppUpload)
+)(EditFile)

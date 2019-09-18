@@ -11,6 +11,7 @@ import {
 } from '../actions/index'
 import file from './css/file.css'
 import Upload from './app-upload'
+import Edit from './edit-file'
 
 class Bar extends Component {
   componentDidMount() {}
@@ -52,7 +53,13 @@ class Bar extends Component {
     this.props.fetchFiles()
   }
   render() {
-    const { isSelected, topLevel, currentFolder, lastVisited } = this.props
+    const {
+      isSelected,
+      topLevel,
+      currentFolder,
+      lastVisited,
+      tabular
+    } = this.props
     return (
       <Segment styleName="file.navbar">
         <div styleName="file.navbar-first">
@@ -67,7 +74,10 @@ class Bar extends Component {
             <Button disabled={lastVisited === ''} icon="angle right" />
           </div>
           <div>
-            <Button onClick={this.handleTabulation} icon="table" />
+            <Button
+              onClick={this.handleTabulation}
+              icon={tabular ? 'columns' : 'table'}
+            />
           </div>
         </div>
         <div styleName="file.navbar-first">
@@ -78,11 +88,7 @@ class Bar extends Component {
             <Upload />
           </div>
           <div>
-            <Button
-              disabled={!isSelected}
-              onClick={this.handleEdit}
-              icon="edit"
-            />
+            <Edit />
           </div>
           <div>
             <Button

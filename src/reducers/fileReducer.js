@@ -9,6 +9,9 @@ import {
   TABULATION,
   SET_SELECTED,
   SET_GRID_VIEW_ACTIVE_INDEX,
+  EDIT_FILE_FAILURE,
+  EDIT_FILE_REQUEST,
+  EDIT_FILE_SUCCESS,
   UNSET_SELECTED
 } from '../constants/index'
 
@@ -65,6 +68,30 @@ const fileReducer = (state = initialState, action) => {
         ...state,
         error: action.payload.error
       }
+    case EDIT_FILE_REQUEST:
+      return {
+        ...state,
+        isLoading: true
+      }
+    case EDIT_FILE_SUCCESS:
+      if (state.currentData && state.currentData.files) {
+        for (let i = 0; i < state.currentData.files.length; i++) {
+          if (state.currentData.files[i].id === action.payload.id) {
+            state.currentData.files[i].fileName = action.payload.fileName
+            state.currentData.files[i].isPublic = action.payload.isPublic
+            break
+          }
+        }
+      }
+      return {
+        ...state,
+        isLoading: false
+      }
+    case EDIT_FILE_FAILURE:
+      return {
+        ...state,
+        error: action.payload.error
+      }
     case SET_SELECTED:
       return {
         ...state,
@@ -72,7 +99,8 @@ const fileReducer = (state = initialState, action) => {
         selectedData: {
           pk: action.payload.pk,
           fileName: action.payload.fileName,
-          link: action.payload.link
+          link: action.payload.link,
+          isPublic: action.payload.isPublic
         }
       }
     case UNSET_SELECTED:
