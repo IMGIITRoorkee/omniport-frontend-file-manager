@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Table, Icon } from 'semantic-ui-react'
 import { setSelected, setTarget } from '../actions/index'
 import { getFileIcon } from '../utils/get-file-icon'
+import {getModifiedDate} from '../utils/get-modified-date'
 import { getTheme } from 'formula_one'
 
 import index from './css/index.css'
@@ -28,6 +29,7 @@ class TabularView extends Component {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Title</Table.HeaderCell>
+            <Table.HeaderCell>Last Modified</Table.HeaderCell>
             <Table.HeaderCell>Public</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
@@ -58,6 +60,7 @@ class TabularView extends Component {
                   />
                   {file.fileName}
                 </Table.Cell>
+                <Table.Cell>{getModifiedDate(file.datetimeModified)}</Table.Cell>
                 <Table.Cell>{file.isPublic ? 'True' : 'False'}</Table.Cell>
               </Table.Row>
             ))}

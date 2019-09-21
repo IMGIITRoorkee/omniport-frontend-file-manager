@@ -81,6 +81,8 @@ const fileReducer = (state = initialState, action) => {
           if (state.currentData.files[i].id === action.payload.id) {
             state.currentData.files[i].fileName = action.payload.fileName
             state.currentData.files[i].isPublic = action.payload.isPublic
+            state.currentData.files[i].datetimeModified =
+              action.payload.datetimeModified
             break
           }
         }

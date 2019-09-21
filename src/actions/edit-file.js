@@ -23,7 +23,8 @@ export const editFile = (pk, data, callback) => {
           payload: {
             id: res.data.id,
             isPublic: res.data.isPublic,
-            fileName: res.data.fileName
+            fileName: res.data.fileName,
+            datetimeModified: res.data.datetimeModified
           }
         })
         callback()
