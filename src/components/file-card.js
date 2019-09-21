@@ -3,7 +3,11 @@ import { connect } from 'react-redux'
 import { Icon } from 'semantic-ui-react'
 import { getFileIcon } from '../utils/get-file-icon'
 import { getTheme } from 'formula_one'
-import { setGridViewActiveIndex, setSelected } from '../actions/index'
+import {
+  setGridViewActiveIndex,
+  setSelected,
+  setTarget
+} from '../actions/index'
 
 import grid from './css/grid-view.css'
 
@@ -22,7 +26,13 @@ class FileCard extends Component {
     setSelected({ pk: id, fileName, link, isPublic })
   }
   render() {
-    const { fileName, link, gridViewActiveIndex, index } = this.props
+    const {
+      fileName,
+      link,
+      gridViewActiveIndex,
+      index,
+      setTarget
+    } = this.props
     return (
       <div styleName="grid.file-card">
         <div styleName="grid.flex-center">
@@ -32,11 +42,13 @@ class FileCard extends Component {
             color={getTheme()}
             name={getFileIcon(link)}
             onClick={this.handleSelect}
+            onDoubleClick={setTarget}
           />
         </div>
         <div styleName="grid.file-name">
           <p
             onClick={this.handleSelect}
+            onDoubleClick={setTarget}
             styleName={gridViewActiveIndex !== index ? '' : 'grid.card-active'}
           >
             {fileName}
@@ -60,6 +72,9 @@ const mapDispatchToProps = dispatch => {
     },
     setSelected: data => {
       dispatch(setSelected(data))
+    },
+    setTarget: () => {
+      dispatch(setTarget())
     }
   }
 }

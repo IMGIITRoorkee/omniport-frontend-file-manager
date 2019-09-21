@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Icon } from 'semantic-ui-react'
-import { setSelected } from '../actions/index'
+import { setSelected, setTarget } from '../actions/index'
 import { getFileIcon } from '../utils/get-file-icon'
 import { getTheme } from 'formula_one'
 
@@ -20,11 +20,8 @@ class TabularView extends Component {
     })
     setSelected({ pk, fileName, link, isPublic })
   }
-  handledoubleClick = () => {
-    // console.log('dahsgdhj')
-  }
   render() {
-    const { currentData } = this.props
+    const { currentData, setTarget } = this.props
     const { active } = this.state
     return (
       <Table singleLine styleName="index.table-main" selectable>
@@ -51,7 +48,7 @@ class TabularView extends Component {
                     file.isPublic
                   )
                 }
-                onDoubleClick={() => this.handledoubleClick(file.id, index)}
+                onDoubleClick={setTarget}
               >
                 <Table.Cell>
                   <Icon
@@ -82,6 +79,9 @@ const mapDispatchToProps = dispatch => {
   return {
     setSelected: data => {
       dispatch(setSelected(data))
+    },
+    setTarget: () => {
+      dispatch(setTarget())
     }
   }
 }

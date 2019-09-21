@@ -3,6 +3,7 @@ import Loadable from 'react-loadable'
 import { connect } from 'react-redux'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { fetchFiles } from '../actions/index'
+
 import index from './css/index.css'
 
 const Loading = ({ error }) => {
@@ -39,6 +40,16 @@ class Manager extends Component {
   componentDidMount() {
     this.props.fetchFiles()
   }
+  componentDidUpdate(prevProps) {
+    const { isTarget, selectedData } = this.props
+    if (prevProps.isTarget !== isTarget) {
+      window.opener.postMessage(
+        { file: selectedData.link, fileName: selectedData.fileName },
+        '*'
+      )
+      window.close()
+    }
+  }
   render() {
     const { tabular, isLoading } = this.props
     return (
@@ -62,7 +73,9 @@ class Manager extends Component {
 const mapStateToProps = state => {
   return {
     tabular: state.files.tabular,
-    isLoading: state.files.isLoading
+    isLoading: state.files.isLoading,
+    selectedData: state.files.selectedData,
+    isTarget: state.files.isTarget
   }
 }
 

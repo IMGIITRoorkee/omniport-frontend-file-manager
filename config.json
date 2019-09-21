@@ -1,9 +1,9 @@
 {
-    "nomenclature": {
-        "name": "file_manager",
-        "verboseName": "File manager"
-    },
-    "baseUrl": "/file_manager",
-    "source": "file_manager/src/index",
-    "apiKey":"o0l5yisg0820x4d4q8amvmsex6u9ct3t8kvnodq057hhgyyz"
+  "nomenclature": {
+    "name": "file_manager",
+    "verboseName": "File manager"
+  },
+  "baseUrl": "/file_manager",
+  "source": "file_manager/src/index",
+  "apiKey": "o0l5yisg0820x4d4q8amvmsex6u9ct3t8kvnodq057hhgyyz"
 }

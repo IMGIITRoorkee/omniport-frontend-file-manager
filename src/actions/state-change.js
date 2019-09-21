@@ -3,6 +3,7 @@ import {
   SET_SELECTED,
   SET_GRID_VIEW_ACTIVE_INDEX,
   UNSET_SELECTED,
+  TOGGLE_TARGET,
   LAST_VISITED
 } from '../constants/index'
 
@@ -46,6 +47,14 @@ export const setGridViewActiveIndex = index => {
     dispatch({
       type: SET_GRID_VIEW_ACTIVE_INDEX,
       payload: index
+    })
+  }
+}
+
+export const setTarget = () => {
+  return dispatch => {
+    dispatch({
+      type: TOGGLE_TARGET
     })
   }
 }

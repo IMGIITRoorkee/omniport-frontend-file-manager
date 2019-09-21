@@ -4,7 +4,7 @@ import { AppHeader, AppFooter, AppMain } from 'formula_one'
 import { Route, Switch } from 'react-router-dom'
 import { Scrollbars } from 'react-custom-scrollbars'
 import AppEditor from './app-editor'
-import AppDisplayFile from './app-display-file'
+import Manager from './manager'
 
 import main from 'formula_one/src/css/app.css'
 import blocks from './css/app.css'
@@ -21,7 +21,7 @@ class App extends Component {
     const { match } = this.props
     return (
       <div styleName="main.app">
-        <AppHeader appName="file_manager" mode="app" />
+        {/* <AppHeader appName="file_manager" mode="app" /> */}
         <AppMain>
           <Scrollbars>
             <Switch>
@@ -29,12 +29,12 @@ class App extends Component {
               <Route
                 exact
                 path={`${match.path}/file`}
-                component={AppDisplayFile}
+                component={Manager}
               />
             </Switch>
           </Scrollbars>
         </AppMain>
-        <AppFooter creators={creators} />
+        {/* <AppFooter creators={creators} /> */}
       </div>
     )
   }

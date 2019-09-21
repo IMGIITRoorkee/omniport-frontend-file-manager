@@ -26,3 +26,7 @@
     max-height: 90vh !important;
     min-height: 90vh !important;
 }
+
+.main-div{
+    z-index: 1000000;
+}

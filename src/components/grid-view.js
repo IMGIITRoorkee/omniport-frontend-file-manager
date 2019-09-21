@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import FileCard from './file-card'
+
 import grid from './css/grid-view.css'
 
 class GridView extends Component {
@@ -11,7 +12,7 @@ class GridView extends Component {
     }
   }
   render() {
-    const { currentData } = this.props
+    const { currentData} = this.props
     return (
       <div styleName="grid.view-parent">
         {currentData &&

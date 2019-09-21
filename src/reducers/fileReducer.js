@@ -12,7 +12,8 @@ import {
   EDIT_FILE_FAILURE,
   EDIT_FILE_REQUEST,
   EDIT_FILE_SUCCESS,
-  UNSET_SELECTED
+  UNSET_SELECTED,
+  TOGGLE_TARGET
 } from '../constants/index'
 
 const initialState = {
@@ -25,7 +26,8 @@ const initialState = {
   topLevel: '',
   lastVisited: '',
   tabular: false,
-  gridViewActiveIndex: ''
+  gridViewActiveIndex: '',
+  isTarget: false
 }
 
 const fileReducer = (state = initialState, action) => {
@@ -119,6 +121,11 @@ const fileReducer = (state = initialState, action) => {
       return {
         ...state,
         tabular: action.payload
+      }
+    case TOGGLE_TARGET:
+      return {
+        ...state,
+        isTarget: true
       }
     case SET_GRID_VIEW_ACTIVE_INDEX:
       return {

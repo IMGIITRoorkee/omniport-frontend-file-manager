@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Breadcrumb } from 'semantic-ui-react'
+
 import index from './css/index.css'
 
 class Progress extends Component {

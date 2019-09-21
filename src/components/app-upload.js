@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Checkbox, Button, Modal } from 'semantic-ui-react'
 import { uploadFile, fetchFiles } from '../actions/index'
-import './css/appupload.css'
+
+// import './css/appupload.css'
 
 class AppUpload extends Component {
   constructor(props) {
