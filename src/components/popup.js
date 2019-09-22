@@ -100,8 +100,16 @@ class PopupView extends Component {
     this.handlePopupToggle(null, false)
   }
   handleDelete = () => {
-    const { isSelected, selectedData, deleteFile, unsetSelected } = this.props
-    isSelected ? deleteFile(selectedData.pk, this.successCallback) : null
+    const {
+      isSelected,
+      selectedData,
+      deleteFile,
+      unsetSelected,
+      id
+    } = this.props
+    isSelected && selectedData.pk === id
+      ? deleteFile(selectedData.pk, this.successCallback)
+      : deleteFile(id, this.successCallback)
     unsetSelected()
     this.handlePopupToggle(null, false)
   }
@@ -117,7 +125,6 @@ class PopupView extends Component {
   }
   handleSelect = e => {
     if (e && e.type === 'click') {
-      console.log('dsajbdajk')
       this.props.handleClick()
       e.stopPropagation()
     }
@@ -133,12 +140,14 @@ class PopupView extends Component {
               <Icon name="ellipsis horizontal" />
             </Button>
           }
-          on="click"
+          // on="click"
           open={isPopupOpen}
           onClose={e => this.handlePopupToggle(e, false)}
           onOpen={e => this.handlePopupToggle(e, true)}
           onClick={e => this.handleSelect(e)}
           wide
+          flowing
+          hoverable
         >
           <Grid columns="equal">
             <Grid.Column width={4} textAlign="center">

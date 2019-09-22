@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Table, Icon, Popup, Grid, Button } from 'semantic-ui-react'
+import { Table, Icon } from 'semantic-ui-react'
 import {
   setSelected,
   setTarget,
@@ -100,6 +100,7 @@ class TabularView extends Component {
                 <Table.Cell>{file.isPublic ? 'True' : 'False'}</Table.Cell>
                 <Table.Cell>
                   <PopupView
+                    id={file.id}
                     handleClick={() =>
                       this.handleClick(
                         file.id,

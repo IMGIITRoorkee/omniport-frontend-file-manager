@@ -15,7 +15,6 @@ export const deleteFile = (data, callback) => {
     dispatch({
       type: DELETE_FILE_REQUEST
     })
-    console.log('DELETE HEADERS', headers)
     fetch(urlDeleteFile(data), {
       method: 'DELETE',
       headers: headers
