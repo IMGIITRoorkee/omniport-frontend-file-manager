@@ -15,8 +15,11 @@ export const deleteFile = (data, callback) => {
     dispatch({
       type: DELETE_FILE_REQUEST
     })
-    axios
-      .delete(urlDeleteFile(data), null, { headers: headers })
+    console.log('DELETE HEADERS', headers)
+    fetch(urlDeleteFile(data), {
+      method: 'DELETE',
+      headers: headers
+    })
       .then(res => {
         dispatch({
           type: DELETE_FILE_SUCCESS

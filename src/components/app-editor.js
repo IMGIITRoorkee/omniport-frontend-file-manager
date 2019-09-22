@@ -14,7 +14,7 @@ class AppEditor extends Component {
       'message',
       function(e) {
         if (e && e.data && e.data.file && e.data.fileName) {
-          callback('blob:' + e.data.file, { title: e.data.fileName })
+          callback(e.data.file, { title: e.data.fileName })
         }
       },
       false

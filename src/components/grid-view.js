@@ -23,7 +23,7 @@ class GridView extends Component {
               index={index}
               id={file.id}
               fileName={file.fileName}
-              link={file.path}
+              link={file.upload}  
               isPublic={file.isPublic}
             />
           ))}

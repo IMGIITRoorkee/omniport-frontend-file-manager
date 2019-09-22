@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, Checkbox, Button, Modal } from 'semantic-ui-react'
+import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
 import { uploadFile, fetchFiles } from '../actions/index'
 
 // import './css/appupload.css'
@@ -71,10 +71,10 @@ class AppUpload extends Component {
     const { isUploading } = this.props
     return (
       <React.Fragment>
-        <Button
-          icon="upload"
-          onClick={() => this.fileInputRef.current.click()}
-        />
+        <Button primary icon labelPosition='left' onClick={() => this.fileInputRef.current.click()}>
+          <Icon name="upload" />
+          Upload
+        </Button>
         <input
           ref={this.fileInputRef}
           type="file"

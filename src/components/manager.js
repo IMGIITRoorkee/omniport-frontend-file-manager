@@ -3,6 +3,7 @@ import Loadable from 'react-loadable'
 import { connect } from 'react-redux'
 import { Dimmer, Loader } from 'semantic-ui-react'
 import { fetchFiles } from '../actions/index'
+import axios from 'axios'
 
 import index from './css/index.css'
 
