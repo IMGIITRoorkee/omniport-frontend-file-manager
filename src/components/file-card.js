@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Icon, Popup, Grid, Button } from 'semantic-ui-react'
+import { Icon, Popup, Menu } from 'semantic-ui-react'
 import { getFileIcon } from '../utils/get-file-icon'
 import { getTheme } from 'formula_one'
 import {
@@ -15,37 +15,38 @@ class FileCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      visible: false
+      visible: false,
+      activeItem: ''
     }
-    this.root = React.createRef()
+    // this.root = React.createRef()
   }
-  componentDidMount() {
-    // document.addEventListener('contextmenu', this._handleContextMenu)
-    document.addEventListener('click', this._handleClick)
-    document.addEventListener('scroll', this._handleScroll)
-  }
+  // componentDidMount() {
+  //   // document.addEventListener('contextmenu', this._handleContextMenu)
+  //   document.addEventListener('click', this._handleClick)
+  //   document.addEventListener('scroll', this._handleScroll)
+  // }
 
-  componentWillUnmount() {
-    // document.removeEventListener('contextmenu', this._handleContextMenu)
-    document.removeEventListener('click', this._handleClick)
-    document.removeEventListener('scroll', this._handleScroll)
-  }
-  _handleClick = event => {
-    const { visible } = this.state
-    const wasOutside = !(event.target.contains === this.root)
+  // componentWillUnmount() {
+  //   // document.removeEventListener('contextmenu', this._handleContextMenu)
+  //   document.removeEventListener('click', this._handleClick)
+  //   document.removeEventListener('scroll', this._handleScroll)
+  // }
+  // _handleClick = event => {
+  //   const { visible } = this.state
+  //   const wasOutside = !(event.target.contains === this.root)
 
-    if (wasOutside && visible) this.setState({ visible: false })
-  }
+  //   if (wasOutside && visible) this.setState({ visible: false })
+  // }
 
-  handleContextMenuToggle = (e, value) => {
-    e.preventDefault()
-    const { setGridViewActiveIndex, index } = this.props
-    setGridViewActiveIndex(index)
-    this.setState({
-      visible: value
-    })
-    if (e && e.type === 'click') e.stopPropagation()
-  }
+  // handleContextMenuToggle = (e, value) => {
+  //   e.preventDefault()
+  //   const { setGridViewActiveIndex, index } = this.props
+  //   setGridViewActiveIndex(index)
+  //   this.setState({
+  //     visible: value
+  //   })
+  //   if (e && e.type === 'click') e.stopPropagation()
+  // }
 
   handleSelect = () => {
     const {
@@ -61,68 +62,70 @@ class FileCard extends Component {
     setSelected({ pk: id, fileName, link, isPublic })
   }
   render() {
-    const { visible } = this.state
+    // const { visible, activeItem } = this.state
     const { fileName, link, gridViewActiveIndex, index, setTarget } = this.props
     return (
-      <Popup
-        on="click"
-        trigger={
-          <div
-            id={`grid-card-${index}`}
-            styleName="grid.file-card"
-            onContextMenu={e => this.handleContextMenuToggle(e, true)}
-            ref={ref => {
-              this.root = ref
-            }}
-          >
-            <div styleName="grid.flex-center">
-              <Icon
-                styleName={
-                  gridViewActiveIndex !== index ? '' : 'grid.card-active'
-                }
-                size="huge"
-                color={getTheme()}
-                name={getFileIcon(link)}
-                onClick={e => this.handleSelect(e)}
-                onDoubleClick={setTarget}
-              />
-            </div>
-            <div styleName="grid.file-name">
-              <p
-                onClick={this.handleSelect}
-                onDoubleClick={setTarget}
-                styleName={
-                  gridViewActiveIndex !== index ? '' : 'grid.card-active'
-                }
-              >
-                {fileName}
-              </p>
-            </div>
-          </div>
-        }
-        open={visible}
-        onClose={e => this.handleContextMenuToggle(e, false)}
-        onOpen={e => this.handleContextMenuToggle(e, true)}
-        onClick={e => this.handleSelect(e)}
+      <div
+        id={`grid-card-${index}`}
+        styleName="grid.file-card"
+        // onContextMenu={e => this.handleContextMenuToggle(e, true)}
       >
-        <Grid>
-          <Grid.Row textAlign="center">
-            <Button onClick={this.handleEdit} color="green">
-              Edit
-            </Button>
-          </Grid.Row>
-          <Grid.Row textAlign="center">
-            <Button color="purple" onClick={this.handleDownload}>
-              Download
-            </Button>
-          </Grid.Row>
-          <Grid.Row textAlign="center">
-            <Button color="red" onClick={this.handleDelete}>
-              Delete
-            </Button>
-          </Grid.Row>
-        </Grid>
-      </Popup>
+        <div styleName="grid.flex-center">
+          <Icon
+            styleName={gridViewActiveIndex !== index ? '' : 'grid.card-active'}
+            size="huge"
+            color={getTheme()}
+            name={getFileIcon(link)}
+            onClick={e => this.handleSelect(e)}
+            onDoubleClick={setTarget}
+          />
+        </div>
+        <div styleName="grid.file-name">
+          <p
+            onClick={this.handleSelect}
+            onDoubleClick={setTarget}
+            styleName={gridViewActiveIndex !== index ? '' : 'grid.card-active'}
+          >
+            {fileName}
+          </p>
+        </div>
+      </div>
+      // <Popup
+      //   on="click"
+      //   trigger={
+
+      //   }
+      //   open={visible}
+      //   onClose={e => this.handleContextMenuToggle(e, false)}
+      //   onOpen={e => this.handleContextMenuToggle(e, true)}
+      //   onClick={e => this.handleSelect(e)}
+      // >
+      //   <Menu vertical>
+      //     <Menu.Item
+      //       name="edit"
+      //       active={activeItem === 'edit'}
+      //       onClick={this.handleEdit}
+      //     >
+      //       Edit
+      //     </Menu.Item>
+
+      //     <Menu.Item
+      //       name="download"
+      //       active={activeItem === 'download'}
+      //       onClick={this.handleItemClick}
+      //     >
+      //       Download
+      //     </Menu.Item>
+
+      //     <Menu.Item
+      //       name="delete"
+      //       active={activeItem === 'delete'}
+      //       onClick={this.handleDelete}
+      //     >
+      //       Delete
+      //     </Menu.Item>
+      //   </Menu>
+      // </Popup>
     )
   }
 }

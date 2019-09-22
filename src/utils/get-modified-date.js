@@ -18,7 +18,7 @@ export function getModifiedDate(date) {
   return (
     monthData[newDate.getMonth()] +
     ' ' +
-    newDate.getDay() +
+    newDate.getDate() +
     ', ' +
     newDate.getFullYear()
   )

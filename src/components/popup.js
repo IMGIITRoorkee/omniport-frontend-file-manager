@@ -26,7 +26,8 @@ class PopupView extends Component {
       isPopupOpen: false,
       showModal: false,
       fileName: '',
-      isPublic: false
+      isPublic: false,
+      isDelete: false
     }
     this.contextRef = React.createRef()
   }
@@ -129,9 +130,19 @@ class PopupView extends Component {
       e.stopPropagation()
     }
   }
+  showDeleteModal = () => {
+    this.setState({
+      isDelete: true
+    })
+  }
+  closeDeleteModal = () => {
+    this.setState({
+      isDelete: false
+    })
+  }
   render() {
-    const { isPopupOpen, showModal, fileName, isPublic } = this.state
-    const { isLoading } = this.props
+    const { isPopupOpen, showModal, fileName, isPublic, isDelete } = this.state
+    const { isLoading, isSelected } = this.props
     return (
       <React.Fragment>
         <Popup
@@ -161,7 +172,7 @@ class PopupView extends Component {
               </Button>
             </Grid.Column>
             <Grid.Column width={6} textAlign="center">
-              <Button color="red" onClick={this.handleDelete}>
+              <Button color="red" onClick={this.showDeleteModal}>
                 Delete
               </Button>
             </Grid.Column>
@@ -200,6 +211,28 @@ class PopupView extends Component {
                 </Button>
               </Form>
             </Modal.Content>
+          </Modal>
+        ) : null}
+        {isDelete && isSelected ? (
+          <Modal size="large" open={isDelete} onClose={this.closeDeleteModal}>
+            <Modal.Header>
+              Do you really want to delete "{fileName}"
+            </Modal.Header>
+            <Modal.Content>
+              <p>Are you sure you want to delete this file?</p>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button negative onClick={this.closeDeleteModal}>
+                No
+              </Button>
+              <Button
+                positive
+                icon="checkmark"
+                labelPosition="right"
+                content="Yes"
+                onClick={this.handleDelete}
+              />
+            </Modal.Actions>
           </Modal>
         ) : null}
       </React.Fragment>

@@ -11,9 +11,10 @@ class Progress extends Component {
   render() {
     const { progress } = this.props
     return (
-      <div>
-        <Breadcrumb>
-          {progress &&
+      <div styleName='index.progress-parent'>
+        <Breadcrumb size="huge">
+          <Breadcrumb.Section link>Root</Breadcrumb.Section>
+          {/* {progress &&
             progress.map((data, index) => (
               <React.Fragment>
                 <React.Fragment>
@@ -28,7 +29,7 @@ class Progress extends Component {
                   {data}
                 </Breadcrumb.Section>
               </React.Fragment>
-            ))}
+            ))} */}
         </Breadcrumb>
       </div>
     )

@@ -1,9 +1,9 @@
-.table-main{
-    margin-top: 0px !important;
+.table-main {
+  margin-top: 0px !important;
 }
-.table-body{
-    
+.table-row:hover {
+  cursor: pointer !important;
 }
-.table-row:hover{
-    cursor: pointer !important;
+.progress-parent {
+  padding: 1rem;
 }
