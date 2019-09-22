@@ -106,7 +106,7 @@ class Bar extends Component {
                 <Button
                   disabled={!isSelected}
                   onClick={this.handleDownload}
-                  icon="download"
+                  icon
                   labelPosition="left"
                   secondary
                 >

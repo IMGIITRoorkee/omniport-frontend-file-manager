@@ -1,14 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {
-  Icon,
-  Popup,
-  Grid,
-  Button,
-  Modal,
-  Form,
-  Checkbox
-} from 'semantic-ui-react'
+import { Icon, Popup, Grid, Button, Modal } from 'semantic-ui-react'
 import {
   setSelected,
   setTarget,
@@ -17,8 +9,10 @@ import {
   fetchFiles,
   editFile
 } from '../actions/index'
+import EditModal from './edit-modal'
 
 import index from './css/index.css'
+import popup from './css/popup.css'
 class PopupView extends Component {
   constructor(props) {
     super(props)
@@ -49,28 +43,6 @@ class PopupView extends Component {
       },
       this.handlePopupToggle(null, false)
     )
-  }
-  handleChange = e => {
-    const name = e.target.name
-    const value = e.target.value
-    this.setState({ [name]: value })
-  }
-  handleSubmit = e => {
-    e.preventDefault()
-    let { fileName, isPublic } = this.state
-    const { selectedData, editFile } = this.props
-
-    if (fileName) {
-      var formData = new FormData()
-      formData.append('file_name', fileName)
-      formData.append('is_public', isPublic)
-      editFile(selectedData.pk, formData, this.successCallback)
-    }
-  }
-  handleCheck = () => {
-    this.setState({
-      isPublic: !this.state.isPublic
-    })
   }
   successCallback = () => {
     this.setState({
@@ -141,8 +113,8 @@ class PopupView extends Component {
     })
   }
   render() {
-    const { isPopupOpen, showModal, fileName, isPublic, isDelete } = this.state
-    const { isLoading, isSelected } = this.props
+    const { isPopupOpen, showModal, fileName, isDelete } = this.state
+    const { isSelected } = this.props
     return (
       <React.Fragment>
         <Popup
@@ -151,7 +123,6 @@ class PopupView extends Component {
               <Icon name="ellipsis horizontal" />
             </Button>
           }
-          // on="click"
           open={isPopupOpen}
           onClose={e => this.handlePopupToggle(e, false)}
           onOpen={e => this.handlePopupToggle(e, true)}
@@ -160,59 +131,43 @@ class PopupView extends Component {
           flowing
           hoverable
         >
-          <Grid columns="equal">
-            <Grid.Column width={4} textAlign="center">
-              <Button icon onClick={this.handleEdit} color="green">
+          <div styleName="popup.button-group">
+            <div styleName="popup.button-padding">
+              <Button
+                labelPosition="left"
+                icon
+                onClick={this.handleEdit}
+                color="green"
+              >
+                <Icon name="edit" />
                 Edit
               </Button>
-            </Grid.Column>
-            <Grid.Column width={6} textAlign="center">
-              <Button color="purple" onClick={this.handleDownload}>
+            </div>
+            <div styleName="popup.button-padding">
+              <Button
+                labelPosition="left"
+                secondary
+                onClick={this.handleDownload}
+                icon
+              >
+                <Icon name="download" />
                 Download
               </Button>
-            </Grid.Column>
-            <Grid.Column width={6} textAlign="center">
-              <Button color="red" onClick={this.showDeleteModal}>
+            </div>
+            <div styleName="popup.button-padding">
+              <Button
+                color="red"
+                labelPosition="left"
+                onClick={this.showDeleteModal}
+                icon
+              >
+                <Icon name="delete" />
                 Delete
               </Button>
-            </Grid.Column>
-          </Grid>
+            </div>
+          </div>
         </Popup>
-        {showModal ? (
-          <Modal
-            size="small"
-            open={showModal}
-            closeOnEscape={true}
-            closeOnDimmerClick={true}
-            onClose={this.close}
-            closeIcon
-          >
-            <Modal.Header>Editing file</Modal.Header>
-            <Modal.Content>
-              <Form onSubmit={this.handleSubmit}>
-                <Form.Field>
-                  <label>File Name</label>
-                  <input
-                    name="fileName"
-                    value={fileName}
-                    onChange={this.handleChange}
-                    placeholder="File Name"
-                  />
-                </Form.Field>
-                <Form.Field>
-                  <Checkbox
-                    checked={isPublic}
-                    onChange={this.handleCheck}
-                    label="Public"
-                  />
-                </Form.Field>
-                <Button loading={isLoading} type="submit">
-                  Submit
-                </Button>
-              </Form>
-            </Modal.Content>
-          </Modal>
-        ) : null}
+        <EditModal close={this.close} showModal={showModal} />
         {isDelete && isSelected ? (
           <Modal size="large" open={isDelete} onClose={this.closeDeleteModal}>
             <Modal.Header>
@@ -246,8 +201,7 @@ const mapStateToProps = state => {
     progress: state.files.progressArray,
     tabular: state.files.tabular,
     isSelected: state.files.isSelected,
-    selectedData: state.files.selectedData,
-    isLoading: state.files.isLoading
+    selectedData: state.files.selectedData
   }
 }
 

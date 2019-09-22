@@ -68,10 +68,15 @@ class AppUpload extends Component {
   }
   render() {
     const { fileName, showModal, isPublic } = this.state
-    const { isUploading } = this.props
+    const { isLoading } = this.props
     return (
       <React.Fragment>
-        <Button primary icon labelPosition='left' onClick={() => this.fileInputRef.current.click()}>
+        <Button
+          primary
+          icon
+          labelPosition="left"
+          onClick={() => this.fileInputRef.current.click()}
+        >
           <Icon name="upload" />
           Upload
         </Button>
@@ -110,7 +115,7 @@ class AppUpload extends Component {
                     label="Public"
                   />
                 </Form.Field>
-                <Button loading={isUploading} type="submit">
+                <Button loading={isLoading} type="submit">
                   Submit
                 </Button>
               </Form>
@@ -124,7 +129,7 @@ class AppUpload extends Component {
 
 const mapStateToProps = state => {
   return {
-    isUploading: state.files.isUploading
+    isLoading: state.files.isLoading
   }
 }
 

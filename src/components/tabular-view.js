@@ -67,7 +67,7 @@ class TabularView extends Component {
             <Table.HeaderCell />
           </Table.Row>
         </Table.Header>
-        <Table.Body styleName="index.table-body">
+        <Table.Body>
           {currentData &&
             currentData.files &&
             currentData.files.map((file, index) => (

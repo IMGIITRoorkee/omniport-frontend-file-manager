@@ -28,7 +28,7 @@ class App extends Component {
               <Route exact path={`${match.path}/`} component={AppEditor} />
               <Route
                 exact
-                path={`${match.path}/file`}
+                path={`${match.path}/files`}
                 component={Manager}
               />
             </Switch>

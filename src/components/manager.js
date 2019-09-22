@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import Loadable from 'react-loadable'
 import { connect } from 'react-redux'
-import { Dimmer, Loader } from 'semantic-ui-react'
+import { Dimmer, Loader, Divider } from 'semantic-ui-react'
 import { fetchFiles } from '../actions/index'
-import axios from 'axios'
 
 import index from './css/index.css'
+import manager from './css/manager.css'
 
 const Loading = ({ error }) => {
   if (error) return <div>Error loading component</div>
   else
     return (
-      <Dimmer active inverted>
-        <Loader inverted content="Loading" />
-      </Dimmer>
+      <p>Loading.....</p>
     )
 }
 
@@ -55,17 +53,23 @@ class Manager extends Component {
     const { tabular, isLoading } = this.props
     return (
       <React.Fragment>
-        <Bar />
-        {isLoading ? (
-          <Dimmer active inverted>
-            <Loader inverted content="Loading" />
-          </Dimmer>
-        ) : (
-          <React.Fragment>
-            <Progress />
-            {tabular ? <TabularView /> : <GridView />}
-          </React.Fragment>
-        )}
+        <div styleName="manager.bar-progress-parent">
+          <Bar />
+          <Progress />
+          <Divider styleName='manager.divider-margin' clearing />
+        </div>
+        
+        <div styleName="manager.view">
+          {isLoading ? (
+            <Dimmer active inverted>
+              <Loader inverted content="Loading" />
+            </Dimmer>
+          ) : (
+            <React.Fragment>
+              {tabular ? <TabularView /> : <GridView />}
+            </React.Fragment>
+          )}
+        </div>
       </React.Fragment>
     )
   }

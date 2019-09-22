@@ -1,0 +1,13 @@
+.bar-progress-parent{
+    position: fixed;
+    width: 100%;
+    background: white;
+    z-index: 1000;
+}
+.view{
+    position: relative;
+    top: 8.2rem;
+}
+.divider-margin{
+    margin: 0 !important;
+}

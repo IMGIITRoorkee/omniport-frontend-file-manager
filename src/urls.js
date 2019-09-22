@@ -1,6 +1,6 @@
 // Frontend
 export function urlFilesDisplay() {
-  return `/file/file`
+  return `/file/files`
 }
 
 // Backend
