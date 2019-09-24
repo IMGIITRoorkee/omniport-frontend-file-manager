@@ -1,7 +1,10 @@
-.button-group{
-    display: flex;
-    justify-content: space-evenly;
+.button-group {
+  display: flex;
+  justify-content: space-evenly;
 }
-.button-padding{
-    padding: 0 0.5rem;
+.button-padding {
+  padding: 0 0.5rem;
+}
+.padding-edit {
+  padding: 0px !important;
 }

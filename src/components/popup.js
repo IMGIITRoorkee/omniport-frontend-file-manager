@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Icon, Popup, Grid, Button, Modal } from 'semantic-ui-react'
+import { Icon, Popup, Button, Modal, Menu } from 'semantic-ui-react'
 import {
   setSelected,
   setTarget,
@@ -130,8 +130,10 @@ class PopupView extends Component {
           wide
           flowing
           hoverable
+          position="left center"
+          styleName="popup.padding-edit"
         >
-          <div styleName="popup.button-group">
+          {/* <div styleName="popup.button-group">
             <div styleName="popup.button-padding">
               <Button
                 labelPosition="left"
@@ -165,7 +167,12 @@ class PopupView extends Component {
                 Delete
               </Button>
             </div>
-          </div>
+          </div> */}
+          <Menu vertical>
+            <Menu.Item name="edit" onClick={this.handleEdit} />
+            <Menu.Item name="download" onClick={this.handleDownload} />
+            <Menu.Item name="delete" onClick={this.showDeleteModal} />
+          </Menu>
         </Popup>
         <EditModal close={this.close} showModal={showModal} />
         {isDelete && isSelected ? (

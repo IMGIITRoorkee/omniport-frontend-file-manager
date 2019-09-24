@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Modal, Button, MountNode } from 'semantic-ui-react'
 import { Editor } from '@tinymce/tinymce-react'
 import { urlFilesDisplay } from '../urls'
-import apiKey from '../../config.json'
+import config from '../../config.json'
 
 class AppEditor extends Component {
   constructor(props) {
@@ -67,7 +67,7 @@ class AppEditor extends Component {
     return (
       <React.Fragment>
         <Editor
-          apiKey={apiKey}
+          apiKey={config.apiKey}
           init={{
             plugins: 'link image code',
             toolbar: 'undo redo | link image | code',

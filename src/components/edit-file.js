@@ -39,10 +39,11 @@ class EditFile extends Component {
       <React.Fragment>
         <Button
           disabled={!isSelected}
+          onClick={this.handleEdit}
           icon
           labelPosition="left"
           positive
-          onClick={this.handleEdit}
+          basic
         >
           <Icon name="edit" />
           Edit

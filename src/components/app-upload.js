@@ -72,10 +72,11 @@ class AppUpload extends Component {
     return (
       <React.Fragment>
         <Button
-          primary
+          onClick={() => this.fileInputRef.current.click()}
           icon
           labelPosition="left"
-          onClick={() => this.fileInputRef.current.click()}
+          primary
+          basic
         >
           <Icon name="upload" />
           Upload

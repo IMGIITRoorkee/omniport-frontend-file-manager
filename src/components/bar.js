@@ -57,6 +57,9 @@ class Bar extends Component {
   }
   successCallback = () => {
     this.props.fetchFiles()
+    this.setState({
+      isDelete: false
+    })
   }
   closeDeleteModal = () => {
     this.setState({
@@ -109,6 +112,7 @@ class Bar extends Component {
                   icon
                   labelPosition="left"
                   secondary
+                  basic
                 >
                   <Icon name="download" />
                   Download
@@ -117,10 +121,11 @@ class Bar extends Component {
               <div>
                 <Button
                   disabled={!isSelected}
-                  color="red"
-                  labelPosition="left"
                   onClick={this.showDeleteModal}
                   icon
+                  labelPosition="left"
+                  negative
+                  basic
                 >
                   <Icon name="delete" />
                   Delete
