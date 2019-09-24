@@ -1,10 +1,10 @@
 export function getFileIcon(upload) {
-  let type = upload.slice(upload.indexOf('.')+1)
+  let type = upload.slice(upload.indexOf('.') + 1)
   let return_type
   type === 'pdf'
     ? (return_type = 'file pdf outline')
-    : type === 'png' || type === 'jpg' || type === 'jpeg'
+    : type === 'png' || type === 'jpg' || type === 'jpeg' || type === 'svg'
     ? (return_type = 'file image outline')
     : (return_type = 'folder outline')
-    return return_type
+  return return_type
 }
