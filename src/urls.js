@@ -1,8 +1,3 @@
-// Frontend
-export function urlFilesDisplay() {
-  return `/file/files`
-}
-
 // Backend
 export function urlBase() {
   return `/api/django_filemanager/`

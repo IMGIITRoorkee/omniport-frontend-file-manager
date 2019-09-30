@@ -42,7 +42,7 @@ class EditFile extends Component {
           onClick={this.handleEdit}
           icon
           labelPosition="left"
-          positive
+          primary
           basic
         >
           <Icon name="edit" />

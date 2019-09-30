@@ -111,7 +111,7 @@ class Bar extends Component {
                   onClick={this.handleDownload}
                   icon
                   labelPosition="left"
-                  secondary
+                  primary
                   basic
                 >
                   <Icon name="download" />
@@ -124,7 +124,7 @@ class Bar extends Component {
                   onClick={this.showDeleteModal}
                   icon
                   labelPosition="left"
-                  negative
+                  primary
                   basic
                 >
                   <Icon name="delete" />
