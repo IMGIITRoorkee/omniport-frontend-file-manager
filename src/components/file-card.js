@@ -56,10 +56,11 @@ class FileCard extends Component {
       link,
       fileName,
       id,
-      isPublic
+      isPublic,
+      path
     } = this.props
     setGridViewActiveIndex(index)
-    setSelected({ pk: id, fileName, link, isPublic })
+    setSelected({ pk: id, fileName, link, isPublic, path })
   }
   render() {
     // const { visible, activeItem } = this.state

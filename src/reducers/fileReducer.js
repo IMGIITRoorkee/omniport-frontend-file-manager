@@ -104,7 +104,8 @@ const fileReducer = (state = initialState, action) => {
           pk: action.payload.pk,
           fileName: action.payload.fileName,
           link: action.payload.link,
-          isPublic: action.payload.isPublic
+          isPublic: action.payload.isPublic,
+          path: action.payload.path
         }
       }
     case UNSET_SELECTED:

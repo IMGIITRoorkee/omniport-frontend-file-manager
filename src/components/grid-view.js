@@ -12,7 +12,7 @@ class GridView extends Component {
     }
   }
   render() {
-    const { currentData} = this.props
+    const { currentData } = this.props
     return (
       <div styleName="grid.view-parent">
         {currentData &&
@@ -23,7 +23,8 @@ class GridView extends Component {
               index={index}
               id={file.id}
               fileName={file.fileName}
-              link={file.upload}  
+              link={file.upload}
+              path={file.path}
               isPublic={file.isPublic}
             />
           ))}

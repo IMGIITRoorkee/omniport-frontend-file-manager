@@ -9,10 +9,7 @@ import manager from './css/manager.css'
 
 const Loading = ({ error }) => {
   if (error) return <div>Error loading component</div>
-  else
-    return (
-      <p>Loading.....</p>
-    )
+  else return <p>Loading.....</p>
 }
 
 const Bar = Loadable({
@@ -43,7 +40,11 @@ class Manager extends Component {
     const { isTarget, selectedData } = this.props
     if (prevProps.isTarget !== isTarget) {
       window.opener.postMessage(
-        { file: selectedData.link, fileName: selectedData.fileName },
+        {
+          file: selectedData.link,
+          fileName: selectedData.fileName,
+          path: selectedData.path
+        },
         '*'
       )
       window.close()
@@ -56,9 +57,9 @@ class Manager extends Component {
         <div styleName="manager.bar-progress-parent">
           <Bar />
           <Progress />
-          <Divider styleName='manager.divider-margin' clearing />
+          <Divider styleName="manager.divider-margin" clearing />
         </div>
-        
+
         <div styleName="manager.view">
           {isLoading ? (
             <Dimmer active inverted>
