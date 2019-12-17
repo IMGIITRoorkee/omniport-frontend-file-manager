@@ -1,3 +1,3 @@
-# [[app_display_name]]
+File Manager
 
 > Omniport app frontend
