@@ -1,36 +1,23 @@
-import React, { Component } from 'react'
-import Loadable from 'react-loadable'
+import React, { Component, Suspense } from 'react'
 import { connect } from 'react-redux'
 import { Dimmer, Loader, Divider } from 'semantic-ui-react'
+import ErrorBoundary from './error-boundary'
 import { fetchFiles } from '../actions/index'
 
 import index from './css/index.css'
 import manager from './css/manager.css'
 
-const Loading = ({ error }) => {
-  if (error) return <div>Error loading component</div>
-  else return <p>Loading.....</p>
+const Loading = () => {
+  return <p>Loading ...</p>
 }
 
-const Bar = Loadable({
-  loader: () => import('./bar'),
-  loading: Loading
-})
+const Bar = React.lazy(() => import('./bar'))
 
-const Progress = Loadable({
-  loader: () => import('./progress'),
-  loading: Loading
-})
+const Progress = React.lazy(() => import('./progress'))
 
-const GridView = Loadable({
-  loader: () => import('./grid-view'),
-  loading: Loading
-})
+const GridView = React.lazy(() => import('./grid-view'))
 
-const TabularView = Loadable({
-  loader: () => import('./tabular-view'),
-  loading: Loading
-})
+const TabularView = React.lazy(() => import('./tabular-view'))
 
 class Manager extends Component {
   componentDidMount() {
@@ -55,8 +42,12 @@ class Manager extends Component {
     return (
       <React.Fragment>
         <div styleName="manager.bar-progress-parent">
-          <Bar />
-          <Progress />
+          <ErrorBoundary>
+            <Suspense fallback={Loading}>
+              <Bar />
+              <Progress />
+            </Suspense>
+          </ErrorBoundary>
           <Divider styleName="manager.divider-margin" clearing />
         </div>
 
@@ -66,10 +57,12 @@ class Manager extends Component {
               <Loader inverted content="Loading" />
             </Dimmer>
           ) : (
-            <React.Fragment>
-              {tabular ? <TabularView /> : <GridView />}
-            </React.Fragment>
-          )}
+              <ErrorBoundary>
+                <Suspense fallback={Loading}>
+                  {tabular ? <TabularView /> : <GridView />}
+                </Suspense>
+              </ErrorBoundary>
+            )}
         </div>
       </React.Fragment>
     )
