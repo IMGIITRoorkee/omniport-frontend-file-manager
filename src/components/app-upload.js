@@ -3,14 +3,12 @@ import { connect } from 'react-redux'
 import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
 import { uploadFile, fetchFiles } from '../actions/index'
 
-// import './css/appupload.css'
-
 class AppUpload extends Component {
   constructor(props) {
     super(props)
     this.state = {
       fileName: '',
-      isPublic: false,
+      isPublic: true,
       fileData: '',
       showModal: false
     }
