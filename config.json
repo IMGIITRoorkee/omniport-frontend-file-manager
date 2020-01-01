@@ -3,6 +3,6 @@
     "name": "file_manager",
     "verboseName": "File manager"
   },
-  "baseUrl": "/file_manager",
+  "baseUrl": "/file-manager",
   "source": "file_manager/src/index"
 }
