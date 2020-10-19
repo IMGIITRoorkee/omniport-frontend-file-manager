@@ -18,3 +18,8 @@ export function urlDeleteFile(pk) {
 export function urlEditFile(pk) {
   return `${urlBase()}edit_file/${pk}/`
 }
+
+export const FOLDER_APIS = {
+  folderItem: '/folder',
+  getRoot: '/folder/get_root',
+}
