@@ -99,3 +99,19 @@ export const deleteFolder = id => {
       })
   }
 }
+
+export const getRootFolder = filemanager =>{
+  const url = `${FOLDER_APIS.getRoot}?filemanager=${filemanager}`
+  return dispatch => {
+    dispatch(apiDispatch(GET_FOLDER_PENDING, true))
+    apiClient
+      .get(url)
+      .then(res => {
+        dispatch(apiDispatch(GET_FOLDER_PENDING, false))
+        dispatch(apiDispatch(GET_FOLDER, res.data))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+      })
+  }
+}

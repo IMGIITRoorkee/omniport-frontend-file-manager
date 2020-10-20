@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import FileCard from './file-card'
 
 import grid from './css/grid-view.css'
+import FolderCard from './folder-card'
 
 class GridView extends Component {
   constructor(props) {
@@ -12,20 +13,18 @@ class GridView extends Component {
     }
   }
   render() {
-    const { currentData } = this.props
+    const { currentFolder } = this.props
     return (
       <div styleName="grid.view-parent">
-        {currentData &&
-          currentData.files &&
-          currentData.files.map((file, index) => (
-            <FileCard
+        {currentFolder &&
+          currentFolder.folders &&
+          currentFolder.folders.map((folder, index) => (
+            <FolderCard
               key={index}
               index={index}
-              id={file.id}
-              fileName={file.fileName}
-              link={file.upload}
-              path={file.path}
-              isPublic={file.isPublic}
+              id={folder.id}
+              folderName={folder.folderName}
+              isStarred={folder.starred}
             />
           ))}
       </div>
@@ -36,7 +35,8 @@ class GridView extends Component {
 const mapStateToProps = state => {
   return {
     currentData: state.files.currentData,
-    progress: state.files.progressArray
+    progress: state.files.progressArray,
+    currentFolder: state.folders.selectedFolder
   }
 }
 

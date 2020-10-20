@@ -4,9 +4,11 @@ import {
   GET_FOLDER,
   GET_FOLDERS_PENDING,
   GET_FOLDER_PENDING,
+  CREATE_FOLDER,
+  FOLDER_API_ERROR,
   UPDATE_FOLDER_PENDING,
   CREATE_FOLDER_PENDING,
-  DELETE_FOLDER_PENDING,
+  
 } from '../actions/folderActionType'
 
 const initialPendingState = {
@@ -23,11 +25,11 @@ const initialState = {
   addedFolder: null,
   folders: [],
 }
-
-export default function folderReducer(
+const folderReducer = (
   state = initialState,
-  { type, payload, error }
-) {
+  action
+) =>{
+  const { type, payload, error } = action
   switch (type) {
     case GET_FOLDER_PENDING:
       return { ...state, getFolderPending: payload }
@@ -51,3 +53,4 @@ export default function folderReducer(
       return state
   }
 }
+export default folderReducer
