@@ -55,7 +55,7 @@ class TabularView extends Component {
     setSelected({ pk, fileName, link, isPublic })
   }
   render() {
-    const { currentData, setTarget } = this.props
+    const { currentData, setTarget, currentFolder} = this.props
     const { active } = this.state
     return (
       <Table singleLine styleName="index.table-main" selectable>
@@ -68,48 +68,48 @@ class TabularView extends Component {
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {currentData &&
-            currentData.files &&
-            currentData.files.map((file, index) => (
+          {currentFolder &&
+            currentFolder.folders &&
+            currentFolder.folders.map((folder, index) => (
               <Table.Row
                 key={index}
                 active={active === index}
                 styleName="index.table-row"
-                onClick={() =>
-                  this.handleClick(
-                    file.id,
-                    file.fileName,
-                    file.upload,
-                    index,
-                    file.isPublic
-                  )
-                }
+                // onClick={() =>
+                //   this.handleClick(
+                //     file.id,
+                //     file.fileName,
+                //     file.upload,
+                //     index,
+                //     file.isPublic
+                //   )
+                // }
                 onDoubleClick={setTarget}
               >
                 <Table.Cell>
                   <Icon
                     size="large"
-                    name={getFileIcon(file.path)}
+                    // name={getFileIcon(file.path)}
                     color={getTheme()}
                   />
-                  {file.fileName}
+                  {folder.folderName}
                 </Table.Cell>
                 <Table.Cell>
-                  {getModifiedDate(file.datetimeModified)}
+                  {getModifiedDate(folder.datetimeModified)}
                 </Table.Cell>
-                <Table.Cell>{file.isPublic ? 'True' : 'False'}</Table.Cell>
+                <Table.Cell>{folder.permission}</Table.Cell>
                 <Table.Cell>
                   <PopupView
-                    id={file.id}
-                    handleClick={() =>
-                      this.handleClick(
-                        file.id,
-                        file.fileName,
-                        file.upload,
-                        index,
-                        file.isPublic
-                      )
-                    }
+                    id={folder.id}
+                    // handleClick={() =>
+                    //   this.handleClick(
+                    //     folder.id,
+                    //     folder.fileName,
+                    //     folder.upload,
+                    //     index,
+                    //     folder.isPublic
+                    //   )
+                    // }
                   />
                 </Table.Cell>
               </Table.Row>
@@ -126,7 +126,8 @@ const mapStateToProps = state => {
     progress: state.files.progressArray,
     tabular: state.files.tabular,
     isSelected: state.files.isSelected,
-    selectedData: state.files.selectedData
+    selectedData: state.files.selectedData,
+    currentFolder: state.folders.selectedFolder,
   }
 }
 
