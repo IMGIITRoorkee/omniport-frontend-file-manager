@@ -4,7 +4,7 @@ import { AppFooter, AppMain } from 'formula_one'
 import { Route, Switch } from 'react-router-dom'
 import { Scrollbars } from 'react-custom-scrollbars'
 import Manager from './manager'
-
+import Root from './root'
 import main from 'formula_one/src/css/app.css'
 import blocks from './css/app.css'
 
@@ -25,6 +25,7 @@ class App extends Component {
           <Scrollbars>
             <Switch>
               <Route exact path={`${match.path}/`} component={Manager} />
+              <Route exact path={`${match.path}/:filemanager`} component={Root } />
             </Switch>
           </Scrollbars>
         </AppMain>
