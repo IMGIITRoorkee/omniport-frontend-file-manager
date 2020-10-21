@@ -1,14 +1,14 @@
 import {
   DELETE_FOLDER_PENDING,
   GET_ALL_FOLDERS,
+  GET_ALL_ROOT_FOLDERS,
   GET_FOLDER,
   GET_FOLDERS_PENDING,
   GET_FOLDER_PENDING,
   CREATE_FOLDER,
   FOLDER_API_ERROR,
   UPDATE_FOLDER_PENDING,
-  CREATE_FOLDER_PENDING,
-  
+  CREATE_FOLDER_PENDING
 } from '../actions/folderActionType'
 
 const initialPendingState = {
@@ -16,19 +16,16 @@ const initialPendingState = {
   deleteFolderPending: false,
   getFolderPending: false,
   getFoldersPending: false,
-  updateFolderPending: false,
+  updateFolderPending: false
 }
 
 const initialState = {
   ...initialPendingState,
   selectedFolder: null,
   addedFolder: null,
-  folders: [],
+  Folders: []
 }
-const folderReducer = (
-  state = initialState,
-  action
-) =>{
+const folderReducer = (state = initialState, action) => {
   const { type, payload, error } = action
   switch (type) {
     case GET_FOLDER_PENDING:
@@ -46,6 +43,8 @@ const folderReducer = (
     case GET_FOLDER:
       return { ...state, selectedFolder: payload }
     case GET_ALL_FOLDERS:
+      return { ...state, Folders: payload }
+    case GET_ALL_ROOT_FOLDERS:
       return { ...state, Folders: payload }
     case FOLDER_API_ERROR:
       return { ...state, error: error }
