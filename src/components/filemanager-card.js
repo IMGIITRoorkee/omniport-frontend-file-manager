@@ -13,18 +13,10 @@ import { Link } from 'react-router-dom'
 class Filemanagercard extends Component {
   constructor (props) {
     super(props)
-    console.log('constructor called')
-  }
-  componentDidMount () {
-    console.log('card reached')
-    console.log(this.props)
   }
   render () {
-    console.log(this.props)
     const { filemanagername, contentSize, maxSpace } = this.props
     let percentage = (contentSize * 100) / maxSpace
-    console.log((contentSize * 100) / maxSpace)
-    console.log(contentSize * 100)
     return (
       <Card as={Link} to={`/file-manager/${filemanagername}`}>
         <Card.Content>
