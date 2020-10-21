@@ -11,7 +11,6 @@ import {
 } from './folderActionType'
 
 const apiDispatch = (actionType = '', data) => {
-  console.log(data)
   return {
     type: actionType,
     payload: data
