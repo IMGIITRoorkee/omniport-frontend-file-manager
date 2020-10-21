@@ -1,15 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppFooter, AppMain } from 'formula_one'
+import { AppFooter, AppMain, AppHeader } from 'formula_one'
 import { Route, Switch } from 'react-router-dom'
 import { Scrollbars } from 'react-custom-scrollbars'
 import Manager from './manager'
 import Root from './root'
+import Instances from './instances'
+
 import main from 'formula_one/src/css/app.css'
 import blocks from './css/app.css'
 
 class App extends Component {
-  render() {
+  render () {
+    console.log('rendering app')
     const creators = [
       {
         name: 'Tushar Varshney',
@@ -19,13 +22,25 @@ class App extends Component {
     ]
     const { match } = this.props
     return (
-      <div styleName="main.app">
-        {/* <AppHeader appName="file_manager" mode="app" /> */}
+      <div styleName='main.app'>
+        {/* <AppHeader appName='file_manager' mode='app' /> */}
+        <AppHeader
+          mode='site'
+          userDropdown
+          appName='file_manager'
+          // onSidebarClick={() => ChangeSidebarVisibility(sidebarVisibility)}
+          // sideBarButton
+          // sideBarVisibility={sidebarVisibility}
+        />
         <AppMain>
           <Scrollbars>
             <Switch>
-              <Route exact path={`${match.path}/`} component={Manager} />
-              <Route exact path={`${match.path}/:filemanager`} component={Root } />
+              <Route exact path={`${match.path}/`} component={Instances} />
+              <Route
+                exact
+                path={`${match.path}/:filemanager`}
+                component={Root}
+              />
             </Switch>
           </Scrollbars>
         </AppMain>
@@ -35,7 +50,4 @@ class App extends Component {
   }
 }
 
-export default connect(
-  null,
-  null
-)(App)
+export default connect(null, null)(App)
