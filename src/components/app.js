@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { AppFooter, AppMain, AppHeader } from 'formula_one'
 import { Route, Switch } from 'react-router-dom'
 import { Scrollbars } from 'react-custom-scrollbars'
-import Manager from './manager'
 import Root from './root'
 import Instances from './instances'
 
@@ -50,4 +48,4 @@ class App extends Component {
   }
 }
 
-export default connect(null, null)(App)
+export default App
