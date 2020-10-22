@@ -6,7 +6,7 @@ import {
   setTarget,
   deleteFile,
   unsetSelected,
-  fetchFiles
+  fetchFiles,
 } from '../actions/index'
 import { getFileIcon } from '../utils/get-file-icon'
 import { getModifiedDate } from '../utils/get-modified-date'
@@ -14,17 +14,18 @@ import { getTheme } from 'formula_one'
 import PopupView from './popup'
 
 import index from './css/index.css'
+import { withRouter } from 'react-router-dom'
 class TabularView extends Component {
   constructor(props) {
     super(props)
     this.state = {
       active: '',
-      isPopupOpen: false
+      isPopupOpen: false,
     }
   }
   handlePopupToggle = (e, value) => {
     this.setState({
-      isPopupOpen: value
+      isPopupOpen: value,
     })
     if (e.type === 'click') e.stopPropagation()
   }
@@ -50,12 +51,12 @@ class TabularView extends Component {
   handleClick = (pk, fileName, link, index, isPublic) => {
     const { setSelected } = this.props
     this.setState({
-      active: index
+      active: index,
     })
     setSelected({ pk, fileName, link, isPublic })
   }
   render() {
-    const { currentData, setTarget, currentFolder} = this.props
+    const { currentData, setTarget, currentFolder } = this.props
     const { active } = this.state
     return (
       <Table singleLine styleName="index.table-main" selectable>
@@ -84,7 +85,13 @@ class TabularView extends Component {
                 //     file.isPublic
                 //   )
                 // }
-                onDoubleClick={setTarget}
+                onDoubleClick={() => {
+                  const url =
+                    this.props.location.pathname.slice(-1) === '/'
+                      ? `${this.props.match.url}${folder.id}`
+                      : `${this.props.match.url}/${folder.id}`
+                  this.props.history.push(url)
+                }}
               >
                 <Table.Cell>
                   <Icon
@@ -147,11 +154,11 @@ const mapDispatchToProps = dispatch => {
     },
     unsetSelected: () => {
       dispatch(unsetSelected())
-    }
+    },
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(TabularView)
+)(withRouter(TabularView))

@@ -7,20 +7,22 @@ import {
   GET_FOLDER,
   GET_FOLDERS_PENDING,
   GET_FOLDER_PENDING,
-  FOLDER_API_ERROR
+  FOLDER_API_ERROR,
+  CREATE_FOLDER,
+  CREATE_FOLDER_PENDING,
 } from './folderActionType'
 
 const apiDispatch = (actionType = '', data) => {
   return {
     type: actionType,
-    payload: data
+    payload: data,
   }
 }
 
 const apiError = error => {
   return {
     type: FOLDER_API_ERROR,
-    error
+    error,
   }
 }
 
@@ -57,7 +59,7 @@ export const getAllRootFoldersRequest = (pk, data) => {
 }
 
 export const getFolder = (id, params) => {
-  const url = FOLDER_APIS.folderItem
+  const url = `${FOLDER_APIS.folderItem}/${id}`
   return dispatch => {
     dispatch(apiDispatch(GET_FOLDER_PENDING, true))
     apiClient
@@ -71,15 +73,17 @@ export const getFolder = (id, params) => {
       })
   }
 }
-export const createFolder = (id, data) => {
-  const url = FOLDER_APIS.folderItem
-  return dispatch => {
+export const createFolder = data => {
+  const url = `${FOLDER_APIS.folderItem}/`
+  return (dispatch, getState) => {
+    const parentFolder = getState().folders.selectedFolder
     dispatch(apiDispatch(CREATE_FOLDER_PENDING, true))
     apiClient
       .post(url, data)
       .then(res => {
         dispatch(apiDispatch(CREATE_FOLDER_PENDING, false))
-        dispatch(apiDispatch(GET_FOLDER, res.data))
+        dispatch(apiDispatch(CREATE_FOLDER, res.data))
+        dispatch(getFolder(parentFolder.id))
       })
       .catch(error => {
         dispatch(apiError(error))

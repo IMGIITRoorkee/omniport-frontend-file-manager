@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Dimmer, Loader, Divider } from 'semantic-ui-react'
 import ErrorBoundary from './error-boundary'
 import { fetchFiles } from '../actions/index'
-import {getRootFolder} from '../actions/folderActions'
+import { getFolder, getRootFolder } from '../actions/folderActions'
 import index from './css/index.css'
 import manager from './css/manager.css'
 
@@ -22,20 +22,15 @@ const TabularView = React.lazy(() => import('./tabular-view'))
 class Root extends Component {
   componentDidMount() {
     this.props.fetchFiles()
-    this.props.getRoot(this.props.match.params.filemanager)
+    this.props.match.params.id
+      ? this.props.getFolderDetails(this.props.match.params.id)
+      : this.props.getRoot(this.props.match.params.filemanager)
   }
   componentDidUpdate(prevProps) {
-    const { isTarget, selectedData } = this.props
-    if (prevProps.isTarget !== isTarget) {
-      window.opener.postMessage(
-        {
-          file: selectedData.link,
-          fileName: selectedData.fileName,
-          path: selectedData.path
-        },
-        '*'
-      )
-      window.close()
+    if (prevProps.location.pathname !== this.props.location.pathname) {
+      this.props.match.params.id
+        ? this.props.getFolderDetails(this.props.match.params.id)
+        : this.props.getRoot(this.props.match.params.filemanager)
     }
   }
   render() {
@@ -58,12 +53,12 @@ class Root extends Component {
               <Loader inverted content="Loading" />
             </Dimmer>
           ) : (
-              <ErrorBoundary>
-                <Suspense fallback={Loading}>
-                  {tabular ? <TabularView /> : <GridView />}
-                </Suspense>
-              </ErrorBoundary>
-            )}
+            <ErrorBoundary>
+              <Suspense fallback={Loading}>
+                {tabular ? <TabularView /> : <GridView />}
+              </Suspense>
+            </ErrorBoundary>
+          )}
         </div>
       </React.Fragment>
     )
@@ -85,13 +80,13 @@ const mapDispatchToProps = dispatch => {
     fetchFiles: () => {
       dispatch(fetchFiles())
     },
-    getRoot: (filemanager)=>{
+    getRoot: filemanager => {
       dispatch(getRootFolder(filemanager))
-    }
+    },
+    getFolderDetails: id => {
+      dispatch(getFolder(id))
+    },
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Root)
+export default connect(mapStateToProps, mapDispatchToProps)(Root)
