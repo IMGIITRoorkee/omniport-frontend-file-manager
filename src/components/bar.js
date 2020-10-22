@@ -34,9 +34,6 @@ class Bar extends Component {
     }
   }
   handleBack = () => {
-    // const { fetchFilesFolder, lastVisited, unsetSelected } = this.props
-    // fetchFilesFolder(lastVisited, this.successBackCallback)
-    // unsetSelected()
     this.props.history.goBack()
   }
   successBackCallback = () => {
@@ -91,7 +88,6 @@ class Bar extends Component {
           </div>
           <div>
             <Button
-              // disabled={lastVisited === ''}
               icon="angle right"
               onClick={() => {
                 this.props.history.goForward()
