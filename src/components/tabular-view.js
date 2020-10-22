@@ -30,8 +30,6 @@ class TabularView extends Component {
         active: [index],
       })
     } else {
-      console.log(active)
-      console.log(active.includes(index))
       const newArr = active.includes(index)
         ? active.filter(elem => elem !== index)
         : [...active, index]
