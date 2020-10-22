@@ -6,17 +6,18 @@ import { getTheme } from 'formula_one'
 import {
   setGridViewActiveIndex,
   setSelected,
-  setTarget
+  setTarget,
 } from '../actions/index'
 
 import grid from './css/grid-view.css'
+import { withRouter } from 'react-router-dom'
 
 class FolderCard extends Component {
   constructor(props) {
     super(props)
     this.state = {
       visible: false,
-      activeItem: ''
+      activeItem: '',
     }
   }
 
@@ -29,14 +30,14 @@ class FolderCard extends Component {
       fileName,
       id,
       isPublic,
-      path
+      path,
     } = this.props
     setGridViewActiveIndex(index)
     setSelected({ pk: id, fileName, link, isPublic, path })
   }
   render() {
     // const { visible, activeItem } = this.state
-    const { folderName , gridViewActiveIndex, index, setTarget } = this.props
+    const { folderName, gridViewActiveIndex, index, setTarget, id } = this.props
     return (
       <div
         id={`grid-card-${index}`}
@@ -50,7 +51,13 @@ class FolderCard extends Component {
             color={getTheme()}
             name={'folder outline'}
             onClick={e => this.handleSelect(e)}
-            onDoubleClick={setTarget}
+            onDoubleClick={() => {
+              const url =
+                this.props.location.pathname.slice(-1) === '/'
+                  ? `${this.props.match.url}${id}`
+                  : `${this.props.match.url}/${id}`
+              this.props.history.push(url)
+            }}
           />
         </div>
         <div styleName="grid.file-name">
@@ -69,7 +76,7 @@ class FolderCard extends Component {
 
 const mapStateToProps = state => {
   return {
-    gridViewActiveIndex: state.files.gridViewActiveIndex
+    gridViewActiveIndex: state.files.gridViewActiveIndex,
   }
 }
 
@@ -83,11 +90,11 @@ const mapDispatchToProps = dispatch => {
     },
     setTarget: () => {
       dispatch(setTarget())
-    }
+    },
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FolderCard)
+)(withRouter(FolderCard))

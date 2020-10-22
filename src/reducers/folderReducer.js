@@ -21,8 +21,8 @@ const initialPendingState = {
 
 const initialState = {
   ...initialPendingState,
-  selectedFolder: null,
-  addedFolder: null,
+  selectedFolder: {},
+  addedFolder: {},
   Folders: []
 }
 const folderReducer = (state = initialState, action) => {
