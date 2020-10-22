@@ -13,6 +13,7 @@ import Upload from './app-upload'
 import Edit from './edit-file'
 
 import file from './css/file.css'
+import CreateFolderModal from './createFolderModal'
 class Bar extends Component {
   constructor(props) {
     super(props)
@@ -100,6 +101,8 @@ class Bar extends Component {
           <div>
             <Upload />
           </div>
+          <CreateFolderModal />
+          <div></div>
           {!tabular ? (
             <React.Fragment>
               <div>

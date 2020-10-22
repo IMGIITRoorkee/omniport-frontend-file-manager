@@ -25,6 +25,7 @@ class GridView extends Component {
               id={folder.id}
               folderName={folder.folderName}
               isStarred={folder.starred}
+              folder={folder}
             />
           ))}
       </div>

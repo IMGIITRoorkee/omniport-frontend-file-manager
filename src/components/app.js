@@ -36,6 +36,11 @@ class App extends Component {
               <Route exact path={`${match.path}/`} component={Instances} />
               <Route
                 exact
+                path={`${match.path}/:filemanager/:id`}
+                component={Root}
+              />
+              <Route
+                exact
                 path={`${match.path}/:filemanager`}
                 component={Root}
               />
