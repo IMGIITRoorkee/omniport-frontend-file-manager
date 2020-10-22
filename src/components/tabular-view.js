@@ -19,41 +19,24 @@ class TabularView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      active: '',
+      active: [],
       isPopupOpen: false,
     }
   }
-  handlePopupToggle = (e, value) => {
-    this.setState({
-      isPopupOpen: value,
-    })
-    if (e.type === 'click') e.stopPropagation()
-  }
-  handleDownload = () => {
-    const { isSelected, selectedData } = this.props
-    if (isSelected) {
-      let link = document.createElement('a')
-      link.download = selectedData.fileName
-      link.href = selectedData.link
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+  handleClick = index => event => {
+    const { active } = this.state
+    if (!event.ctrlKey) {
+      this.setState({
+        active: [index],
+      })
+    } else {
+      console.log(active)
+      console.log(active.includes(index))
+      const newArr = active.includes(index)
+        ? active.filter(elem => elem !== index)
+        : [...active, index]
+      this.setState({ active: newArr })
     }
-  }
-  handleDelete = () => {
-    const { isSelected, selectedData, deleteFile, unsetSelected } = this.props
-    isSelected ? deleteFile(selectedData.pk, this.successCallback) : null
-    unsetSelected()
-  }
-  successCallback = () => {
-    this.props.fetchFiles()
-  }
-  handleClick = (pk, fileName, link, index, isPublic) => {
-    const { setSelected } = this.props
-    this.setState({
-      active: index,
-    })
-    setSelected({ pk, fileName, link, isPublic })
   }
   render() {
     const { currentData, setTarget, currentFolder } = this.props
@@ -64,7 +47,7 @@ class TabularView extends Component {
           <Table.Row>
             <Table.HeaderCell>Title</Table.HeaderCell>
             <Table.HeaderCell>Last Modified</Table.HeaderCell>
-            <Table.HeaderCell>Public</Table.HeaderCell>
+            <Table.HeaderCell>Permissions</Table.HeaderCell>
             <Table.HeaderCell />
           </Table.Row>
         </Table.Header>
@@ -74,17 +57,9 @@ class TabularView extends Component {
             currentFolder.folders.map((folder, index) => (
               <Table.Row
                 key={index}
-                active={active === index}
+                active={active.includes(index)}
                 styleName="index.table-row"
-                // onClick={() =>
-                //   this.handleClick(
-                //     file.id,
-                //     file.fileName,
-                //     file.upload,
-                //     index,
-                //     file.isPublic
-                //   )
-                // }
+                onClick={this.handleClick(index)}
                 onDoubleClick={() => {
                   const url =
                     this.props.location.pathname.slice(-1) === '/'
@@ -94,11 +69,7 @@ class TabularView extends Component {
                 }}
               >
                 <Table.Cell>
-                  <Icon
-                    size="large"
-                    // name={getFileIcon(file.path)}
-                    color={getTheme()}
-                  />
+                  <Icon size="large" name="folder outline" color={getTheme()} />
                   {folder.folderName}
                 </Table.Cell>
                 <Table.Cell>
@@ -108,15 +79,6 @@ class TabularView extends Component {
                 <Table.Cell>
                   <PopupView
                     id={folder.id}
-                    // handleClick={() =>
-                    //   this.handleClick(
-                    //     folder.id,
-                    //     folder.fileName,
-                    //     folder.upload,
-                    //     index,
-                    //     folder.isPublic
-                    //   )
-                    // }
                   />
                 </Table.Cell>
               </Table.Row>
