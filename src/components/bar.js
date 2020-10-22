@@ -7,18 +7,19 @@ import {
   tabulation,
   unsetSelected,
   deleteFile,
-  fetchFiles
+  fetchFiles,
 } from '../actions/index'
 import Upload from './app-upload'
 import Edit from './edit-file'
 
 import file from './css/file.css'
 import CreateFolderModal from './createFolderModal'
+import { withRouter } from 'react-router-dom'
 class Bar extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isDelete: false
+      isDelete: false,
     }
   }
   handleDownload = () => {
@@ -33,9 +34,10 @@ class Bar extends Component {
     }
   }
   handleBack = () => {
-    const { fetchFilesFolder, lastVisited, unsetSelected } = this.props
-    fetchFilesFolder(lastVisited, this.successBackCallback)
-    unsetSelected()
+    // const { fetchFilesFolder, lastVisited, unsetSelected } = this.props
+    // fetchFilesFolder(lastVisited, this.successBackCallback)
+    // unsetSelected()
+    this.props.history.goBack()
   }
   successBackCallback = () => {
     const { currentFolder, lastVisitedAct } = this.props
@@ -48,7 +50,7 @@ class Bar extends Component {
   }
   showDeleteModal = () => {
     this.setState({
-      isDelete: true
+      isDelete: true,
     })
   }
   handleDelete = () => {
@@ -59,12 +61,12 @@ class Bar extends Component {
   successCallback = () => {
     this.props.fetchFiles()
     this.setState({
-      isDelete: false
+      isDelete: false,
     })
   }
   closeDeleteModal = () => {
     this.setState({
-      isDelete: false
+      isDelete: false,
     })
   }
   render() {
@@ -74,7 +76,7 @@ class Bar extends Component {
       lastVisited,
       tabular,
       isSelected,
-      selectedData
+      selectedData,
     } = this.props
     const { isDelete } = this.state
     return (
@@ -82,13 +84,19 @@ class Bar extends Component {
         <div styleName="file.navbar-first">
           <div>
             <Button
-              disabled={topLevel === currentFolder}
+              disabled={!Boolean(this.props.currentFolder && this.props.currentFolder.root)}
               onClick={this.handleBack}
               icon="angle left"
             />
           </div>
           <div>
-            <Button disabled={lastVisited === ''} icon="angle right" />
+            <Button
+              // disabled={lastVisited === ''}
+              icon="angle right"
+              onClick={() => {
+                this.props.history.goForward()
+              }}
+            />
           </div>
           <div>
             <Button
@@ -171,7 +179,8 @@ const mapStateToProps = state => {
     topLevel: state.files.topLevel,
     currentFolder: state.files.currentFolder,
     lastVisited: state.files.lastVisited,
-    tabular: state.files.tabular
+    tabular: state.files.tabular,
+    currentFolder: state.folders.selectedFolder,
   }
 }
 
@@ -194,11 +203,8 @@ const mapDispatchToProps = dispatch => {
     },
     fetchFiles: () => {
       dispatch(fetchFiles())
-    }
+    },
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Bar)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Bar))
