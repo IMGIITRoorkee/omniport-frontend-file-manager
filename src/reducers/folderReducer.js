@@ -8,7 +8,8 @@ import {
   CREATE_FOLDER,
   FOLDER_API_ERROR,
   UPDATE_FOLDER_PENDING,
-  CREATE_FOLDER_PENDING
+  CREATE_FOLDER_PENDING,
+  SET_ACTIVE_FOLDER,
 } from '../actions/folderActionType'
 
 const initialPendingState = {
@@ -16,14 +17,15 @@ const initialPendingState = {
   deleteFolderPending: false,
   getFolderPending: false,
   getFoldersPending: false,
-  updateFolderPending: false
+  updateFolderPending: false,
 }
 
 const initialState = {
   ...initialPendingState,
   selectedFolder: {},
   addedFolder: {},
-  Folders: []
+  Folders: [],
+  activeFolder: {},
 }
 const folderReducer = (state = initialState, action) => {
   const { type, payload, error } = action
@@ -46,6 +48,8 @@ const folderReducer = (state = initialState, action) => {
       return { ...state, Folders: payload }
     case GET_ALL_ROOT_FOLDERS:
       return { ...state, Folders: payload }
+    case SET_ACTIVE_FOLDER:
+      return { ...state, activeFolder: payload }
     case FOLDER_API_ERROR:
       return { ...state, error: error }
     default:
