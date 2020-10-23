@@ -8,19 +8,27 @@ import {
   unsetSelected,
   fetchFiles,
 } from '../actions/index'
-import { getFileIcon } from '../utils/get-file-icon'
 import { getModifiedDate } from '../utils/get-modified-date'
 import { getTheme } from 'formula_one'
 import PopupView from './popup'
-
+import ConfirmModal from './confirmModal'
 import index from './css/index.css'
 import { withRouter } from 'react-router-dom'
+import { deleteFolder } from '../actions/folderActions'
+
+const options = [
+  { key: '1', label: 'Edit' },
+  { key: '2', label: 'Download' },
+  { key: '3', label: 'Delete' },
+]
+
 class TabularView extends Component {
   constructor(props) {
     super(props)
     this.state = {
       active: [],
       isPopupOpen: false,
+      showDeleteModal: false,
     }
   }
   handleClick = index => event => {
@@ -36,9 +44,20 @@ class TabularView extends Component {
       this.setState({ active: newArr })
     }
   }
+  handleOptions = {
+    1: () => {},
+    2: () => {},
+    3: () => {
+      this.setState({ showDeleteModal: true })
+    },
+  }
+  handleDelete = id => {
+    this.props.deleteFolder(id)
+    this.setState({ showDeleteModal: false })
+  }
   render() {
     const { currentData, setTarget, currentFolder } = this.props
-    const { active } = this.state
+    const { active, showDeleteModal } = this.state
     return (
       <Table singleLine styleName="index.table-main" selectable>
         <Table.Header>
@@ -77,6 +96,19 @@ class TabularView extends Component {
                 <Table.Cell>
                   <PopupView
                     id={folder.id}
+                    options={options}
+                    handleOptions={this.handleOptions}
+                  />
+                  <ConfirmModal
+                    show={showDeleteModal}
+                    handleClose={() => {
+                      this.setState({ showDeleteModal: false })
+                    }}
+                    handleSubmit={() => {
+                      this.handleDelete(folder.id)
+                    }}
+                    type="remove"
+                    item="file"
                   />
                 </Table.Cell>
               </Table.Row>
@@ -114,6 +146,9 @@ const mapDispatchToProps = dispatch => {
     },
     unsetSelected: () => {
       dispatch(unsetSelected())
+    },
+    deleteFolder: id => {
+      dispatch(deleteFolder(id))
     },
   }
 }

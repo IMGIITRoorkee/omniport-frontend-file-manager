@@ -107,13 +107,15 @@ export const editFolderName = (id, data) => {
 }
 
 export const deleteFolder = id => {
-  const url = FOLDER_APIS.folderItem
-  return dispatch => {
+  const url = `${FOLDER_APIS.folderItem}/${id}`
+  return (dispatch, getState) => {
+    const parentFolder = getState().folders.selectedFolder
     dispatch(apiDispatch(DELETE_FOLDER_PENDING, true))
     apiClient
       .delete(url)
       .then(() => {
         dispatch(apiDispatch(DELETE_FOLDER_PENDING, false))
+        dispatch(getFolder(parentFolder.id))
       })
       .catch(error => {
         dispatch(apiError(error))
