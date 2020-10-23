@@ -10,6 +10,7 @@ import {
   FOLDER_API_ERROR,
   CREATE_FOLDER,
   CREATE_FOLDER_PENDING,
+  SET_ACTIVE_FOLDER,
 } from './folderActionType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -136,5 +137,11 @@ export const getRootFolder = filemanager => {
       .catch(error => {
         dispatch(apiError(error))
       })
+  }
+}
+
+export const setActiveFolder = folder => {
+  return dispatch => {
+    dispatch(apiDispatch(SET_ACTIVE_FOLDER, folder))
   }
 }
