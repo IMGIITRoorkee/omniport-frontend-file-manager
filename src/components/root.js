@@ -39,7 +39,7 @@ class Root extends Component {
       <React.Fragment>
         <div styleName="manager.bar-progress-parent">
           <ErrorBoundary>
-            <Suspense fallback={Loading}>
+            <Suspense fallback={<Loading />}>
               <Bar />
               <Progress />
             </Suspense>
@@ -54,7 +54,7 @@ class Root extends Component {
             </Dimmer>
           ) : (
             <ErrorBoundary>
-              <Suspense fallback={Loading}>
+              <Suspense fallback={<Loading />}>
                 {tabular ? <TabularView /> : <GridView />}
               </Suspense>
             </ErrorBoundary>
