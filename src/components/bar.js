@@ -11,10 +11,12 @@ import {
 } from '../actions/index'
 import Upload from './app-upload'
 import Edit from './edit-file'
+import ConfirmModal from './confirmModal'
 
 import file from './css/file.css'
 import CreateFolderModal from './createFolderModal'
 import { withRouter } from 'react-router-dom'
+import { deleteFolder, setActiveFolder } from '../actions/folderActions'
 class Bar extends Component {
   constructor(props) {
     super(props)
@@ -45,23 +47,18 @@ class Bar extends Component {
     tabulation(!tabular)
     unsetSelected()
   }
-  showDeleteModal = () => {
-    this.setState({
-      isDelete: true,
-    })
-  }
+
   handleDelete = () => {
-    const { isSelected, selectedData, deleteFile, unsetSelected } = this.props
-    isSelected ? deleteFile(selectedData.pk, this.successCallback) : null
-    unsetSelected()
+    // const { isSelected, selectedData, deleteFile, unsetSelected } = this.props
+    // isSelected ? deleteFile(selectedData.pk, this.successCallback) : null
+    // unsetSelected()
+    const { activeFolder, deleteFolder } = this.props
+    deleteFolder(activeFolder.id)
+    setActiveFolder({})
+    this.setState({isDelete: false})
   }
   successCallback = () => {
     this.props.fetchFiles()
-    this.setState({
-      isDelete: false,
-    })
-  }
-  closeDeleteModal = () => {
     this.setState({
       isDelete: false,
     })
@@ -74,6 +71,7 @@ class Bar extends Component {
       tabular,
       isSelected,
       selectedData,
+      activeFolder,
     } = this.props
     const { isDelete } = this.state
     return (
@@ -81,7 +79,11 @@ class Bar extends Component {
         <div styleName="file.navbar-first">
           <div>
             <Button
-              disabled={!Boolean(this.props.currentFolder && this.props.currentFolder.root)}
+              disabled={
+                !Boolean(
+                  this.props.currentFolder && this.props.currentFolder.root
+                )
+              }
               onClick={this.handleBack}
               icon="angle left"
             />
@@ -127,8 +129,10 @@ class Bar extends Component {
               </div>
               <div>
                 <Button
-                  disabled={!isSelected}
-                  onClick={this.showDeleteModal}
+                  disabled={!activeFolder.id}
+                  onClick={() => {
+                    this.setState({ isDelete: true })
+                  }}
                   icon
                   labelPosition="left"
                   primary
@@ -140,28 +144,13 @@ class Bar extends Component {
               </div>
             </React.Fragment>
           ) : null}
-          {isDelete && isSelected ? (
-            <Modal size="large" open={isDelete} onClose={this.closeDeleteModal}>
-              <Modal.Header>
-                Do you really want to delete "{selectedData.fileName}"
-              </Modal.Header>
-              <Modal.Content>
-                <p>Are you sure you want to delete this file?</p>
-              </Modal.Content>
-              <Modal.Actions>
-                <Button negative onClick={this.closeDeleteModal}>
-                  No
-                </Button>
-                <Button
-                  positive
-                  icon="checkmark"
-                  labelPosition="right"
-                  content="Yes"
-                  onClick={this.handleDelete}
-                />
-              </Modal.Actions>
-            </Modal>
-          ) : null}
+          <ConfirmModal
+            show={isDelete}
+            handleClose={() => {
+              this.setState({ isDelete: false })
+            }}
+            handleSubmit={this.handleDelete}
+          />
         </div>
       </Segment>
     )
@@ -177,6 +166,7 @@ const mapStateToProps = state => {
     lastVisited: state.files.lastVisited,
     tabular: state.files.tabular,
     currentFolder: state.folders.selectedFolder,
+    activeFolder: state.folders.activeFolder,
   }
 }
 
@@ -199,6 +189,12 @@ const mapDispatchToProps = dispatch => {
     },
     fetchFiles: () => {
       dispatch(fetchFiles())
+    },
+    deleteFolder: id => {
+      dispatch(deleteFolder(id))
+    },
+    setActiveFolder: obj => {
+      dispatch(setActiveFolder(obj))
     },
   }
 }
