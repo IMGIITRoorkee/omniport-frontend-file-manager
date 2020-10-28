@@ -3,11 +3,13 @@
   flex-direction: row;
   justify-content: start;
   flex-wrap: wrap;
+  height: 100%;
 }
 
 .file-card {
   width: 16%;
   padding: 1em;
+  height: max-content;
 }
 
 .file-card:hover {

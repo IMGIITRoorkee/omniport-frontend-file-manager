@@ -17,6 +17,8 @@ import file from './css/file.css'
 import CreateFolderModal from './createFolderModal'
 import { withRouter } from 'react-router-dom'
 import { deleteFolder, setActiveFolder } from '../actions/folderActions'
+import { setActiveItems } from '../actions/itemActions'
+import { ITEM_TYPE } from '../constants'
 class Bar extends Component {
   constructor(props) {
     super(props)
@@ -49,13 +51,12 @@ class Bar extends Component {
   }
 
   handleDelete = () => {
-    // const { isSelected, selectedData, deleteFile, unsetSelected } = this.props
-    // isSelected ? deleteFile(selectedData.pk, this.successCallback) : null
-    // unsetSelected()
-    const { activeFolder, deleteFolder } = this.props
-    deleteFolder(activeFolder.id)
-    setActiveFolder({})
-    this.setState({isDelete: false})
+    const { deleteFolder, activeItems } = this.props
+    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.folder) {
+      deleteFolder(activeItems[0].obj.id)
+    }
+    setActiveItems([])
+    this.setState({ isDelete: false })
   }
   successCallback = () => {
     this.props.fetchFiles()
@@ -64,15 +65,7 @@ class Bar extends Component {
     })
   }
   render() {
-    const {
-      topLevel,
-      currentFolder,
-      lastVisited,
-      tabular,
-      isSelected,
-      selectedData,
-      activeFolder,
-    } = this.props
+    const { tabular, isSelected, activeItems } = this.props
     const { isDelete } = this.state
     return (
       <Segment styleName="file.navbar">
@@ -129,7 +122,7 @@ class Bar extends Component {
               </div>
               <div>
                 <Button
-                  disabled={!activeFolder.id}
+                  disabled={activeItems.length !== 1}
                   onClick={() => {
                     this.setState({ isDelete: true })
                   }}
@@ -167,6 +160,7 @@ const mapStateToProps = state => {
     tabular: state.files.tabular,
     currentFolder: state.folders.selectedFolder,
     activeFolder: state.folders.activeFolder,
+    activeItems: state.items.activeItems,
   }
 }
 
@@ -195,6 +189,9 @@ const mapDispatchToProps = dispatch => {
     },
     setActiveFolder: obj => {
       dispatch(setActiveFolder(obj))
+    },
+    setActiveItems: items => {
+      dispatch(setActiveItems(items))
     },
   }
 }
