@@ -6,7 +6,6 @@ import index from './css/index.css'
 
 class Progress extends Component {
   handleClick = data => {
-    // console.log(data, 'dajgsjk')
   }
   render() {
     const { progress } = this.props
