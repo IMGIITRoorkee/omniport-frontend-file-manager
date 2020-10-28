@@ -9,23 +9,23 @@ import main from 'formula_one/src/css/app.css'
 import blocks from './css/app.css'
 
 class App extends Component {
-  render () {
+  render() {
     console.log('rendering app')
     const creators = [
       {
         name: 'Tushar Varshney',
         role: 'Frontend Developer',
-        link: 'https://github.com/Tushar19varshney'
-      }
+        link: 'https://github.com/Tushar19varshney',
+      },
     ]
     const { match } = this.props
     return (
-      <div styleName='main.app'>
+      <div styleName="main.app">
         {/* <AppHeader appName='file_manager' mode='app' /> */}
         <AppHeader
-          mode='site'
+          mode="site"
           userDropdown
-          appName='file_manager'
+          appName="file_manager"
           // onSidebarClick={() => ChangeSidebarVisibility(sidebarVisibility)}
           // sideBarButton
           // sideBarVisibility={sidebarVisibility}

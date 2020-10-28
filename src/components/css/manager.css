@@ -7,6 +7,7 @@
 .view{
     position: relative;
     top: 8.2rem;
+    height: 100%;
 }
 .divider-margin{
     margin: 0 !important;
