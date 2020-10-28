@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Icon } from 'semantic-ui-react'
+import { withRouter } from 'react-router-dom'
+
 import {
   setSelected,
   setTarget,
@@ -13,8 +15,9 @@ import { getTheme } from 'formula_one'
 import PopupView from './popup'
 import ConfirmModal from './confirmModal'
 import index from './css/index.css'
-import { withRouter } from 'react-router-dom'
 import { deleteFolder } from '../actions/folderActions'
+import { setActiveItems } from '../actions/itemActions'
+import { ITEM_TYPE } from '../constants'
 
 const options = [
   { key: '1', label: 'Edit' },
@@ -26,22 +29,19 @@ class TabularView extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      active: [],
       isPopupOpen: false,
       showDeleteModal: false,
     }
   }
-  handleClick = index => event => {
-    const { active } = this.state
+  handleFolderClick = folder => event => {
+    const { setActiveItems, activeItems } = this.props
     if (!event.ctrlKey) {
-      this.setState({
-        active: [index],
-      })
+      setActiveItems([{ type: ITEM_TYPE.folder, obj: folder }])
     } else {
-      const newArr = active.includes(index)
-        ? active.filter(elem => elem !== index)
-        : [...active, index]
-      this.setState({ active: newArr })
+      const newArr = activeItems.some(elem => elem.obj.id === folder.id)
+        ? activeItems.filter(elem => elem.obj.id !== folder.id)
+        : [...activeItems, { type: ITEM_TYPE.folder, obj: folder }]
+      setActiveItems(newArr)
     }
   }
   handleOptions = {
@@ -56,8 +56,8 @@ class TabularView extends Component {
     this.setState({ showDeleteModal: false })
   }
   render() {
-    const { currentData, setTarget, currentFolder } = this.props
-    const { active, showDeleteModal } = this.state
+    const { currentFolder, activeItems } = this.props
+    const { showDeleteModal } = this.state
     return (
       <Table singleLine styleName="index.table-main" selectable>
         <Table.Header>
@@ -74,9 +74,9 @@ class TabularView extends Component {
             currentFolder.folders.map((folder, index) => (
               <Table.Row
                 key={index}
-                active={active.includes(index)}
+                active={activeItems.some(elem => elem.obj.id == folder.id)}
                 styleName="index.table-row"
-                onClick={this.handleClick(index)}
+                onClick={this.handleFolderClick(folder)}
                 onDoubleClick={() => {
                   const url =
                     this.props.location.pathname.slice(-1) === '/'
@@ -127,6 +127,7 @@ const mapStateToProps = state => {
     isSelected: state.files.isSelected,
     selectedData: state.files.selectedData,
     currentFolder: state.folders.selectedFolder,
+    activeItems: state.items.activeItems,
   }
 }
 
@@ -149,6 +150,9 @@ const mapDispatchToProps = dispatch => {
     },
     deleteFolder: id => {
       dispatch(deleteFolder(id))
+    },
+    setActiveItems: items => {
+      dispatch(setActiveItems(items))
     },
   }
 }
