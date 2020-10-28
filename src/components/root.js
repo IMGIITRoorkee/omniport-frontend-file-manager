@@ -6,6 +6,7 @@ import { fetchFiles } from '../actions/index'
 import { getFolder, getRootFolder } from '../actions/folderActions'
 import index from './css/index.css'
 import manager from './css/manager.css'
+import { setActiveItems } from '../actions/itemActions'
 
 const Loading = () => {
   return <p>Loading ...</p>
@@ -20,6 +21,10 @@ const GridView = React.lazy(() => import('./grid-view'))
 const TabularView = React.lazy(() => import('./tabular-view'))
 
 class Root extends Component {
+  constructor(props) {
+    super(props)
+    this.ref = React.createRef()
+  }
   componentDidMount() {
     this.props.fetchFiles()
     this.props.match.params.id
@@ -33,6 +38,12 @@ class Root extends Component {
         : this.props.getRoot(this.props.match.params.filemanager)
     }
   }
+  handleReset = e => {
+    if (e.target === this.ref.current) {
+      this.props.setActiveItems([])
+    }
+  }
+
   render() {
     const { tabular, isLoading } = this.props
     return (
@@ -47,7 +58,7 @@ class Root extends Component {
           <Divider styleName="manager.divider-margin" clearing />
         </div>
 
-        <div styleName="manager.view">
+        <div styleName="manager.view" ref={this.ref} onClick={this.handleReset}>
           {isLoading ? (
             <Dimmer active inverted>
               <Loader inverted content="Loading" />
@@ -86,6 +97,7 @@ const mapDispatchToProps = dispatch => {
     getFolderDetails: id => {
       dispatch(getFolder(id))
     },
+    setActiveItems: items => dispatch(setActiveItems(items)),
   }
 }
 
