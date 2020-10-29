@@ -7,9 +7,9 @@ export function urlFilesList () {
   return `${urlBase()}folder`
 }
 
-export function urlUploadFile () {
-  return `${urlBase()}upload/`
-}
+// export function urlUploadFile () {
+//   return `${urlBase()}upload/`
+// }
 
 export function urlDeleteFile (pk) {
   return `${urlBase()}delete_file/${pk}/`
@@ -20,11 +20,15 @@ export function urlEditFile (pk) {
 }
 
 export function urlFolderFiles (pk) {
-  return `${urlBase()}folder/${pk}/files`
+  return `${urlBase()}folder/${pk}/files/`
 }
 
 export function urlFile (pk) {
-  return `${urlBase()}files/${pk}`
+  return `files/${pk}/`
+}
+
+export function urlUploadFile () {
+  return `files/`
 }
 
 export const FOLDER_APIS = {
