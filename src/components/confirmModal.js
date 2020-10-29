@@ -1,6 +1,5 @@
 import React from 'react'
 import { Icon, Modal, Button, Header } from 'semantic-ui-react'
-import { Row, Col } from 'react-bootstrap'
 
 const modalTypes = item => ({
   normal: {},
@@ -9,51 +8,51 @@ const modalTypes = item => ({
     messeageObject: {
       main: (
         <>
-          <Icon name="trash" Color="red" />
+          <Icon name='trash' Color='red' />
           Are you sure you want to remove {item} ?
         </>
       ),
-      extras: '',
+      extras: ''
     },
     buttonColor: 'negative',
-    buttonLabel: 'Remove',
+    buttonLabel: 'Remove'
   },
   save: {
     header: `Save ${item}`,
     messeageObject: {
       main: <>Are you sure you want to save {item} ?</>,
-      extras: '',
+      extras: ''
     },
     buttonLabel: 'Save',
-    buttonColor: 'positive',
+    buttonColor: 'positive'
   },
   update: {
     header: `Update ${item}`,
     messeageObject: {
       main: <>Are you sure you want to update {item} ?</>,
-      extras: '',
+      extras: ''
     },
     buttonLabel: 'Update',
-    buttonColor: 'positive',
+    buttonColor: 'positive'
   },
   reject: {
     header: `Reject ${item}`,
     messeageObject: {
       main: <>Are you sure you want to Reject {item} ?</>,
-      extras: '',
+      extras: ''
     },
     buttonLabel: 'Reject',
-    buttonColor: 'negative',
+    buttonColor: 'negative'
   },
   cancel: {
     header: `Cancel ${item}`,
     messeageObject: {
       main: <>Are you sure you want to cancel {item} ?</>,
-      extras: '',
+      extras: ''
     },
     buttonLabel: 'Cancel',
-    buttonColor: 'negative',
-  },
+    buttonColor: 'negative'
+  }
 })
 
 const ConfirmModal = ({
@@ -63,7 +62,7 @@ const ConfirmModal = ({
   type = 'remove',
   item = 'task',
   dialogText = '',
-  dialogMessage = '',
+  dialogMessage = ''
 }) => {
   const stateObject = modalTypes(item)[type]
 
@@ -76,10 +75,10 @@ const ConfirmModal = ({
             <Header>{dialogMessage}</Header>
           ) : (
             <>
-              <Header className="d-inline-block">
+              <Header className='d-inline-block'>
                 {stateObject.messeageObject.main}
               </Header>
-              <Header className="pl-1 d-flex justify-content-center fw-bold">
+              <Header className='pl-1 d-flex justify-content-center fw-bold'>
                 {stateObject.messeageObject.extras}
               </Header>
             </>

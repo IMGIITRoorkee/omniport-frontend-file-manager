@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import fileReducer from './fileReducer'
+import fileReducer from './File-reducer'
 import folderReducer from './folderReducer'
 import itemReducer from './itemReducer'
 const rootReducers = combineReducers({

@@ -10,20 +10,20 @@ import {
   FOLDER_API_ERROR,
   CREATE_FOLDER,
   CREATE_FOLDER_PENDING,
-  SET_ACTIVE_FOLDER,
+  SET_ACTIVE_FOLDER
 } from './folderActionType'
 
 const apiDispatch = (actionType = '', data) => {
   return {
     type: actionType,
-    payload: data,
+    payload: data
   }
 }
 
 const apiError = error => {
   return {
     type: FOLDER_API_ERROR,
-    error,
+    error
   }
 }
 

@@ -19,6 +19,14 @@ export function urlEditFile (pk) {
   return `${urlBase()}edit_file/${pk}/`
 }
 
+export function urlFolderFiles (pk) {
+  return `${urlBase()}folder/${pk}/files`
+}
+
+export function urlFile (pk) {
+  return `${urlBase()}files/${pk}`
+}
+
 export const FOLDER_APIS = {
   folderItem: '/folder',
   getRoot: '/folder/get_root',
