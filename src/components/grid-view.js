@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import FileCard from './file-card'
+import Filecard from './Filecard'
 
 import grid from './css/grid-view.css'
 import FolderCard from './folder-card'
 import { setActiveItems } from '../actions/itemActions'
+import { Divider } from 'semantic-ui-react'
 
 class GridView extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.ref = React.createRef()
   }
@@ -16,27 +17,41 @@ class GridView extends Component {
       this.props.setActiveItems([])
     }
   }
-
-  render() {
+  render () {
     const { currentFolder } = this.props
+    console.log(currentFolder)
     return (
-      <div
-        styleName="grid.view-parent"
-        ref={this.ref}
-        onClick={this.handleReset}
-      >
-        {currentFolder &&
-          currentFolder.folders &&
-          currentFolder.folders.map((folder, index) => (
-            <FolderCard
-              key={index}
-              index={index}
-              id={folder.id}
-              folderName={folder.folderName}
-              isStarred={folder.starred}
-              folder={folder}
-            />
-          ))}
+      <div>
+        <div
+          styleName='grid.view-parent'
+          ref={this.ref}
+          onClick={this.handleReset}
+        >
+          {currentFolder &&
+            currentFolder.folders &&
+            currentFolder.folders.map((folder, index) => (
+              <FolderCard
+                key={index}
+                index={index}
+                id={folder.id}
+                folderName={folder.folderName}
+                isStarred={folder.starred}
+                folder={folder}
+              />
+            ))}
+        </div>
+        <Divider />
+        <div
+          styleName='grid.view-parent'
+          ref={this.ref}
+          onClick={this.handleReset}
+        >
+          {currentFolder &&
+            currentFolder.files &&
+            currentFolder.files.map((file, index) => (
+              <Filecard key={index} index={index} file={file} />
+            ))}
+        </div>
       </div>
     )
   }
@@ -44,7 +59,7 @@ class GridView extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentFolder: state.folders.selectedFolder,
+    currentFolder: state.folders.selectedFolder
   }
 }
 

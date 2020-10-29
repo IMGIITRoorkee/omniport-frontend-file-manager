@@ -2,14 +2,16 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Icon } from 'semantic-ui-react'
 import { withRouter } from 'react-router-dom'
+import EditModal from './edit-modal'
 
-import {
-  setSelected,
-  setTarget,
-  deleteFile,
-  unsetSelected,
-  fetchFiles,
-} from '../actions/index'
+// import {
+//   setSelected,
+//   setTarget,
+//   deleteFile,
+//   unsetSelected,
+//   fetchFiles,
+// } from '../actions/index'
+import { deleteFile } from '../actions/fileAction'
 import { getModifiedDate } from '../utils/get-modified-date'
 import { getTheme } from 'formula_one'
 import PopupView from './popup'
@@ -22,15 +24,16 @@ import { ITEM_TYPE } from '../constants'
 const options = [
   { key: '1', label: 'Edit' },
   { key: '2', label: 'Download' },
-  { key: '3', label: 'Delete' },
+  { key: '3', label: 'Delete' }
 ]
 
 class TabularView extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       isPopupOpen: false,
       showDeleteModal: false,
+      showEditModal: false
     }
   }
   handleFolderClick = folder => event => {
@@ -38,28 +41,61 @@ class TabularView extends Component {
     if (!event.ctrlKey) {
       setActiveItems([{ type: ITEM_TYPE.folder, obj: folder }])
     } else {
-      const newArr = activeItems.some(elem => elem.obj.id === folder.id)
-        ? activeItems.filter(elem => elem.obj.id !== folder.id)
+      const newArr = activeItems.some(
+        elem => elem.obj.id === folder.id && elem.type == 'folder'
+      )
+        ? activeItems.filter(
+            elem => elem.obj.id !== folder.id || elem.type == 'file'
+          )
         : [...activeItems, { type: ITEM_TYPE.folder, obj: folder }]
       setActiveItems(newArr)
     }
   }
+  handleFileClick = file => event => {
+    const { setActiveItems, activeItems } = this.props
+    if (!event.ctrlKey) {
+      setActiveItems([{ type: ITEM_TYPE.file, obj: file }])
+    } else {
+      const newArr = activeItems.some(
+        elem => elem.obj.id === file.id && elem.type == 'file'
+      )
+        ? activeItems.filter(
+            elem => elem.obj.id !== file.id && elem.type == 'folder'
+          )
+        : [...activeItems, { type: ITEM_TYPE.file, obj: file }]
+      setActiveItems(newArr)
+    }
+  }
   handleOptions = {
-    1: () => {},
+    1: () => {
+      this.setState({ showEditModal: true })
+    },
     2: () => {},
     3: () => {
       this.setState({ showDeleteModal: true })
-    },
+    }
   }
-  handleDelete = id => {
-    this.props.deleteFolder(id)
+  handleDelete = () => {
+    const { deleteFolder, activeItems, deleteFile } = this.props
+    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.folder) {
+      deleteFolder(activeItems[0].obj.id)
+    }
+    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.file) {
+      deleteFile(activeItems[0].obj.id)
+    }
+    setActiveItems([])
     this.setState({ showDeleteModal: false })
   }
-  render() {
+  closeEditModal = () => {
+    this.setState({
+      showEditModal: false
+    })
+  }
+  render () {
     const { currentFolder, activeItems } = this.props
-    const { showDeleteModal } = this.state
+    const { showDeleteModal, showEditModal } = this.state
     return (
-      <Table singleLine styleName="index.table-main" selectable>
+      <Table singleLine styleName='index.table-main' selectable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Title</Table.HeaderCell>
@@ -75,7 +111,7 @@ class TabularView extends Component {
               <Table.Row
                 key={index}
                 active={activeItems.some(elem => elem.obj.id == folder.id)}
-                styleName="index.table-row"
+                styleName='index.table-row'
                 onClick={this.handleFolderClick(folder)}
                 onDoubleClick={() => {
                   const url =
@@ -86,7 +122,7 @@ class TabularView extends Component {
                 }}
               >
                 <Table.Cell>
-                  <Icon size="large" name="folder outline" color={getTheme()} />
+                  <Icon size='large' name='folder outline' color={getTheme()} />
                   {folder.folderName}
                 </Table.Cell>
                 <Table.Cell>
@@ -105,14 +141,53 @@ class TabularView extends Component {
                       this.setState({ showDeleteModal: false })
                     }}
                     handleSubmit={() => {
-                      this.handleDelete(folder.id)
+                      this.handleDelete()
                     }}
-                    type="remove"
-                    item="file"
+                    type='remove'
+                    item='file'
                   />
                 </Table.Cell>
               </Table.Row>
             ))}
+
+          {currentFolder &&
+            currentFolder.files &&
+            currentFolder.files.map((file, index) => (
+              <Table.Row
+                key={index}
+                active={activeItems.some(elem => elem.obj.id == file.id)}
+                styleName='index.table-row'
+                onClick={this.handleFileClick(file)}
+              >
+                <Table.Cell>
+                  <Icon size='large' name='file' color={getTheme()} />
+                  {file.fileName}
+                </Table.Cell>
+                <Table.Cell>
+                  {getModifiedDate(file.datetimeModified)}
+                </Table.Cell>
+                <Table.Cell>{file.permission}</Table.Cell>
+                <Table.Cell>
+                  <PopupView
+                    id={file.id}
+                    options={options}
+                    handleOptions={this.handleOptions}
+                  />
+                </Table.Cell>
+              </Table.Row>
+            ))}
+          <ConfirmModal
+            show={showDeleteModal}
+            handleClose={() => {
+              this.setState({ showDeleteModal: false })
+            }}
+            handleSubmit={() => {
+              this.handleDelete()
+            }}
+            type='remove'
+            item='file'
+          />
+          <EditModal showModal={showEditModal} close={this.closeEditModal} />
         </Table.Body>
       </Table>
     )
@@ -121,39 +196,39 @@ class TabularView extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentData: state.files.currentData,
-    progress: state.files.progressArray,
+    // currentData: state.files.currentData,
+    // progress: state.files.progressArray,
     tabular: state.files.tabular,
-    isSelected: state.files.isSelected,
-    selectedData: state.files.selectedData,
+    // isSelected: state.files.isSelected,
+    // selectedData: state.files.selectedData,
     currentFolder: state.folders.selectedFolder,
-    activeItems: state.items.activeItems,
+    activeItems: state.items.activeItems
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchFiles: () => {
-      dispatch(fetchFiles())
+    // fetchFiles: () => {
+    //   dispatch(fetchFiles())
+    // },
+    // setSelected: data => {
+    //   dispatch(setSelected(data))
+    // },
+    // setTarget: () => {
+    //   dispatch(setTarget())
+    // },
+    deleteFile: pk => {
+      dispatch(deleteFile(pk))
     },
-    setSelected: data => {
-      dispatch(setSelected(data))
-    },
-    setTarget: () => {
-      dispatch(setTarget())
-    },
-    deleteFile: (pk, callback) => {
-      dispatch(deleteFile(pk, callback))
-    },
-    unsetSelected: () => {
-      dispatch(unsetSelected())
-    },
+    // unsetSelected: () => {
+    //   dispatch(unsetSelected())
+    // },
     deleteFolder: id => {
       dispatch(deleteFolder(id))
     },
     setActiveItems: items => {
       dispatch(setActiveItems(items))
-    },
+    }
   }
 }
 
