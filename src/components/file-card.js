@@ -1,157 +1,80 @@
 import React, { Component } from 'react'
+import { Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
-import { Icon, Popup, Menu } from 'semantic-ui-react'
-import { getFileIcon } from '../utils/get-file-icon'
+
 import { getTheme } from 'formula_one'
-import {
-  setGridViewActiveIndex,
-  setSelected,
-  setTarget
-} from '../actions/index'
+import { setActiveItems } from '../actions/itemActions'
+import { ITEM_TYPE } from '../constants'
 
 import grid from './css/grid-view.css'
 
-class FileCard extends Component {
-  constructor(props) {
+class Filecard extends Component {
+  constructor (props) {
     super(props)
-    this.state = {
-      visible: false,
-      activeItem: ''
+  }
+
+  handleSelect = e => {
+    const { file, activeItems, setActiveItems } = this.props
+    if (e.ctrlKey) {
+      const newActiveItems = activeItems.some(
+        elem => elem.obj.id === file.id && elem.type == 'file'
+      )
+        ? activeItems.filter(elem => elem.obj.id !== file.id)
+        : [...activeItems, { type: ITEM_TYPE.file, obj: file }]
+      setActiveItems(newActiveItems)
+    } else {
+      setActiveItems([{ type: ITEM_TYPE.file, obj: file }])
     }
-    // this.root = React.createRef()
   }
-  // componentDidMount() {
-  //   // document.addEventListener('contextmenu', this._handleContextMenu)
-  //   document.addEventListener('click', this._handleClick)
-  //   document.addEventListener('scroll', this._handleScroll)
-  // }
 
-  // componentWillUnmount() {
-  //   // document.removeEventListener('contextmenu', this._handleContextMenu)
-  //   document.removeEventListener('click', this._handleClick)
-  //   document.removeEventListener('scroll', this._handleScroll)
-  // }
-  // _handleClick = event => {
-  //   const { visible } = this.state
-  //   const wasOutside = !(event.target.contains === this.root)
-
-  //   if (wasOutside && visible) this.setState({ visible: false })
-  // }
-
-  // handleContextMenuToggle = (e, value) => {
-  //   e.preventDefault()
-  //   const { setGridViewActiveIndex, index } = this.props
-  //   setGridViewActiveIndex(index)
-  //   this.setState({
-  //     visible: value
-  //   })
-  //   if (e && e.type === 'click') e.stopPropagation()
-  // }
-
-  handleSelect = () => {
-    const {
-      setGridViewActiveIndex,
-      setSelected,
-      index,
-      link,
-      fileName,
-      id,
-      isPublic,
-      path
-    } = this.props
-    setGridViewActiveIndex(index)
-    setSelected({ pk: id, fileName, link, isPublic, path })
-  }
-  render() {
-    // const { visible, activeItem } = this.state
-    const { fileName, link, gridViewActiveIndex, index, setTarget } = this.props
+  render () {
+    const { index, activeItems, file } = this.props
     return (
-      <div
-        id={`grid-card-${index}`}
-        styleName="grid.file-card"
-        // onContextMenu={e => this.handleContextMenuToggle(e, true)}
-      >
-        <div styleName="grid.flex-center">
+      <div id={`grid-card-${index}`} styleName='grid.file-card'>
+        <div styleName='grid.flex-center' onClick={e => this.handleSelect(e)}>
           <Icon
-            styleName={gridViewActiveIndex !== index ? '' : 'grid.card-active'}
-            size="huge"
+            styleName={
+              activeItems.some(
+                elem => elem.obj.id === file.id && elem.type == 'file'
+              )
+                ? 'grid.card-active'
+                : ''
+            }
+            size='huge'
             color={getTheme()}
-            name={getFileIcon(link)}
-            onClick={e => this.handleSelect(e)}
-            onDoubleClick={setTarget}
+            name={'file'}
           />
         </div>
-        <div styleName="grid.file-name">
+        <div styleName='grid.file-name'>
           <p
-            onClick={this.handleSelect}
-            onDoubleClick={setTarget}
-            styleName={gridViewActiveIndex !== index ? '' : 'grid.card-active'}
+            styleName={
+              activeItems.some(
+                elem => elem.obj.id === file.id && elem.type == 'file'
+              )
+                ? 'grid.card-active'
+                : ''
+            }
           >
-            {fileName}
+            {file.fileName} -- {file.extension}
           </p>
         </div>
       </div>
-      // <Popup
-      //   on="click"
-      //   trigger={
-
-      //   }
-      //   open={visible}
-      //   onClose={e => this.handleContextMenuToggle(e, false)}
-      //   onOpen={e => this.handleContextMenuToggle(e, true)}
-      //   onClick={e => this.handleSelect(e)}
-      // >
-      //   <Menu vertical>
-      //     <Menu.Item
-      //       name="edit"
-      //       active={activeItem === 'edit'}
-      //       onClick={this.handleEdit}
-      //     >
-      //       Edit
-      //     </Menu.Item>
-
-      //     <Menu.Item
-      //       name="download"
-      //       active={activeItem === 'download'}
-      //       onClick={this.handleItemClick}
-      //     >
-      //       Download
-      //     </Menu.Item>
-
-      //     <Menu.Item
-      //       name="delete"
-      //       active={activeItem === 'delete'}
-      //       onClick={this.handleDelete}
-      //     >
-      //       Delete
-      //     </Menu.Item>
-      //   </Menu>
-      // </Popup>
     )
   }
 }
 
 const mapStateToProps = state => {
   return {
-    gridViewActiveIndex: state.files.gridViewActiveIndex
+    activeItems: state.items.activeItems
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    setGridViewActiveIndex: index => {
-      dispatch(setGridViewActiveIndex(index))
-    },
-    setSelected: data => {
-      dispatch(setSelected(data))
-    },
-    setTarget: () => {
-      dispatch(setTarget())
+    setActiveItems: items => {
+      dispatch(setActiveItems(items))
     }
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(FileCard)
+export default connect(mapStateToProps, mapDispatchToProps)(Filecard)

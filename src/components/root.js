@@ -1,12 +1,13 @@
 import React, { Component, Suspense } from 'react'
 import { connect } from 'react-redux'
 import { Dimmer, Loader, Divider } from 'semantic-ui-react'
+
 import ErrorBoundary from './error-boundary'
-import { fetchFiles } from '../actions/index'
 import { getFolder, getRootFolder } from '../actions/folderActions'
+import { setActiveItems } from '../actions/itemActions'
+
 import index from './css/index.css'
 import manager from './css/manager.css'
-import { setActiveItems } from '../actions/itemActions'
 
 const Loading = () => {
   return <p>Loading ...</p>
@@ -26,7 +27,6 @@ class Root extends Component {
     this.ref = React.createRef()
   }
   componentDidMount () {
-    // this.props.fetchFiles()
     this.props.match.params.id
       ? this.props.getFolderDetails(this.props.match.params.id)
       : this.props.getRoot(this.props.match.params.filemanager)
@@ -88,9 +88,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    // fetchFiles: () => {
-    //   dispatch(fetchFiles())
-    // },
     getRoot: filemanager => {
       dispatch(getRootFolder(filemanager))
     },

@@ -2,7 +2,6 @@ import React, { Component, Suspense } from 'react'
 import { connect } from 'react-redux'
 import { Dimmer, Loader, Divider } from 'semantic-ui-react'
 import ErrorBoundary from './error-boundary'
-import { fetchFiles } from '../actions/index'
 
 import index from './css/index.css'
 import manager from './css/manager.css'
@@ -20,10 +19,10 @@ const GridView = React.lazy(() => import('./grid-view'))
 const TabularView = React.lazy(() => import('./tabular-view'))
 
 class Manager extends Component {
-  componentDidMount() {
+  componentDidMount () {
     this.props.fetchFiles()
   }
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     const { isTarget, selectedData } = this.props
     if (prevProps.isTarget !== isTarget) {
       window.opener.postMessage(
@@ -37,32 +36,32 @@ class Manager extends Component {
       window.close()
     }
   }
-  render() {
-    const { tabular, isLoading } = this.props
+  render () {
+    const { tabular } = this.props
     return (
       <React.Fragment>
-        <div styleName="manager.bar-progress-parent">
+        <div styleName='manager.bar-progress-parent'>
           <ErrorBoundary>
             <Suspense fallback={Loading}>
               <Bar />
               <Progress />
             </Suspense>
           </ErrorBoundary>
-          <Divider styleName="manager.divider-margin" clearing />
+          <Divider styleName='manager.divider-margin' clearing />
         </div>
 
-        <div styleName="manager.view">
+        <div styleName='manager.view'>
           {isLoading ? (
             <Dimmer active inverted>
-              <Loader inverted content="Loading" />
+              <Loader inverted content='Loading' />
             </Dimmer>
           ) : (
-              <ErrorBoundary>
-                <Suspense fallback={Loading}>
-                  {tabular ? <TabularView /> : <GridView />}
-                </Suspense>
-              </ErrorBoundary>
-            )}
+            <ErrorBoundary>
+              <Suspense fallback={Loading}>
+                {tabular ? <TabularView /> : <GridView />}
+              </Suspense>
+            </ErrorBoundary>
+          )}
         </div>
       </React.Fragment>
     )
@@ -71,22 +70,12 @@ class Manager extends Component {
 
 const mapStateToProps = state => {
   return {
-    tabular: state.files.tabular,
-    isLoading: state.files.isLoading,
-    selectedData: state.files.selectedData,
-    isTarget: state.files.isTarget
+    tabular: state.files.tabular
   }
 }
 
 const mapDispatchToProps = dispatch => {
-  return {
-    fetchFiles: () => {
-      dispatch(fetchFiles())
-    }
-  }
+  return {}
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Manager)
+export default connect(mapStateToProps, mapDispatchToProps)(Manager)

@@ -1,14 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Segment, Button, Icon, Modal } from 'semantic-ui-react'
-// import {
-//   lastVisited,
-//   fetchFilesFolder,
-//   tabulation,
-//   unsetSelected,
-//   deleteFile,
-//   fetchFiles,
-// } from '../actions/index'
 import { tabulation } from '../actions/itemActions'
 import Upload from './app-upload'
 import Edit from './edit-file'
@@ -18,7 +10,7 @@ import file from './css/file.css'
 import CreateFolderModal from './createFolderModal'
 import { withRouter } from 'react-router-dom'
 import { deleteFolder, setActiveFolder } from '../actions/folderActions'
-import { deleteFile } from '../actions/fileAction'
+import { deleteFile } from '../actions/fileActions'
 import { setActiveItems } from '../actions/itemActions'
 import { ITEM_TYPE } from '../constants'
 class Bar extends Component {
@@ -157,38 +149,17 @@ class Bar extends Component {
 
 const mapStateToProps = state => {
   return {
-    // isSelected: state.files.isSelected,
-    // selectedData: state.files.selectedData,
-    // topLevel: state.files.topLevel,
-    // currentFolder: state.files.currentFolder,
-    // lastVisited: state.files.lastVisited,
     tabular: state.items.tabular,
     currentFolder: state.folders.selectedFolder,
-    // activeFolder: state.folders.activeFolder,
     activeItems: state.items.activeItems
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    // lastVisitedAct: data => {
-    //   dispatch(lastVisited(data))
-    // },
-    // fetchFilesFolder: (data, callback) => {
-    //   dispatch(fetchFilesFolder(data, callback))
-    // },
     tabulation: bool => {
       dispatch(tabulation(bool))
     },
-    // unsetSelected: () => {
-    //   dispatch(unsetSelected())
-    // },
-    // deleteFile: (pk, callback) => {
-    //   dispatch(deleteFile(pk, callback))
-    // },
-    // fetchFiles: () => {
-    //   dispatch(fetchFiles())
-    // },
     deleteFile: id => {
       dispatch(deleteFile(id))
     },
