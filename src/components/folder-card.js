@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom'
 import { setActiveItems } from '../actions/itemActions'
 import { ITEM_TYPE } from '../constants'
 class FolderCard extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.ref = React.createRef()
   }
@@ -16,7 +16,9 @@ class FolderCard extends Component {
   handleSelect = e => {
     const { setActiveFolder, folder, activeItems, setActiveItems } = this.props
     if (e.ctrlKey) {
-      const newActiveItems = activeItems.some(elem => elem.obj.id === folder.id)
+      const newActiveItems = activeItems.some(
+        elem => elem.obj.id === folder.id && elem.type == 'folder'
+      )
         ? activeItems.filter(elem => elem.obj.id !== folder.id)
         : [...activeItems, { type: ITEM_TYPE.folder, obj: folder }]
       setActiveItems(newActiveItems)
@@ -24,18 +26,21 @@ class FolderCard extends Component {
       setActiveItems([{ type: ITEM_TYPE.folder, obj: folder }])
     }
   }
-  render() {
+  render () {
     const { index, folder, activeItems } = this.props
+    console.log(activeItems)
     return (
-      <div id={`grid-card-${index}`} styleName="grid.file-card">
-        <div styleName="grid.flex-center" onClick={e => this.handleSelect(e)}>
+      <div id={`grid-card-${index}`} styleName='grid.file-card'>
+        <div styleName='grid.flex-center' onClick={e => this.handleSelect(e)}>
           <Icon
             styleName={
-              activeItems.some(elem => elem.obj.id === folder.id)
+              activeItems.some(
+                elem => elem.obj.id === folder.id && elem.type == 'folder'
+              )
                 ? 'grid.card-active'
                 : ''
             }
-            size="huge"
+            size='huge'
             color={getTheme()}
             name={'folder outline'}
             onDoubleClick={() => {
@@ -44,10 +49,12 @@ class FolderCard extends Component {
             }}
           />
         </div>
-        <div styleName="grid.file-name">
+        <div styleName='grid.file-name'>
           <p
             styleName={
-              activeItems.some(elem => elem.obj.id === folder.id)
+              activeItems.some(
+                elem => elem.obj.id === folder.id && elem.type == 'folder'
+              )
                 ? 'grid.card-active'
                 : ''
             }
@@ -68,7 +75,7 @@ const mapStateToProps = state => {
   return {
     gridViewActiveIndex: state.files.gridViewActiveIndex,
     activeFolder: state.folders.activeFolder,
-    activeItems: state.items.activeItems,
+    activeItems: state.items.activeItems
   }
 }
 
@@ -76,7 +83,7 @@ const mapDispatchToProps = dispatch => {
   return {
     setActiveItems: items => {
       dispatch(setActiveItems(items))
-    },
+    }
   }
 }
 
