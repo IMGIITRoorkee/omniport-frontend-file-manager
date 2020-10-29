@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import Filecard from './Filecard'
+import Filecard from './file-card'
 
 import grid from './css/grid-view.css'
 import FolderCard from './folder-card'

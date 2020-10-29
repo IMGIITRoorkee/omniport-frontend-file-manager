@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
-import { uploadFile } from '../actions/fileAction'
+import { uploadFile } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
 
 class AppUpload extends Component {
@@ -55,7 +55,7 @@ class AppUpload extends Component {
       formdata.append('starred', starred)
       formdata.append('size', parseInt(size))
       formdata.append('folder', parseInt(currentFolder.id))
-      uploadFile(formdata, this.successCallback)
+      uploadFile(formdata, this.handleSuccess)
     }
   }
   handleCheckPublic = () => {
@@ -68,7 +68,7 @@ class AppUpload extends Component {
       starred: !this.state.starred
     })
   }
-  successCallback = () => {
+  handleSuccess = () => {
     const id = this.props.currentFolder.id
     this.props.getFolder(id)
     this.setState({
@@ -123,7 +123,6 @@ class AppUpload extends Component {
                 <Form.Field>
                   <label>File Name</label>
                   <input
-                    name='fileName'
                     value={fileName}
                     onChange={this.handleChange}
                     placeholder='File Name'
@@ -132,7 +131,6 @@ class AppUpload extends Component {
                 <Form.Field>
                   <Checkbox
                     checked={isPublic}
-                    name='isPublic'
                     onChange={this.handleCheckPublic}
                     label='Public'
                   />

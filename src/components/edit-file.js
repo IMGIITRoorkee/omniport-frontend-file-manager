@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Button, Icon } from 'semantic-ui-react'
 
 import EditModal from './edit-modal'
-import { editFileName } from '../actions/fileAction'
+import { editFileName } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
 
 class EditFile extends Component {
@@ -14,30 +14,18 @@ class EditFile extends Component {
     }
   }
 
-  showModal = () => {
-    this.setState({
-      showModal: true
-    })
-  }
-
-  close = () => {
-    this.setState({
-      showModal: false
-    })
-  }
-
   handleEdit = () => {
     const { activeItems, editFile } = this.props
     if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.folder) {
-      editFolder(activeItems[0].obj.id, this.successCallback)
+      editFolder(activeItems[0].obj.id, this.handleSuccess)
     }
     if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.file) {
-      editFile(activeItems[0].obj.id, this.successCallback)
+      editFile(activeItems[0].obj.id, this.handleSuccess)
     }
     setActiveItems([])
   }
 
-  successCallback = () => {
+  handleSuccess = () => {
     const id = this.props.currentFolder.id
     this.props.getFolder(id)
     this.setState({
@@ -52,7 +40,9 @@ class EditFile extends Component {
       <React.Fragment>
         <Button
           disabled={activeItems.length !== 1}
-          onClick={this.showModal}
+          onClick={() => {
+            this.setState({ showModal: true })
+          }}
           icon
           labelPosition='left'
           primary
@@ -62,7 +52,12 @@ class EditFile extends Component {
           Edit
         </Button>
 
-        <EditModal showModal={showModal} close={this.close} />
+        <EditModal
+          showModal={showModal}
+          close={() => {
+            this.setState({ showModal: false })
+          }}
+        />
       </React.Fragment>
     )
   }
