@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
-import { editFileName } from '../actions/fileAction'
+import { editFileName } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
 
 class EditModal extends Component {
@@ -38,7 +38,7 @@ class EditModal extends Component {
       var formdata = new FormData()
       formdata.append('file_name', fileName)
       formdata.append('is_public', isPublic)
-      editFile(activeItems[0].obj.id, formdata, this.successCallback)
+      editFile(activeItems[0].obj.id, formdata, this.handleSuccess)
     }
   }
   handleCheckPublic = () => {
@@ -51,7 +51,7 @@ class EditModal extends Component {
       starred: !this.state.starred
     })
   }
-  successCallback = () => {
+  handleSuccess = () => {
     const id = this.props.currentFolder.id
     this.props.getFolder(id)
     this.props.close()

@@ -1,13 +1,11 @@
 import apiClient from '../helpers/apiClient'
-import { urlFile, urlFolderFiles, urlUploadFile } from '../urls'
+import { FILE_APIS, FOLDER_APIS } from '../urls'
 import { getFolder } from './folderActions'
 import {
   GET_ALL_FILES,
-  GET_FOLDER_FILES,
   FILE_API_ERROR,
   UPLOAD_FILE,
   GET_FILE_DETAILS,
-  GET_FOLDER_FILES_PENDING,
   GET_ALL_FILES_PENDING,
   UPLOAD_FILE_PENDING,
   GET_FILE_DETAILS_PENDING,
@@ -29,15 +27,15 @@ const apiError = error => {
   }
 }
 
-export const getFolderFiles = (id, params) => {
-  const url = urlFolderFiles(id)
+export const getALLFiles = (id, params) => {
+  const url = `${FOLDER_APIS.folderItem}/${id}/files/`
   return dispatch => {
-    dispatch(apiDispatch(GET_FOLDER_FILES_PENDING, true))
+    dispatch(apiDispatch(GET_ALL_FILES_PENDING, true))
     apiClient
       .get(url)
       .then(res => {
-        dispatch(apiDispatch(GET_FOLDER_FILES_PENDING, false))
-        dispatch(apiDispatch(GET_FOLDER_FILES, res.data))
+        dispatch(apiDispatch(GET_ALL_FILES_PENDING, false))
+        dispatch(apiDispatch(GET_ALL_FILES, res.data))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -46,7 +44,7 @@ export const getFolderFiles = (id, params) => {
 }
 
 export const getFileDetails = id => {
-  const url = urlFile(id)
+  const url = `${FILE_APIS.fileItem}/${id}/`
   return dispatch => {
     dispatch(apiDispatch(GET_FILE_DETAILS_PENDING, true))
     apiClient
@@ -62,7 +60,7 @@ export const getFileDetails = id => {
 }
 
 export const editFileName = (id, data, callback) => {
-  const url = urlFile(id)
+  const url = `${FILE_APIS.fileItem}/${id}/`
   return dispatch => {
     dispatch(apiDispatch(UPDATE_FILE_PENDING, true))
     apiClient
@@ -78,7 +76,7 @@ export const editFileName = (id, data, callback) => {
 }
 
 export const deleteFile = id => {
-  const url = urlFile(id)
+  const url = `${FILE_APIS.fileItem}/${id}/`
   return (dispatch, getState) => {
     const parentFolder = getState().folders.selectedFolder
     dispatch(apiDispatch(DELETE_FILE_PENDING, true))
@@ -95,7 +93,7 @@ export const deleteFile = id => {
 }
 
 export const uploadFile = (data, callback) => {
-  const url = urlUploadFile()
+  const url = `${FILE_APIS.fileItem}/`
   return dispatch => {
     dispatch(apiDispatch(UPLOAD_FILE_PENDING, true))
     apiClient
