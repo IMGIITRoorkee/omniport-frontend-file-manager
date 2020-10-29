@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
-import { uploadFile, fetchFiles } from '../actions/index'
+import { uploadFile } from '../actions/fileAction'
+import { getFolder } from '../actions/folderActions'
 
 class AppUpload extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       fileName: '',
       isPublic: true,
       fileData: '',
+      size: 0,
+      starred: false,
+      extension: '',
       showModal: false
     }
   }
@@ -22,6 +26,8 @@ class AppUpload extends Component {
       this.setState({
         fileName: file.name,
         fileData: file,
+        size: file.size,
+        extension: file.type,
         showModal: true
       })
     }
@@ -35,27 +41,43 @@ class AppUpload extends Component {
     const value = e.target.value
     this.setState({ [name]: value })
   }
+
   handleSubmit = e => {
     e.preventDefault()
-    let { fileName, fileData, isPublic } = this.state
-    const { uploadFile } = this.props
-
+    let { fileName, fileData, isPublic, starred, size, extension } = this.state
+    const { uploadFile, currentFolder } = this.props
     if (fileName && fileData) {
-      var formData = new FormData()
-      fileData ? formData.append('upload', fileData) : void 0
-      formData.append('file_name', fileName)
-      formData.append('is_public', isPublic)
-      uploadFile(formData, this.successCallback)
+      let formdata = new FormData()
+      fileData ? formdata.append('upload', fileData) : void 0
+      formdata.append('file_name', fileName)
+      formdata.append('is_public', isPublic)
+      formdata.append('extension', extension)
+      formdata.append('starred', starred)
+      formdata.append('size', parseInt(size))
+      formdata.append('folder', parseInt(currentFolder.id))
+      uploadFile(formdata, this.successCallback)
     }
   }
-  handleCheck = () => {
+  handleCheckPublic = () => {
     this.setState({
       isPublic: !this.state.isPublic
     })
   }
-  successCallback = () => {
-    this.props.fetchFiles()
+  handleCheckStar = () => {
     this.setState({
+      starred: !this.state.starred
+    })
+  }
+  successCallback = () => {
+    const id = this.props.currentFolder.id
+    this.props.getFolder(id)
+    this.setState({
+      fileName: '',
+      isPublic: true,
+      fileData: '',
+      size: 0,
+      starred: false,
+      extension: '',
       showModal: false
     })
   }
@@ -64,31 +86,31 @@ class AppUpload extends Component {
       showModal: false
     })
   }
-  render() {
-    const { fileName, showModal, isPublic } = this.state
-    const { isLoading } = this.props
+  render () {
+    const { fileName, showModal, isPublic, starred } = this.state
+    const { uploadFilePending } = this.props
     return (
       <React.Fragment>
         <Button
           onClick={() => this.fileInputRef.current.click()}
           icon
-          labelPosition="left"
+          labelPosition='left'
           primary
           basic
         >
-          <Icon name="upload" />
+          <Icon name='upload' />
           Upload
         </Button>
         <input
           ref={this.fileInputRef}
-          type="file"
+          type='file'
           hidden
           onChange={this.handleImageChange}
         />
 
         {showModal ? (
           <Modal
-            size="large"
+            size='large'
             open={showModal}
             closeOnEscape={true}
             closeOnDimmerClick={true}
@@ -97,24 +119,31 @@ class AppUpload extends Component {
           >
             <Modal.Header>Uploading file</Modal.Header>
             <Modal.Content>
-              <Form encType="multiple/form-data" onSubmit={this.handleSubmit}>
+              <Form encType='multiple/form-data' onSubmit={this.handleSubmit}>
                 <Form.Field>
                   <label>File Name</label>
                   <input
-                    name="fileName"
+                    name='fileName'
                     value={fileName}
                     onChange={this.handleChange}
-                    placeholder="File Name"
+                    placeholder='File Name'
                   />
                 </Form.Field>
                 <Form.Field>
                   <Checkbox
                     checked={isPublic}
-                    onChange={this.handleCheck}
-                    label="Public"
+                    name='isPublic'
+                    onChange={this.handleCheckPublic}
+                    label='Public'
+                  />
+                  <Checkbox
+                    checked={starred}
+                    name='starred'
+                    onChange={this.handleCheckStar}
+                    label='Star this File'
                   />
                 </Form.Field>
-                <Button loading={isLoading} type="submit">
+                <Button loading={uploadFilePending} type='submit'>
                   Submit
                 </Button>
               </Form>
@@ -128,14 +157,15 @@ class AppUpload extends Component {
 
 const mapStateToProps = state => {
   return {
-    isLoading: state.files.isLoading
+    uploadFilePending: state.files.uploadFilePending,
+    currentFolder: state.folders.selectedFolder
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchFiles: () => {
-      return dispatch(fetchFiles())
+    getFolder: id => {
+      return dispatch(getFolder(id))
     },
     uploadFile: (data, callback) => {
       return dispatch(uploadFile(data, callback))
@@ -143,7 +173,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AppUpload)
+export default connect(mapStateToProps, mapDispatchToProps)(AppUpload)
