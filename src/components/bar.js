@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Segment, Button, Icon, Modal } from 'semantic-ui-react'
-import {
-  lastVisited,
-  fetchFilesFolder,
-  tabulation,
-  unsetSelected,
-  deleteFile,
-  fetchFiles,
-} from '../actions/index'
+// import {
+//   lastVisited,
+//   fetchFilesFolder,
+//   tabulation,
+//   unsetSelected,
+//   deleteFile,
+//   fetchFiles,
+// } from '../actions/index'
+import { tabulation } from '../actions/itemActions'
 import Upload from './app-upload'
 import Edit from './edit-file'
 import ConfirmModal from './confirmModal'
@@ -17,13 +18,14 @@ import file from './css/file.css'
 import CreateFolderModal from './createFolderModal'
 import { withRouter } from 'react-router-dom'
 import { deleteFolder, setActiveFolder } from '../actions/folderActions'
+import { deleteFile } from '../actions/fileAction'
 import { setActiveItems } from '../actions/itemActions'
 import { ITEM_TYPE } from '../constants'
 class Bar extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
-      isDelete: false,
+      isDelete: false
     }
   }
   handleDownload = () => {
@@ -45,15 +47,18 @@ class Bar extends Component {
     lastVisitedAct(currentFolder)
   }
   handleTabulation = () => {
-    const { tabulation, tabular, unsetSelected } = this.props
+    const { tabulation, tabular, setActiveItems } = this.props
     tabulation(!tabular)
-    unsetSelected()
+    setActiveItems([])
   }
 
   handleDelete = () => {
-    const { deleteFolder, activeItems } = this.props
+    const { deleteFolder, activeItems, deleteFile } = this.props
     if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.folder) {
       deleteFolder(activeItems[0].obj.id)
+    }
+    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.file) {
+      deleteFile(activeItems[0].obj.id)
     }
     setActiveItems([])
     this.setState({ isDelete: false })
@@ -61,15 +66,15 @@ class Bar extends Component {
   successCallback = () => {
     this.props.fetchFiles()
     this.setState({
-      isDelete: false,
+      isDelete: false
     })
   }
-  render() {
-    const { tabular, isSelected, activeItems } = this.props
+  render () {
+    const { tabular, activeItems } = this.props
     const { isDelete } = this.state
     return (
-      <Segment styleName="file.navbar">
-        <div styleName="file.navbar-first">
+      <Segment styleName='file.navbar'>
+        <div styleName='file.navbar-first'>
           <div>
             <Button
               disabled={
@@ -78,12 +83,12 @@ class Bar extends Component {
                 )
               }
               onClick={this.handleBack}
-              icon="angle left"
+              icon='angle left'
             />
           </div>
           <div>
             <Button
-              icon="angle right"
+              icon='angle right'
               onClick={() => {
                 this.props.history.goForward()
               }}
@@ -96,7 +101,7 @@ class Bar extends Component {
             />
           </div>
         </div>
-        <div styleName="file.navbar-first">
+        <div styleName='file.navbar-first'>
           <div>
             <Upload />
           </div>
@@ -109,14 +114,14 @@ class Bar extends Component {
               </div>
               <div>
                 <Button
-                  disabled={!isSelected}
+                  disabled={activeItems.length !== 1}
                   onClick={this.handleDownload}
                   icon
-                  labelPosition="left"
+                  labelPosition='left'
                   primary
                   basic
                 >
-                  <Icon name="download" />
+                  <Icon name='download' />
                   Download
                 </Button>
               </div>
@@ -127,11 +132,11 @@ class Bar extends Component {
                     this.setState({ isDelete: true })
                   }}
                   icon
-                  labelPosition="left"
+                  labelPosition='left'
                   primary
                   basic
                 >
-                  <Icon name="delete" />
+                  <Icon name='delete' />
                   Delete
                 </Button>
               </div>
@@ -152,37 +157,40 @@ class Bar extends Component {
 
 const mapStateToProps = state => {
   return {
-    isSelected: state.files.isSelected,
-    selectedData: state.files.selectedData,
-    topLevel: state.files.topLevel,
-    currentFolder: state.files.currentFolder,
-    lastVisited: state.files.lastVisited,
-    tabular: state.files.tabular,
+    // isSelected: state.files.isSelected,
+    // selectedData: state.files.selectedData,
+    // topLevel: state.files.topLevel,
+    // currentFolder: state.files.currentFolder,
+    // lastVisited: state.files.lastVisited,
+    tabular: state.items.tabular,
     currentFolder: state.folders.selectedFolder,
-    activeFolder: state.folders.activeFolder,
-    activeItems: state.items.activeItems,
+    // activeFolder: state.folders.activeFolder,
+    activeItems: state.items.activeItems
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    lastVisitedAct: data => {
-      dispatch(lastVisited(data))
-    },
-    fetchFilesFolder: (data, callback) => {
-      dispatch(fetchFilesFolder(data, callback))
-    },
+    // lastVisitedAct: data => {
+    //   dispatch(lastVisited(data))
+    // },
+    // fetchFilesFolder: (data, callback) => {
+    //   dispatch(fetchFilesFolder(data, callback))
+    // },
     tabulation: bool => {
       dispatch(tabulation(bool))
     },
-    unsetSelected: () => {
-      dispatch(unsetSelected())
-    },
-    deleteFile: (pk, callback) => {
-      dispatch(deleteFile(pk, callback))
-    },
-    fetchFiles: () => {
-      dispatch(fetchFiles())
+    // unsetSelected: () => {
+    //   dispatch(unsetSelected())
+    // },
+    // deleteFile: (pk, callback) => {
+    //   dispatch(deleteFile(pk, callback))
+    // },
+    // fetchFiles: () => {
+    //   dispatch(fetchFiles())
+    // },
+    deleteFile: id => {
+      dispatch(deleteFile(id))
     },
     deleteFolder: id => {
       dispatch(deleteFolder(id))
@@ -192,7 +200,7 @@ const mapDispatchToProps = dispatch => {
     },
     setActiveItems: items => {
       dispatch(setActiveItems(items))
-    },
+    }
   }
 }
 

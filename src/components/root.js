@@ -21,17 +21,17 @@ const GridView = React.lazy(() => import('./grid-view'))
 const TabularView = React.lazy(() => import('./tabular-view'))
 
 class Root extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.ref = React.createRef()
   }
-  componentDidMount() {
-    this.props.fetchFiles()
+  componentDidMount () {
+    // this.props.fetchFiles()
     this.props.match.params.id
       ? this.props.getFolderDetails(this.props.match.params.id)
       : this.props.getRoot(this.props.match.params.filemanager)
   }
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     if (prevProps.location.pathname !== this.props.location.pathname) {
       this.props.match.params.id
         ? this.props.getFolderDetails(this.props.match.params.id)
@@ -44,24 +44,24 @@ class Root extends Component {
     }
   }
 
-  render() {
+  render () {
     const { tabular, isLoading } = this.props
     return (
       <React.Fragment>
-        <div styleName="manager.bar-progress-parent">
+        <div styleName='manager.bar-progress-parent'>
           <ErrorBoundary>
             <Suspense fallback={<Loading />}>
               <Bar />
               <Progress />
             </Suspense>
           </ErrorBoundary>
-          <Divider styleName="manager.divider-margin" clearing />
+          <Divider styleName='manager.divider-margin' clearing />
         </div>
 
-        <div styleName="manager.view" ref={this.ref} onClick={this.handleReset}>
+        <div styleName='manager.view' ref={this.ref} onClick={this.handleReset}>
           {isLoading ? (
             <Dimmer active inverted>
-              <Loader inverted content="Loading" />
+              <Loader inverted content='Loading' />
             </Dimmer>
           ) : (
             <ErrorBoundary>
@@ -78,26 +78,26 @@ class Root extends Component {
 
 const mapStateToProps = state => {
   return {
-    tabular: state.files.tabular,
-    isLoading: state.files.isLoading,
-    selectedData: state.files.selectedData,
-    isTarget: state.files.isTarget,
-    folder: state.folders.selectedFolder,
+    tabular: state.items.tabular,
+    // isLoading: state.files.isLoading,
+    // selectedData: state.files.selectedData,
+    // isTarget: state.files.isTarget,
+    folder: state.folders.selectedFolder
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
-    fetchFiles: () => {
-      dispatch(fetchFiles())
-    },
+    // fetchFiles: () => {
+    //   dispatch(fetchFiles())
+    // },
     getRoot: filemanager => {
       dispatch(getRootFolder(filemanager))
     },
     getFolderDetails: id => {
       dispatch(getFolder(id))
     },
-    setActiveItems: items => dispatch(setActiveItems(items)),
+    setActiveItems: items => dispatch(setActiveItems(items))
   }
 }
 
