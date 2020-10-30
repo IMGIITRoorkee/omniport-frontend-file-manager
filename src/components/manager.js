@@ -19,23 +19,6 @@ const GridView = React.lazy(() => import('./grid-view'))
 const TabularView = React.lazy(() => import('./tabular-view'))
 
 class Manager extends Component {
-  componentDidMount () {
-    this.props.fetchFiles()
-  }
-  componentDidUpdate (prevProps) {
-    const { isTarget, selectedData } = this.props
-    if (prevProps.isTarget !== isTarget) {
-      window.opener.postMessage(
-        {
-          file: selectedData.link,
-          fileName: selectedData.fileName,
-          path: selectedData.path
-        },
-        '*'
-      )
-      window.close()
-    }
-  }
   render () {
     const { tabular } = this.props
     return (
