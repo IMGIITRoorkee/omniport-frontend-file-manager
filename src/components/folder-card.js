@@ -30,40 +30,36 @@ class FolderCard extends Component {
     const { index, folder, activeItems } = this.props
     return (
       <div id={`grid-card-${index}`} styleName="grid.file-card">
-        <div styleName="grid.flex-center" onClick={e => this.handleSelect(e)}>
-          <Icon
-            styleName={
-              activeItems.some(
-                elem => elem.obj.id === folder.id && elem.type == 'folder'
-              )
-                ? 'grid.card-active'
-                : ''
-            }
-            size="huge"
-            color="grey"
-            name={'folder open'}
-            onDoubleClick={() => {
-              const url = `/file-manager/${this.props.match.params.filemanager}/${folder.id}/`
-              this.props.history.push(url)
-            }}
-          />
-        </div>
-        <div styleName="grid.file-name">
-          <p
-            styleName={
-              activeItems.some(
-                elem => elem.obj.id === folder.id && elem.type == 'folder'
-              )
-                ? 'grid.card-active'
-                : ''
-            }
-            onDoubleClick={() => {
-              const url = `/file-manager/${this.props.match.params.filemanager}/${folder.id}/`
-              this.props.history.push(url)
-            }}
-          >
-            {folder.folderName}
-          </p>
+        <div
+          styleName={
+            activeItems.some(
+              elem => elem.obj.id === folder.id && elem.type == 'folder'
+            )
+              ? 'grid.folder-active'
+              : 'grid.folder-inactive'
+          }
+        >
+          <div styleName="grid.folder-icon" onClick={e => this.handleSelect(e)}>
+            <Icon
+              size="huge"
+              color="grey"
+              name={'folder open'}
+              onDoubleClick={() => {
+                const url = `/file-manager/${this.props.match.params.filemanager}/${folder.id}/`
+                this.props.history.push(url)
+              }}
+            />
+          </div>
+          <div styleName="grid.folder-name">
+            <p
+              onDoubleClick={() => {
+                const url = `/file-manager/${this.props.match.params.filemanager}/${folder.id}/`
+                this.props.history.push(url)
+              }}
+            >
+              {folder.folderName}
+            </p>
+          </div>
         </div>
       </div>
     )

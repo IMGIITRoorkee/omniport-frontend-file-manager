@@ -35,3 +35,44 @@
   text-align: center;
   /* margin-top: 0.5em; */
 }
+.file-inactive {
+  opacity: 0.8;
+  padding: 2px;
+  box-sizing: content-box;
+}
+
+.file-active {
+  opacity: 1;
+  border: 3px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #eaeaea;
+  padding: 2px;
+  box-sizing: content-box;
+}
+.folder-icon,
+.folder-name {
+  width: max-content;
+margin:auto;
+}
+
+.folder-active {
+  display: block;
+  width: max-content;
+  margin-right: auto;
+  margin-left: auto;
+  padding:2px;
+  box-sizing: content-box;
+  border: 3px solid #e0e0e0;
+  background-color: #eaeaea;
+  text-align: center;
+
+}
+.folder-inactive {
+  display: block;
+  padding:2px;
+  box-sizing: content-box;
+  width: max-content;
+  margin-right: auto;
+  margin-left: auto;
+  text-align: center;
+}

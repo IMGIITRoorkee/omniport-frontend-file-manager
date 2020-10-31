@@ -36,17 +36,18 @@ class Filecard extends Component {
         <div
           styleName="grid.file-icon"
           onClick={e => this.handleSelect(e)}
+          styleName={
+            activeItems.some(
+              elem => elem.obj.id === file.id && elem.type == 'file'
+            )
+              ? 'grid.file-active'
+              : 'grid.file-inactive'
+          }
         >
           <FileIcon
             {...FILE_TYPES[extension] }
             extension={extension}
-            styleName={
-              activeItems.some(
-                elem => elem.obj.id === file.id && elem.type == 'file'
-              )
-                ? 'grid.card-active'
-                : ''
-            }
+            
           />
         </div>
       </div>
