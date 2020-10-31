@@ -10,6 +10,7 @@ import {
   UPDATE_FOLDER_PENDING,
   CREATE_FOLDER_PENDING,
   SET_ACTIVE_FOLDER,
+  DATA_REQUEST_PENDING
 } from '../actions/folderActionType'
 
 const initialPendingState = {
@@ -18,6 +19,7 @@ const initialPendingState = {
   getFolderPending: false,
   getFoldersPending: false,
   updateFolderPending: false,
+  dataRequestPending: false
 }
 
 const initialState = {
@@ -25,7 +27,7 @@ const initialState = {
   selectedFolder: {},
   addedFolder: {},
   Folders: [],
-  activeFolder: {},
+  activeFolder: {}
 }
 const folderReducer = (state = initialState, action) => {
   const { type, payload, error } = action
@@ -50,6 +52,8 @@ const folderReducer = (state = initialState, action) => {
       return { ...state, Folders: payload }
     case SET_ACTIVE_FOLDER:
       return { ...state, activeFolder: payload }
+    case DATA_REQUEST_PENDING:
+      return { ...state, dataRequestPending: payload }
     case FOLDER_API_ERROR:
       return { ...state, error: error }
     default:

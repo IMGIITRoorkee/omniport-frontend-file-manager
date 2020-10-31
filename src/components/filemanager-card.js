@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import {
   Card,
   CardHeader,
@@ -9,34 +10,76 @@ import {
 } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+import RequestData from './requestData'
+import { setActiveFolder } from '../actions/folderActions'
 
 class Filemanagercard extends Component {
   constructor (props) {
     super(props)
+    this.state = {
+      showExtra: false
+    }
   }
   render () {
-    const { filemanagername, contentSize, maxSpace } = this.props
-    let percentage = (contentSize * 100) / maxSpace
+    const { folder, setActiveFolder, currentFolder } = this.props
+    let percentage = (folder.contentSize * 100) / folder.maxSpace
+    percentage = percentage.toFixed(2)
+    let content = (folder.contentSize / 1000).toFixed(1)
+    let maxSpace = (folder.maxSpace / 1000).toFixed(1)
     return (
-      <Card as={Link} to={`/file-manager/${filemanagername}`}>
+      <Card
+        onDoubleClick={() => {
+          const url = `/file-manager/${folder.filemanagername}/`
+          this.props.history.push(url)
+        }}
+        onClick={() => setActiveFolder(folder)}
+      >
         <Card.Content>
           <Image
             floated='right'
             size='mini'
             src='https://img2.pngio.com/yellow-folder-transparent-png-clipart-free-download-ywd-yellow-folder-png-2400_1729.png'
           />
-          <Card.Header>{filemanagername}</Card.Header>
+          <Card.Header>{folder.filemanagername}</Card.Header>
           <Card.Meta>filemanager</Card.Meta>
           <Card.Description>
-            <Progress percent={percentage} color='red' size='small'>
+            <Progress percent={percentage} color='red' size='tiny'>
               {percentage}%
             </Progress>
-            {contentSize}/{maxSpace} MB used
           </Card.Description>
+        </Card.Content>
+        <Card.Content extra color='black'>
+          {content}/{maxSpace} GB used
+          {currentFolder && currentFolder.id === folder.id ? (
+            <span className='right floated'>
+              <Icon name='setting' title='Storage' color='black' size='large' />
+              <RequestData />
+            </span>
+          ) : (
+            ''
+          )}
         </Card.Content>
       </Card>
     )
   }
 }
 
-export default Filemanagercard
+const mapStateToProps = state => {
+  return {
+    currentFolder: state.folders.activeFolder
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setActiveFolder: folder => {
+      return dispatch(setActiveFolder(folder))
+    }
+  }
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Filemanagercard))
