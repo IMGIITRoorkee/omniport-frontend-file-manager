@@ -6,13 +6,16 @@ import {
   CardMeta,
   Progress,
   Image,
-  Icon
+  Icon,
+  Label
 } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
 import RequestData from './requestData'
 import { setActiveFolder } from '../actions/folderActions'
+
+import main from './css/filemanager-card.css'
 
 class Filemanagercard extends Component {
   constructor (props) {
@@ -29,6 +32,7 @@ class Filemanagercard extends Component {
     let maxSpace = (folder.maxSpace / 1000).toFixed(1)
     return (
       <Card
+        styleName='filemanager-card'
         onDoubleClick={() => {
           const url = `/file-manager/${folder.filemanagername}/`
           this.props.history.push(url)
@@ -54,7 +58,18 @@ class Filemanagercard extends Component {
           {currentFolder && currentFolder.id === folder.id ? (
             <span className='right floated'>
               <Icon name='setting' title='Storage' color='black' size='large' />
-              <RequestData />
+              {currentFolder.requestSpacePending ? (
+                <Label
+                  color='red'
+                  title={`Extra ${folder.additionalSpace / 1000} GB`}
+                  size='large'
+                >
+                  <Icon name='database' />
+                  Space requested
+                </Label>
+              ) : (
+                <RequestData />
+              )}
             </span>
           ) : (
             ''
