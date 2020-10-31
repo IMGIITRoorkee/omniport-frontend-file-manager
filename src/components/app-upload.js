@@ -5,7 +5,7 @@ import { uploadFile } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
 
 class AppUpload extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       fileName: '',
@@ -14,7 +14,7 @@ class AppUpload extends Component {
       size: 0,
       starred: false,
       extension: '',
-      showModal: false
+      showModal: false,
     }
   }
   fileInputRef = React.createRef()
@@ -28,7 +28,7 @@ class AppUpload extends Component {
         fileData: file,
         size: file.size,
         extension: file.type,
-        showModal: true
+        showModal: true,
       })
     }
     if (file) {
@@ -51,7 +51,7 @@ class AppUpload extends Component {
       fileData ? formdata.append('upload', fileData) : void 0
       formdata.append('file_name', fileName)
       formdata.append('is_public', isPublic)
-      formdata.append('extension', extension)
+      formdata.append('extension', fileName.split('.').pop())
       formdata.append('starred', starred)
       formdata.append('size', parseInt(size))
       formdata.append('folder', parseInt(currentFolder.id))
@@ -60,12 +60,12 @@ class AppUpload extends Component {
   }
   handleCheckPublic = () => {
     this.setState({
-      isPublic: !this.state.isPublic
+      isPublic: !this.state.isPublic,
     })
   }
   handleCheckStar = () => {
     this.setState({
-      starred: !this.state.starred
+      starred: !this.state.starred,
     })
   }
   handleSuccess = () => {
@@ -78,15 +78,15 @@ class AppUpload extends Component {
       size: 0,
       starred: false,
       extension: '',
-      showModal: false
+      showModal: false,
     })
   }
   close = () => {
     this.setState({
-      showModal: false
+      showModal: false,
     })
   }
-  render () {
+  render() {
     const { fileName, showModal, isPublic, starred } = this.state
     const { uploadFilePending } = this.props
     return (
@@ -94,23 +94,23 @@ class AppUpload extends Component {
         <Button
           onClick={() => this.fileInputRef.current.click()}
           icon
-          labelPosition='left'
+          labelPosition="left"
           primary
           basic
         >
-          <Icon name='upload' />
+          <Icon name="upload" />
           Upload
         </Button>
         <input
           ref={this.fileInputRef}
-          type='file'
+          type="file"
           hidden
           onChange={this.handleImageChange}
         />
 
         {showModal ? (
           <Modal
-            size='large'
+            size="large"
             open={showModal}
             closeOnEscape={true}
             closeOnDimmerClick={true}
@@ -119,29 +119,29 @@ class AppUpload extends Component {
           >
             <Modal.Header>Uploading file</Modal.Header>
             <Modal.Content>
-              <Form encType='multiple/form-data' onSubmit={this.handleSubmit}>
+              <Form encType="multiple/form-data" onSubmit={this.handleSubmit}>
                 <Form.Field>
                   <label>File Name</label>
                   <input
                     value={fileName}
                     onChange={this.handleChange}
-                    placeholder='File Name'
+                    placeholder="File Name"
                   />
                 </Form.Field>
                 <Form.Field>
                   <Checkbox
                     checked={isPublic}
                     onChange={this.handleCheckPublic}
-                    label='Public'
+                    label="Public"
                   />
                   <Checkbox
                     checked={starred}
-                    name='starred'
+                    name="starred"
                     onChange={this.handleCheckStar}
-                    label='Star this File'
+                    label="Star this File"
                   />
                 </Form.Field>
-                <Button loading={uploadFilePending} type='submit'>
+                <Button loading={uploadFilePending} type="submit">
                   Submit
                 </Button>
               </Form>
@@ -156,7 +156,7 @@ class AppUpload extends Component {
 const mapStateToProps = state => {
   return {
     uploadFilePending: state.files.uploadFilePending,
-    currentFolder: state.folders.selectedFolder
+    currentFolder: state.folders.selectedFolder,
   }
 }
 
@@ -167,7 +167,7 @@ const mapDispatchToProps = dispatch => {
     },
     uploadFile: (data, callback) => {
       return dispatch(uploadFile(data, callback))
-    }
+    },
   }
 }
 

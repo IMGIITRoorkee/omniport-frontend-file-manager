@@ -11,6 +11,10 @@
   padding: 1em;
   height: max-content;
 }
+.file-icon {
+  width: 80px;
+  margin: auto;
+}
 
 .file-card:hover {
   cursor: pointer;
