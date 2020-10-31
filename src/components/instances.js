@@ -13,14 +13,7 @@ class Instances extends Component {
   render () {
     const { Folders } = this.props
     const filemanagers = Folders.map(folder => {
-      return (
-        <Filemanagercard
-          key={folder.id}
-          filemanagername={folder.filemanagername}
-          contentSize={folder.contentSize}
-          maxSpace={folder.maxSpace}
-        />
-      )
+      return <Filemanagercard folder={folder} />
     })
     return (
       <ErrorBoundary>

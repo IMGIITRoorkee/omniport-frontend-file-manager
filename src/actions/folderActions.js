@@ -10,7 +10,8 @@ import {
   FOLDER_API_ERROR,
   CREATE_FOLDER,
   CREATE_FOLDER_PENDING,
-  SET_ACTIVE_FOLDER
+  SET_ACTIVE_FOLDER,
+  DATA_REQUEST_PENDING
 } from './folderActionType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -143,5 +144,21 @@ export const getRootFolder = filemanager => {
 export const setActiveFolder = folder => {
   return dispatch => {
     dispatch(apiDispatch(SET_ACTIVE_FOLDER, folder))
+  }
+}
+
+export const generateDataRequest = (id, data, callback) => {
+  const url = `${FOLDER_APIS.folderItem}/${id}/`
+  return dispatch => {
+    dispatch(apiDispatch(DATA_REQUEST_PENDING, true))
+    apiClient
+      .patch(url, data)
+      .then(res => {
+        dispatch(apiDispatch(DATA_REQUEST_PENDING, false))
+        callback()
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+      })
   }
 }
