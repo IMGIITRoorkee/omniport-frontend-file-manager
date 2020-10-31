@@ -1,15 +1,15 @@
 import React, { Component } from 'react'
 import { Icon } from 'semantic-ui-react'
 import { connect } from 'react-redux'
+import { FileIcon } from 'react-file-icon'
 
 import { getTheme } from 'formula_one'
 import { setActiveItems } from '../actions/itemActions'
-import { ITEM_TYPE } from '../constants'
+import { FILE_TYPES, ITEM_TYPE } from '../constants'
 
 import grid from './css/grid-view.css'
-
 class Filecard extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
   }
 
@@ -27,12 +27,19 @@ class Filecard extends Component {
     }
   }
 
-  render () {
+  render() {
     const { index, activeItems, file } = this.props
+    const extension = file.extension
+
     return (
-      <div id={`grid-card-${index}`} styleName='grid.file-card'>
-        <div styleName='grid.flex-center' onClick={e => this.handleSelect(e)}>
-          <Icon
+      <div id={`grid-card-${index}`} styleName="grid.file-card">
+        <div
+          styleName="grid.file-icon"
+          onClick={e => this.handleSelect(e)}
+        >
+          <FileIcon
+            {...FILE_TYPES[extension] }
+            extension={extension}
             styleName={
               activeItems.some(
                 elem => elem.obj.id === file.id && elem.type == 'file'
@@ -40,23 +47,7 @@ class Filecard extends Component {
                 ? 'grid.card-active'
                 : ''
             }
-            size='huge'
-            color={getTheme()}
-            name={'file'}
           />
-        </div>
-        <div styleName='grid.file-name'>
-          <p
-            styleName={
-              activeItems.some(
-                elem => elem.obj.id === file.id && elem.type == 'file'
-              )
-                ? 'grid.card-active'
-                : ''
-            }
-          >
-            {file.fileName} -- {file.extension}
-          </p>
         </div>
       </div>
     )
@@ -65,7 +56,7 @@ class Filecard extends Component {
 
 const mapStateToProps = state => {
   return {
-    activeItems: state.items.activeItems
+    activeItems: state.items.activeItems,
   }
 }
 
@@ -73,7 +64,7 @@ const mapDispatchToProps = dispatch => {
   return {
     setActiveItems: items => {
       dispatch(setActiveItems(items))
-    }
+    },
   }
 }
 
