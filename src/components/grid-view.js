@@ -19,7 +19,6 @@ class GridView extends Component {
   }
   render () {
     const { currentFolder } = this.props
-    console.log(currentFolder)
     return (
       <div>
         <div
