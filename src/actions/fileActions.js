@@ -10,20 +10,20 @@ import {
   UPLOAD_FILE_PENDING,
   GET_FILE_DETAILS_PENDING,
   DELETE_FILE_PENDING,
-  UPDATE_FILE_PENDING
+  UPDATE_FILE_PENDING,
 } from './fileActionType'
 
 const apiDispatch = (actionType = '', data) => {
   return {
     type: actionType,
-    payload: data
+    payload: data,
   }
 }
 
 const apiError = error => {
   return {
     type: FILE_API_ERROR,
-    error
+    error,
   }
 }
 
@@ -99,11 +99,12 @@ export const uploadFile = (data, callback) => {
     apiClient
       .post(url, data)
       .then(res => {
-        dispatch(apiDispatch(DELETE_FILE_PENDING, false))
+        dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
         dispatch(apiDispatch(UPLOAD_FILE, res.data))
         callback()
       })
       .catch(error => {
+        dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
         dispatch(apiError(error))
       })
   }
