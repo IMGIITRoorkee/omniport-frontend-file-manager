@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Table, Icon } from 'semantic-ui-react'
+import { Table, Icon, Button } from 'semantic-ui-react'
 import { withRouter } from 'react-router-dom'
 import EditModal from './edit-modal'
 
@@ -82,6 +82,11 @@ class TabularView extends Component {
   render () {
     const { currentFolder, activeItems } = this.props
     const { showDeleteModal, showEditModal } = this.state
+    const popupChild = (
+      <Button icon floated='right'>
+        <Icon name='ellipsis horizontal' />
+      </Button>
+    )
     return (
       <div>
         <Table singleLine styleName='index.table-main' selectable>
@@ -124,6 +129,7 @@ class TabularView extends Component {
                   <Table.Cell>{folder.permission}</Table.Cell>
                   <Table.Cell>
                     <PopupView
+                      child={popupChild}
                       id={folder.id}
                       options={options}
                       handleOptions={this.handleOptions}
@@ -151,6 +157,7 @@ class TabularView extends Component {
                   <Table.Cell>{file.permission}</Table.Cell>
                   <Table.Cell>
                     <PopupView
+                      child={popupChild}
                       id={file.id}
                       options={options}
                       handleOptions={this.handleOptions}
