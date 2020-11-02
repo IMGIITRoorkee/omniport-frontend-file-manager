@@ -52,7 +52,7 @@
 .folder-icon,
 .folder-name {
   width: max-content;
-margin:auto;
+  margin: auto;
 }
 
 .folder-active {
@@ -60,16 +60,15 @@ margin:auto;
   width: max-content;
   margin-right: auto;
   margin-left: auto;
-  padding:2px;
+  padding: 2px;
   box-sizing: content-box;
   border: 3px solid #e0e0e0;
   background-color: #eaeaea;
   text-align: center;
-
 }
 .folder-inactive {
   display: block;
-  padding:2px;
+  padding: 2px;
   box-sizing: content-box;
   width: max-content;
   margin-right: auto;

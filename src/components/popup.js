@@ -28,22 +28,18 @@ class PopupView extends Component {
 
   render () {
     const { isPopupOpen } = this.state
-    const { options, handleOptions, ...props } = this.props
+    const { options, handleOptions, child, ...props } = this.props
     return (
       <React.Fragment>
         <Popup
-          trigger={
-            <Button icon floated='right'>
-              <Icon name='ellipsis horizontal' />
-            </Button>
-          }
+          trigger={child}
           open={isPopupOpen}
           onClose={e => this.handlePopupToggle(e, false)}
           onOpen={e => this.handlePopupToggle(e, true)}
           wide
           flowing
           on='click'
-          position='left center'
+          position='center'
           styleName='popup.padding-edit'
           {...props}
         >
