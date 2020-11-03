@@ -11,12 +11,7 @@ import EditModal from './edit-modal'
 import { deleteFolder } from '../actions/folderActions'
 import { deleteFile } from '../actions/fileActions'
 import { ITEM_TYPE } from '../constants'
-
-const options = [
-  { key: '1', label: 'Edit', icon: 'edit' },
-  { key: '2', label: 'Download', icon: 'download' },
-  { key: '3', label: 'Delete', icon: 'delete' },
-]
+import FolderFormModal from './folderFormModal'
 
 function createContextFromEvent(e) {
   const left = e.clientX
@@ -39,12 +34,15 @@ function createContextFromEvent(e) {
 class GridView extends Component {
   constructor(props) {
     super(props)
-    this.ref = React.createRef()
+    this.folderContainerRef = React.createRef()
     this.contextRef = React.createRef()
+    this.fileContainerRef = React.createRef()
     this.state = {
       isPopupOpen: false,
-      showEditModal: false,
+      showFileEditModal: false,
       showDeleteModal: false,
+      showFolderFormModal: false,
+      editFolder: {},
     }
   }
   // componentDidUpdate(prevProps, prevState) {
@@ -56,19 +54,42 @@ class GridView extends Component {
   //     this.setState({ isPopupOpen: true })
   //   }
   // }
-
+  getOptions = () => {
+    const { activeItems } = this.props
+    if (activeItems.length == 1) {
+      return activeItems[0].type === ITEM_TYPE.file
+        ? [
+            { key: '1', label: 'Edit', icon: 'edit' },
+            { key: '2', label: 'Download', icon: 'download' },
+            { key: '3', label: 'Delete', icon: 'delete' },
+          ]
+        : [
+            { key: '4', label: 'Edit', icon: 'edit' },
+            { key: '3', label: 'Delete', icon: 'delete' },
+          ]
+    } else return []
+  }
   handleOptions = {
     1: () => {
-      this.setState({ showEditModal: true })
+      this.setState({ showFileEditModal: true })
     },
     2: () => {},
     3: () => {
       this.setState({ showDeleteModal: true })
     },
+    4: () => {
+      this.setState({
+        editFolder: this.props.activeItems[0].obj,
+        showFolderFormModal: true,
+      })
+    },
   }
 
   handleReset = e => {
-    if (e.target === this.ref.current) {
+    if (
+      e.target === this.folderContainerRef.current ||
+      e.target === this.fileContainerRef.current
+    ) {
       this.props.setActiveItems([])
     }
   }
@@ -87,11 +108,24 @@ class GridView extends Component {
 
   render() {
     const { currentFolder, activeItems } = this.props
-    const { isPopupOpen, showDeleteModal, showEditModal } = this.state
+    const {
+      isPopupOpen,
+      showDeleteModal,
+      showFileEditModal,
+      showFolderFormModal,
+      editFolder,
+    } = this.state
     return (
       <div
+        ref={this.rootRef}
         onContextMenu={e => {
           e.preventDefault()
+          if (
+            e.target === this.folderContainerRef.current ||
+            e.target === this.fileContainerRef.current
+          ) {
+            return
+          }
           this.contextRef = createContextFromEvent(e)
           if (isPopupOpen) {
             this.setState({ isPopupOpen: false })
@@ -102,7 +136,7 @@ class GridView extends Component {
       >
         <div
           styleName="grid.view-parent"
-          ref={this.ref}
+          ref={this.folderContainerRef}
           onClick={this.handleReset}
         >
           {currentFolder &&
@@ -121,25 +155,13 @@ class GridView extends Component {
         <Divider />
         <div
           styleName="grid.view-parent"
-          ref={this.ref}
+          ref={this.fileContainerRef}
           onClick={this.handleReset}
         >
           {currentFolder &&
             currentFolder.files &&
             currentFolder.files.map((file, index) => (
-              <Filecard
-                key={index}
-                index={index}
-                file={file}
-                showEditModal={showEditModal}
-                showDeleteModal={showDeleteModal}
-                handleEditModal={value => {
-                  this.setState({ showEditModal: value })
-                }}
-                handleDeleteModal={value => {
-                  this.setState({ showDeleteModal: value })
-                }}
-              />
+              <Filecard key={index} index={index} file={file} />
             ))}
         </div>
         <Popup
@@ -149,7 +171,7 @@ class GridView extends Component {
           open={isPopupOpen}
         >
           <Menu vertical>
-            {options.map(option => (
+            {this.getOptions().map(option => (
               <Menu.Item
                 key={option.key}
                 name={option.label}
@@ -174,9 +196,16 @@ class GridView extends Component {
           item={activeItems.length && activeItems[0].type}
         />
         <EditModal
-          showModal={showEditModal}
+          showModal={showFileEditModal}
           close={() => {
-            this.setState({ showEditModal: false })
+            this.setState({ showFileEditModal: false })
+          }}
+        />
+        <FolderFormModal
+          showModal={showFolderFormModal}
+          editFormObj={editFolder}
+          setShowModal={value => {
+            this.setState({ showFolderFormModal: value })
           }}
         />
       </div>

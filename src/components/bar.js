@@ -7,7 +7,7 @@ import Upload from './app-upload'
 import ConfirmModal from './confirmModal'
 
 import file from './css/file.css'
-import FolderModal from './createFolderModal'
+import FolderFormModal from './folderFormModal'
 import EditFileModal from './edit-modal'
 import { withRouter } from 'react-router-dom'
 import { deleteFolder, setActiveFolder } from '../actions/folderActions'
@@ -20,7 +20,7 @@ class Bar extends Component {
     this.state = {
       isDelete: false,
       showEditFileModal: false,
-      showCreateFolderModal: false,
+      showFolderFormModal: false,
       editFolder: {},
     }
   }
@@ -70,7 +70,7 @@ class Bar extends Component {
     const {
       isDelete,
       showEditFileModal,
-      showCreateFolderModal,
+      showFolderFormModal,
       editFolder,
     } = this.state
     return (
@@ -95,7 +95,7 @@ class Bar extends Component {
               primary
               basic
               onClick={() => {
-                this.setState({ editFolder: {}, showCreateFolderModal: true })
+                this.setState({ editFolder: {}, showFolderFormModal: true })
               }}
             >
               <Icon name="plus" />
@@ -113,7 +113,7 @@ class Bar extends Component {
                     } else {
                       this.setState({
                         editFolder: activeItems[0].obj,
-                        showCreateFolderModal: true,
+                        showFolderFormModal: true,
                       })
                     }
                   }}
@@ -128,7 +128,10 @@ class Bar extends Component {
               </div>
               <div>
                 <Button
-                  disabled={activeItems.length !== 1}
+                  disabled={
+                    activeItems.length !== 1 ||
+                    activeItems[0].type !== ITEM_TYPE.file
+                  }
                   onClick={this.handleDownload}
                   icon
                   labelPosition="left"
@@ -163,6 +166,7 @@ class Bar extends Component {
                 this.setState({ isDelete: false })
               }}
               handleSubmit={this.handleDelete}
+              item={activeItems[0].type}
             />
           )}
           {showEditFileModal && (
@@ -173,11 +177,11 @@ class Bar extends Component {
               }}
             />
           )}
-          <FolderModal
+          <FolderFormModal
             editFormObj={editFolder}
-            showModal={showCreateFolderModal}
+            showModal={showFolderFormModal}
             setShowModal={value => {
-              this.setState({ showCreateFolderModal: value })
+              this.setState({ showFolderFormModal: value })
             }}
           />
         </div>
