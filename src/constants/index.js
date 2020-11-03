@@ -236,7 +236,7 @@ export const FILE_TYPES = {
     type: 'font',
   },
   pdf: {
-        color: '#D93831',
+    color: '#D93831',
     foldColor: '#D93831',
     glyphColor: 'rgba(255,255,255,0.4)',
     labelColor: '#D93831',
@@ -388,3 +388,7 @@ export const FILE_TYPES = {
     type: 'compressed',
   },
 }
+
+export const ONE_GB = 1024 * 1024 * 1024
+export const ONE_MB = 1024 * 1024
+export const ONE_KB = 1024
