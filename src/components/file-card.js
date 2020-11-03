@@ -1,22 +1,12 @@
 import React, { Component } from 'react'
-import { Icon, Popup, Menu } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { FileIcon } from 'react-file-icon'
-import EditModal from './edit-modal'
 
 import { deleteFile } from '../actions/fileActions'
-import ConfirmModal from './confirmModal'
-import { getTheme } from 'formula_one'
 import { setActiveItems } from '../actions/itemActions'
 import { FILE_TYPES, ITEM_TYPE } from '../constants'
 
 import grid from './css/grid-view.css'
-
-const options = [
-  { key: '1', label: 'Edit', icon: 'edit' },
-  { key: '2', label: 'Download' },
-  { key: '3', label: 'Delete', icon: 'delete' },
-]
 
 class Filecard extends Component {
   constructor(props) {
