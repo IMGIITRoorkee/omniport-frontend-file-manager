@@ -12,7 +12,7 @@ const initialObj = {
   root: null,
 }
 
-class FolderModal extends Component {
+class FolderFormModal extends Component {
   constructor(props) {
     super(props)
     const { editFormObj } = this.props
@@ -140,4 +140,4 @@ const mapDispatchToProps = dispatch => {
     },
   }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(FolderModal)
+export default connect(mapStateToProps, mapDispatchToProps)(FolderFormModal)
