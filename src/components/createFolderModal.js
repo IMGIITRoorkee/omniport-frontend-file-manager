@@ -1,7 +1,7 @@
-import React, { Component, useEffect, useState } from 'react'
-import { connect, useSelector } from 'react-redux'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Button, Form, Icon, Modal } from 'semantic-ui-react'
-import { createFolder } from '../actions/folderActions'
+import { createFolder, editFolder } from '../actions/folderActions'
 
 const initialObj = {
   folder_name: '',
@@ -15,12 +15,11 @@ const initialObj = {
 class FolderModal extends Component {
   constructor(props) {
     super(props)
+    const { editFormObj } = this.props
     this.state = {
-      showModal: false,
       formObj: initialObj,
     }
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.onHide = this.onHide.bind(this)
   }
   componentDidMount() {
     const { parentFolder } = this.props
@@ -31,11 +30,12 @@ class FolderModal extends Component {
     })
   }
   componentDidUpdate(prevprops) {
+    const { parentFolder } = this.props
+
     if (
       this.props.parentFolder.id &&
       prevprops.parentFolder.id !== this.props.parentFolder.id
     ) {
-      const { parentFolder } = this.props
       this.setState({
         formObj: {
           ...this.state.formObj,
@@ -45,50 +45,75 @@ class FolderModal extends Component {
         },
       })
     }
+
+    if (
+      JSON.stringify(this.props.editFormObj) !==
+      JSON.stringify(prevprops.editFormObj)
+    ) {
+      if (Object.keys(this.props.editFormObj).length) {
+        this.setState({
+          formObj: Object.assign({
+            ...this.state.formObj,
+            ...this.props.editFormObj,
+          }),
+        })
+      } else {
+        this.setState({
+          formObj: {
+            ...initialObj,
+            filemanager: parentFolder.filemanager,
+            root: parentFolder.root,
+            parent: parentFolder.id,
+          },
+        })
+      }
+    }
   }
   handleSubmit() {
-    this.props.createFolder(this.state.formObj)
-    this.onHide()
+    const { formObj } = this.state
+    if (formObj.id) {
+      this.props.editFolder(formObj.id, formObj)
+      this.setState({ formObj: initialObj })
+      this.props.setShowModal(false)
+    } else {
+      this.props.createFolder(formObj)
+      this.setState({ formObj: initialObj })
+      this.props.setShowModal(false)
+    }
   }
-  onHide() {
-    this.setState({ showModal: false })
-  }
+
   render() {
-    const { showModal, formObj } = this.state
+    const { formObj } = this.state
+    const { showModal, setShowModal } = this.props
     return (
       <div>
-        <Button
-          labelPosition="left"
-          icon
-          primary
-          basic
-          onClick={() => {
-            this.setState({ showModal: true })
-          }}
-        >
-          <Icon name="plus" />
-          Create Folder
-        </Button>
         {showModal && (
-          <Modal closeIcon size="tiny" open={showModal} onClose={this.onHide}>
+          <Modal
+            closeIcon
+            size="tiny"
+            open={showModal}
+            onClose={() => {
+              setShowModal(false)
+            }}
+          >
             <Modal.Content>
               <Form>
                 <Form.Input
                   label="Folder Name"
                   required
                   placeholder="Folder Name"
-                  value={this.state.formObj.folder_name}
+                  value={formObj.folderName}
                   onChange={e => {
                     this.setState({
                       formObj: {
                         ...this.state.formObj,
-                        folder_name: e.target.value,
+                        folderName: e.target.value,
                       },
                     })
                   }}
                 />
                 <Button type="submit" onClick={this.handleSubmit}>
-                  Create
+                  {formObj.id ? 'Edit' : 'Create'}
                 </Button>
               </Form>
             </Modal.Content>
@@ -109,6 +134,9 @@ const mapDispatchToProps = dispatch => {
   return {
     createFolder: formObj => {
       dispatch(createFolder(formObj))
+    },
+    editFolder: (id, formObj) => {
+      dispatch(editFolder(id, formObj))
     },
   }
 }

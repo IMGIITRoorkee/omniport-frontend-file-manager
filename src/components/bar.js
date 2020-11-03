@@ -3,21 +3,25 @@ import { connect } from 'react-redux'
 import { Segment, Button, Icon, Modal } from 'semantic-ui-react'
 import { tabulation } from '../actions/itemActions'
 import Upload from './app-upload'
-import Edit from './edit-file'
+// import Edit from './edit-file'
 import ConfirmModal from './confirmModal'
 
 import file from './css/file.css'
-import CreateFolderModal from './createFolderModal'
+import FolderModal from './createFolderModal'
+import EditFileModal from './edit-modal'
 import { withRouter } from 'react-router-dom'
 import { deleteFolder, setActiveFolder } from '../actions/folderActions'
 import { deleteFile } from '../actions/fileActions'
 import { setActiveItems } from '../actions/itemActions'
 import { ITEM_TYPE } from '../constants'
 class Bar extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-      isDelete: false
+      isDelete: false,
+      showEditFileModal: false,
+      showCreateFolderModal: false,
+      editFolder: {},
     }
   }
   handleDownload = () => {
@@ -58,34 +62,20 @@ class Bar extends Component {
   successCallback = () => {
     this.props.fetchFiles()
     this.setState({
-      isDelete: false
+      isDelete: false,
     })
   }
-  render () {
+  render() {
     const { tabular, activeItems } = this.props
-    const { isDelete } = this.state
+    const {
+      isDelete,
+      showEditFileModal,
+      showCreateFolderModal,
+      editFolder,
+    } = this.state
     return (
-      <Segment styleName='file.navbar'>
-        <div styleName='file.navbar-first'>
-          <div>
-            <Button
-              disabled={
-                !Boolean(
-                  this.props.currentFolder && this.props.currentFolder.root
-                )
-              }
-              onClick={this.handleBack}
-              icon='angle left'
-            />
-          </div>
-          <div>
-            <Button
-              icon='angle right'
-              onClick={() => {
-                this.props.history.goForward()
-              }}
-            />
-          </div>
+      <Segment styleName="file.navbar">
+        <div styleName="file.navbar-first">
           <div>
             <Button
               onClick={this.handleTabulation}
@@ -93,27 +83,59 @@ class Bar extends Component {
             />
           </div>
         </div>
-        <div styleName='file.navbar-first'>
+
+        <div styleName="file.navbar-first">
           <div>
             <Upload />
           </div>
-          <CreateFolderModal />
-          <div></div>
+          <div>
+            <Button
+              labelPosition="left"
+              icon
+              primary
+              basic
+              onClick={() => {
+                this.setState({ editFolder: {}, showCreateFolderModal: true })
+              }}
+            >
+              <Icon name="plus" />
+              Create Folder
+            </Button>
+          </div>
           {!tabular ? (
             <React.Fragment>
               <div>
-                <Edit />
+                <Button
+                  disabled={activeItems.length !== 1}
+                  onClick={() => {
+                    if (activeItems[0].type === ITEM_TYPE.file) {
+                      this.setState({ showEditFileModal: true })
+                    } else {
+                      this.setState({
+                        editFolder: activeItems[0].obj,
+                        showCreateFolderModal: true,
+                      })
+                    }
+                  }}
+                  icon
+                  labelPosition="left"
+                  primary
+                  basic
+                >
+                  <Icon name="edit" />
+                  Edit
+                </Button>
               </div>
               <div>
                 <Button
                   disabled={activeItems.length !== 1}
                   onClick={this.handleDownload}
                   icon
-                  labelPosition='left'
+                  labelPosition="left"
                   primary
                   basic
                 >
-                  <Icon name='download' />
+                  <Icon name="download" />
                   Download
                 </Button>
               </div>
@@ -124,22 +146,39 @@ class Bar extends Component {
                     this.setState({ isDelete: true })
                   }}
                   icon
-                  labelPosition='left'
+                  labelPosition="left"
                   primary
                   basic
                 >
-                  <Icon name='delete' />
+                  <Icon name="delete" />
                   Delete
                 </Button>
               </div>
             </React.Fragment>
           ) : null}
-          <ConfirmModal
-            show={isDelete}
-            handleClose={() => {
-              this.setState({ isDelete: false })
+          {isDelete && (
+            <ConfirmModal
+              show={isDelete}
+              handleClose={() => {
+                this.setState({ isDelete: false })
+              }}
+              handleSubmit={this.handleDelete}
+            />
+          )}
+          {showEditFileModal && (
+            <EditFileModal
+              showModal={showEditFileModal}
+              close={() => {
+                this.setState({ showEditFileModal: false })
+              }}
+            />
+          )}
+          <FolderModal
+            editFormObj={editFolder}
+            showModal={showCreateFolderModal}
+            setShowModal={value => {
+              this.setState({ showCreateFolderModal: value })
             }}
-            handleSubmit={this.handleDelete}
           />
         </div>
       </Segment>
@@ -151,7 +190,7 @@ const mapStateToProps = state => {
   return {
     tabular: state.items.tabular,
     currentFolder: state.folders.selectedFolder,
-    activeItems: state.items.activeItems
+    activeItems: state.items.activeItems,
   }
 }
 
@@ -171,7 +210,7 @@ const mapDispatchToProps = dispatch => {
     },
     setActiveItems: items => {
       dispatch(setActiveItems(items))
-    }
+    },
   }
 }
 

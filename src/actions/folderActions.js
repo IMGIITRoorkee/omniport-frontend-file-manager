@@ -11,20 +11,21 @@ import {
   CREATE_FOLDER,
   CREATE_FOLDER_PENDING,
   SET_ACTIVE_FOLDER,
-  DATA_REQUEST_PENDING
+  DATA_REQUEST_PENDING,
+  UPDATE_FOLDER_PENDING,
 } from './folderActionType'
 
 const apiDispatch = (actionType = '', data) => {
   return {
     type: actionType,
-    payload: data
+    payload: data,
   }
 }
 
 const apiError = error => {
   return {
     type: FOLDER_API_ERROR,
-    error
+    error,
   }
 }
 
@@ -92,15 +93,15 @@ export const createFolder = data => {
       })
   }
 }
-export const editFolderName = (id, data) => {
-  const url = FOLDER_APIS.folderItem
+export const editFolder = (id, data) => {
+  const url = `${FOLDER_APIS.folderItem}/${id}/`
   return dispatch => {
     dispatch(apiDispatch(UPDATE_FOLDER_PENDING, true))
     apiClient
-      .put(url, data)
+      .patch(url, data)
       .then(res => {
         dispatch(apiDispatch(UPDATE_FOLDER_PENDING, false))
-        dispatch(apiDispatch(GET_FOLDER, res.data))
+        dispatch(getFolder(data.parent))
       })
       .catch(error => {
         dispatch(apiError(error))
