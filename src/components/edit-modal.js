@@ -4,7 +4,7 @@ import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
 import { editFileName } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
 
-class EditModal extends Component {
+class EditFileModal extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -128,4 +128,4 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditModal)
+export default connect(mapStateToProps, mapDispatchToProps)(EditFileModal)
