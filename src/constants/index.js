@@ -392,3 +392,15 @@ export const FILE_TYPES = {
 export const ONE_GB = 1024 * 1024 * 1024
 export const ONE_MB = 1024 * 1024
 export const ONE_KB = 1024
+
+export const RESPONSE_TYPES = Object.freeze({
+  accept: 'accept',
+  reject: 'reject',
+})
+
+export const REQUEST_STATUS = Object.freeze({
+  NOT_MADE: '0',
+  PENDING: '1',
+  ACCEPT: '2',
+  REJECT: '3',
+})
