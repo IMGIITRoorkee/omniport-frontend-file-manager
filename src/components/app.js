@@ -7,35 +7,36 @@ import Instances from './instances'
 
 import main from 'formula_one/src/css/app.css'
 import blocks from './css/app.css'
+import ApproveRequest from './approveRequest'
 
 class App extends Component {
-  render () {
+  render() {
     console.log('rendering app')
     const creators = [
       {
         name: 'Tushar Varshney',
         role: 'Frontend Developer',
-        link: 'https://github.com/Tushar19varshney'
+        link: 'https://github.com/Tushar19varshney',
       },
       {
         name: 'Gauransh Dingwani',
         role: 'Frontend & Backend Developer',
-        link: 'https://github.com/gauransh7'
+        link: 'https://github.com/gauransh7',
       },
       {
         name: 'Ayush Bansal',
         role: 'Frontend & Backend Developer',
-        link: 'https://github.com/ayu023ban'
-      }
+        link: 'https://github.com/ayu023ban',
+      },
     ]
     const { match } = this.props
     return (
-      <div styleName='main.app'>
+      <div styleName="main.app">
         {/* <AppHeader appName='file_manager' mode='app' /> */}
         <AppHeader
-          mode='site'
+          mode="site"
           userDropdown
-          appName='file_manager'
+          appName="file_manager"
           // onSidebarClick={() => ChangeSidebarVisibility(sidebarVisibility)}
           // sideBarButton
           // sideBarVisibility={sidebarVisibility}
@@ -44,6 +45,11 @@ class App extends Component {
           <Scrollbars>
             <Switch>
               <Route exact path={`${match.path}/`} component={Instances} />
+              <Route
+                exact
+                path={`${match.path}/approve`}
+                component={ApproveRequest}
+              />
               <Route
                 exact
                 path={`${match.path}/:filemanager/:id`}

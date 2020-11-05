@@ -13,6 +13,7 @@ import {
   SET_ACTIVE_FOLDER,
   DATA_REQUEST_PENDING,
   UPDATE_FOLDER_PENDING,
+  GET_ALL_DATA_REQUESTS,
 } from './folderActionType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -149,13 +150,40 @@ export const setActiveFolder = folder => {
 }
 
 export const generateDataRequest = (id, data, callback) => {
-  const url = `${FOLDER_APIS.folderItem}/${id}/`
+  const url = `${FOLDER_APIS.folderItem}/${id}/${FOLDER_APIS.generateDataRequest}`
   return dispatch => {
     dispatch(apiDispatch(DATA_REQUEST_PENDING, true))
     apiClient
-      .patch(url, data)
+      .post(url, data)
       .then(res => {
         dispatch(apiDispatch(DATA_REQUEST_PENDING, false))
+        callback()
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+      })
+  }
+}
+
+export const getAllDataRequests = (url = FOLDER_APIS.getAllDataRequests) => {
+  return dispatch => {
+    apiClient
+      .get(url)
+      .then(res => {
+        dispatch(apiDispatch(GET_ALL_DATA_REQUESTS, res.data))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+      })
+  }
+}
+
+export const handleRequest = (id, data, callback) => {
+  const url = `${FOLDER_APIS.folderItem}/${id}/${FOLDER_APIS.handleRequest}`
+  return dispatch => {
+    apiClient
+      .post(url, data)
+      .then(() => {
         callback()
       })
       .catch(error => {

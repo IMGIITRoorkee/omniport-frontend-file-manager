@@ -1,14 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import {
-  Card,
-  CardHeader,
-  CardMeta,
-  Progress,
-  Image,
-  Icon,
-  Label,
-} from 'semantic-ui-react'
+import { Card, Progress, Image, Icon, Label } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
@@ -16,7 +8,7 @@ import RequestData from './requestData'
 import { setActiveFolder } from '../actions/folderActions'
 
 import main from './css/filemanager-card.css'
-import { ONE_GB, ONE_MB } from '../constants'
+import { ONE_GB, REQUEST_STATUS } from '../constants'
 import { formatStorage } from '../helpers/helperfunctions'
 
 class Filemanagercard extends Component {
@@ -60,10 +52,10 @@ class Filemanagercard extends Component {
           {currentFolder && currentFolder.id === folder.id ? (
             <span className="right floated">
               <Icon name="setting" title="Storage" color="black" size="large" />
-              {currentFolder.requestSpacePending ? (
+              {currentFolder.requestSpacePending === REQUEST_STATUS.PENDING ? (
                 <Label
                   color="red"
-                  title={`Extra ${folder.additionalSpace / ONE_GB} GB`}
+                  title={`Extra ${formatStorage(folder.additionalSpace)}`}
                   size="large"
                 >
                   <Icon name="database" />
