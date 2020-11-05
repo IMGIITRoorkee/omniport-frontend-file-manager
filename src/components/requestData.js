@@ -8,27 +8,29 @@ import {
   Icon,
   Label,
   Divider,
-  LabelGroup
+  LabelGroup,
 } from 'semantic-ui-react'
 import {
   getAllRootFoldersRequest,
-  generateDataRequest
+  generateDataRequest,
 } from '../actions/folderActions'
 import setActiveItems from '../actions/itemActions'
+import { ONE_GB } from '../constants'
+import { formatStorage } from '../helpers/helperfunctions'
 
 const options = [
-  { key: '1', label: '1 GB', value: 1000, color: 'red' },
-  { key: '2', label: '2 GB', value: 2000, color: 'orange' },
-  { key: '3', label: '5 GB', value: 5000, color: 'green' }
+  { key: '1', label: '1 GB', value: 1 * ONE_GB, color: 'red' },
+  { key: '2', label: '2 GB', value: 5 * ONE_GB, color: 'orange' },
+  { key: '3', label: '5 GB', value: 5 * ONE_GB, color: 'green' },
 ]
 
 class RequestData extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       add_data: null,
       showModal: false,
-      labelColor: null
+      labelColor: null,
     }
   }
 
@@ -40,10 +42,10 @@ class RequestData extends Component {
     console.log('submit called')
     let { add_data } = this.state
     const { currentFolder, generateDataRequest } = this.props
+
     if (add_data && currentFolder) {
       let formdata = new FormData()
       formdata.append('additional_space', add_data)
-      formdata.append('request_space_pending', true)
       generateDataRequest(currentFolder.id, formdata, this.handleSuccess)
     }
   }
@@ -52,29 +54,29 @@ class RequestData extends Component {
     this.props.getRootFolders()
     this.setState({
       add_data: null,
-      showModal: false
+      showModal: false,
     })
   }
   close = () => {
     this.setState({
-      showModal: false
+      showModal: false,
     })
   }
-  render () {
+  render() {
     const { add_data, showModal, labelColor } = this.state
     const { currentFolder } = this.props
     return (
       <React.Fragment>
         <Icon
-          name='add'
+          name="add"
           onClick={() => this.setState({ showModal: true })}
-          title='Request more space'
-          color='yellow'
-          size='large'
+          title="Request more space"
+          color="yellow"
+          size="large"
         />
         {showModal ? (
           <Modal
-            size='large'
+            size="large"
             open={showModal}
             closeOnEscape={true}
             closeOnDimmerClick={true}
@@ -89,11 +91,11 @@ class RequestData extends Component {
                   <Label
                     color={opt.color}
                     key={opt.key}
-                    as='a'
+                    as="a"
                     title={`add ${opt.label} extra`}
                     onClick={() => this.handleChange(opt.value, opt.color)}
                     horizontal
-                    size='large'
+                    size="large"
                   >
                     {opt.label}
                   </Label>
@@ -102,8 +104,8 @@ class RequestData extends Component {
               <Divider />
               {add_data ? (
                 <div>
-                  <Label color={labelColor} horizontal size='large'>
-                    {`Request for ${add_data} MB extra data on 
+                  <Label color={labelColor} horizontal size="large">
+                    {`Request for ${formatStorage(add_data)} extra data on 
                   ${currentFolder.filemanagername} will be initiated.`}
                   </Label>
                 </div>
@@ -125,7 +127,7 @@ class RequestData extends Component {
 const mapStateToProps = state => {
   return {
     activeItems: state.items.activeItems,
-    currentFolder: state.folders.activeFolder
+    currentFolder: state.folders.activeFolder,
   }
 }
 
@@ -139,7 +141,7 @@ const mapDispatchToProps = dispatch => {
     },
     generateDataRequest: (id, data, callback) => {
       dispatch(generateDataRequest(id, data, callback))
-    }
+    },
   }
 }
 
