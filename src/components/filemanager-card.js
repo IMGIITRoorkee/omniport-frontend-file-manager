@@ -52,7 +52,7 @@ class Filemanagercard extends Component {
           {currentFolder && currentFolder.id === folder.id ? (
             <span className="right floated">
               <Icon name="setting" title="Storage" color="black" size="large" />
-              {currentFolder.requestSpacePending === REQUEST_STATUS.PENDING ? (
+              {folder.dataRequestStatus === REQUEST_STATUS.PENDING ? (
                 <Label
                   color="red"
                   title={`Extra ${formatStorage(folder.additionalSpace)}`}
