@@ -60,6 +60,16 @@ class App extends Component {
                 path={`${match.path}/:filemanager`}
                 component={Root}
               />
+              {/* <Route
+                exact
+                path={`${match.path}/:filemanager/shared_with_me`}
+                component={Root}
+              /> */}
+              <Route
+                exact
+                path={`${match.path}/:filemanager/:uuid/:type_shared/:id/:type_access`}
+                component={Root}
+              />
             </Switch>
           </Scrollbars>
         </AppMain>

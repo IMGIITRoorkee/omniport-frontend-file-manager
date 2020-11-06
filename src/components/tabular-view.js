@@ -12,7 +12,8 @@ import ConfirmModal from './confirmModal'
 import index from './css/index.css'
 import { deleteFolder } from '../actions/folderActions'
 import { setActiveItems } from '../actions/itemActions'
-import { ITEM_TYPE } from '../constants'
+import { FILE_TYPES, ITEM_TYPE } from '../constants'
+import { FileIcon } from 'react-file-icon'
 
 const options = [
   { key: '1', label: 'Edit' },
@@ -116,25 +117,21 @@ class TabularView extends Component {
                   }}
                 >
                   <Table.Cell>
-                    <Icon
-                      size='large'
-                      name='folder outline'
-                      color={getTheme()}
-                    />
+                    <Icon size='large' name='folder open' color='grey' />
                     {folder.folderName}
                   </Table.Cell>
                   <Table.Cell>
                     {getModifiedDate(folder.datetimeModified)}
                   </Table.Cell>
                   <Table.Cell>{folder.permission}</Table.Cell>
-                  <Table.Cell>
+                  {/* <Table.Cell>
                     <PopupView
-                      child={popupChild}
+                      children={popupChild}
                       id={folder.id}
                       options={options}
                       handleOptions={this.handleOptions}
                     />
-                  </Table.Cell>
+                  </Table.Cell> */}
                 </Table.Row>
               ))}
 
@@ -148,21 +145,31 @@ class TabularView extends Component {
                   onClick={this.handleFileClick(file)}
                 >
                   <Table.Cell>
-                    <Icon size='large' name='file' color={getTheme()} />
-                    {file.fileName}
+                    <div styleName='index.table-cell-file-icon-name'>
+                      <div styleName='index.table-cell-file-icon'>
+                        {/* <Icon size='large' name='file' color={getTheme()} /> */}
+                        <FileIcon
+                          {...FILE_TYPES[file.extension]}
+                          extension={file.extension}
+                        />
+                      </div>
+                      <div styleName='index.table-cell-file-name'>
+                        {file.fileName}
+                      </div>
+                    </div>
                   </Table.Cell>
                   <Table.Cell>
                     {getModifiedDate(file.datetimeModified)}
                   </Table.Cell>
                   <Table.Cell>{file.permission}</Table.Cell>
-                  <Table.Cell>
+                  {/* <Table.Cell>
                     <PopupView
                       child={popupChild}
                       id={file.id}
                       options={options}
                       handleOptions={this.handleOptions}
                     />
-                  </Table.Cell>
+                  </Table.Cell> */}
                 </Table.Row>
               ))}
           </Table.Body>

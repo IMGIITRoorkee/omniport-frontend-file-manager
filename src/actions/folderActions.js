@@ -13,20 +13,21 @@ import {
   SET_ACTIVE_FOLDER,
   DATA_REQUEST_PENDING,
   UPDATE_FOLDER_PENDING,
-  GET_ALL_DATA_REQUESTS,
+  GET_ALL_DATA_REQUESTS
 } from './folderActionType'
+import { VIEWING_SHARED_ITEMS } from './itemActionType'
 
 const apiDispatch = (actionType = '', data) => {
   return {
     type: actionType,
-    payload: data,
+    payload: data
   }
 }
 
 const apiError = error => {
   return {
     type: FOLDER_API_ERROR,
-    error,
+    error
   }
 }
 
@@ -39,6 +40,7 @@ export const getAllFoldersRequest = (pk, data) => {
       .then(res => {
         dispatch(apiDispatch(GET_ALL_FOLDERS, res.data))
         dispatch(apiDispatch(GET_FOLDERS_PENDING, false))
+        dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -55,6 +57,7 @@ export const getAllRootFoldersRequest = (pk, data) => {
       .then(res => {
         dispatch(apiDispatch(GET_ALL_ROOT_FOLDERS, res.data))
         dispatch(apiDispatch(GET_FOLDERS_PENDING, false))
+        dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -71,6 +74,7 @@ export const getFolder = (id, params) => {
       .then(res => {
         dispatch(apiDispatch(GET_FOLDER_PENDING, false))
         dispatch(apiDispatch(GET_FOLDER, res.data))
+        dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -102,7 +106,23 @@ export const editFolder = (id, data) => {
       .patch(url, data)
       .then(res => {
         dispatch(apiDispatch(UPDATE_FOLDER_PENDING, false))
-        dispatch(getFolder(data.parent))
+        data.parent ? dispatch(getFolder(data.parent)) : ''
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+      })
+  }
+}
+
+export const editFolderUsers = (id, data, callback) => {
+  const url = `${FOLDER_APIS.folderItem}/${id}/update_shared_users/`
+  return dispatch => {
+    dispatch(apiDispatch(UPDATE_FOLDER_PENDING, true))
+    apiClient
+      .patch(url, data)
+      .then(res => {
+        dispatch(apiDispatch(UPDATE_FOLDER_PENDING, false))
+        callback()
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -136,6 +156,7 @@ export const getRootFolder = filemanager => {
       .then(res => {
         dispatch(apiDispatch(GET_FOLDER_PENDING, false))
         dispatch(apiDispatch(GET_FOLDER, res.data))
+        dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
       })
       .catch(error => {
         dispatch(apiError(error))
