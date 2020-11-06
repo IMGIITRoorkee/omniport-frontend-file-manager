@@ -10,20 +10,20 @@ import {
   UPLOAD_FILE_PENDING,
   GET_FILE_DETAILS_PENDING,
   DELETE_FILE_PENDING,
-  UPDATE_FILE_PENDING,
+  UPDATE_FILE_PENDING
 } from './fileActionType'
 
 const apiDispatch = (actionType = '', data) => {
   return {
     type: actionType,
-    payload: data,
+    payload: data
   }
 }
 
 const apiError = error => {
   return {
     type: FILE_API_ERROR,
-    error,
+    error
   }
 }
 
@@ -59,8 +59,24 @@ export const getFileDetails = id => {
   }
 }
 
-export const editFileName = (id, data, callback) => {
+export const editFile = (id, data, callback) => {
   const url = `${FILE_APIS.fileItem}/${id}/`
+  return dispatch => {
+    dispatch(apiDispatch(UPDATE_FILE_PENDING, true))
+    apiClient
+      .patch(url, data)
+      .then(res => {
+        dispatch(apiDispatch(UPDATE_FILE_PENDING, false))
+        callback()
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+      })
+  }
+}
+
+export const editFileUsers = (id, data, callback) => {
+  const url = `${FILE_APIS.fileItem}/${id}/update_shared_users/`
   return dispatch => {
     dispatch(apiDispatch(UPDATE_FILE_PENDING, true))
     apiClient

@@ -28,11 +28,11 @@ class PopupView extends Component {
 
   render () {
     const { isPopupOpen } = this.state
-    const { options, handleOptions, child, ...props } = this.props
+    const { options, handleOptions, children, ...props } = this.props
     return (
       <React.Fragment>
         <Popup
-          trigger={child}
+          trigger={children}
           open={isPopupOpen}
           onClose={e => this.handlePopupToggle(e, false)}
           onOpen={e => this.handlePopupToggle(e, true)}

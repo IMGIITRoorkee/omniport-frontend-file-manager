@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Form, Icon, Modal } from 'semantic-ui-react'
 import { createFolder, editFolder } from '../actions/folderActions'
+import file from './css/file.css'
 
 const initialObj = {
   folder_name: '',
@@ -9,27 +10,27 @@ const initialObj = {
   permission: 'r_w',
   filemanager: null,
   parent: null,
-  root: null,
+  root: null
 }
 
 class FolderFormModal extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     const { editFormObj } = this.props
     this.state = {
-      formObj: initialObj,
+      formObj: initialObj
     }
     this.handleSubmit = this.handleSubmit.bind(this)
   }
-  componentDidMount() {
+  componentDidMount () {
     const { parentFolder } = this.props
     this.setState({
       filemanager: parentFolder.filemanager,
       root: parentFolder.root,
-      parent: parentFolder.id,
+      parent: parentFolder.id
     })
   }
-  componentDidUpdate(prevprops) {
+  componentDidUpdate (prevprops) {
     const { parentFolder } = this.props
 
     if (
@@ -41,8 +42,8 @@ class FolderFormModal extends Component {
           ...this.state.formObj,
           filemanager: parentFolder.filemanager,
           root: parentFolder.root,
-          parent: parentFolder.id,
-        },
+          parent: parentFolder.id
+        }
       })
     }
 
@@ -54,8 +55,8 @@ class FolderFormModal extends Component {
         this.setState({
           formObj: Object.assign({
             ...this.state.formObj,
-            ...this.props.editFormObj,
-          }),
+            ...this.props.editFormObj
+          })
         })
       } else {
         this.setState({
@@ -63,13 +64,13 @@ class FolderFormModal extends Component {
             ...initialObj,
             filemanager: parentFolder.filemanager,
             root: parentFolder.root,
-            parent: parentFolder.id,
-          },
+            parent: parentFolder.id
+          }
         })
       }
     }
   }
-  handleSubmit() {
+  handleSubmit () {
     const { formObj } = this.state
     if (formObj.id) {
       this.props.editFolder(formObj.id, formObj)
@@ -82,7 +83,7 @@ class FolderFormModal extends Component {
     }
   }
 
-  render() {
+  render () {
     const { formObj } = this.state
     const { showModal, setShowModal } = this.props
     return (
@@ -90,7 +91,7 @@ class FolderFormModal extends Component {
         {showModal && (
           <Modal
             closeIcon
-            size="tiny"
+            size='tiny'
             open={showModal}
             onClose={() => {
               setShowModal(false)
@@ -99,20 +100,20 @@ class FolderFormModal extends Component {
             <Modal.Content>
               <Form>
                 <Form.Input
-                  label="Folder Name"
+                  label='Folder Name'
                   required
-                  placeholder="Folder Name"
+                  placeholder='Folder Name'
                   value={formObj.folderName}
                   onChange={e => {
                     this.setState({
                       formObj: {
                         ...this.state.formObj,
-                        folderName: e.target.value,
-                      },
+                        folderName: e.target.value
+                      }
                     })
                   }}
                 />
-                <Button type="submit" onClick={this.handleSubmit}>
+                <Button type='submit' onClick={this.handleSubmit}>
                   {formObj.id ? 'Edit' : 'Create'}
                 </Button>
               </Form>
@@ -126,7 +127,7 @@ class FolderFormModal extends Component {
 
 const mapStateToProps = state => {
   return {
-    parentFolder: state.folders.selectedFolder,
+    parentFolder: state.folders.selectedFolder
   }
 }
 
@@ -137,7 +138,7 @@ const mapDispatchToProps = dispatch => {
     },
     editFolder: (id, formObj) => {
       dispatch(editFolder(id, formObj))
-    },
+    }
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(FolderFormModal)
