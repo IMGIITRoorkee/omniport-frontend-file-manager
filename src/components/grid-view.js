@@ -12,8 +12,9 @@ import { deleteFolder } from '../actions/folderActions'
 import { deleteFile } from '../actions/fileActions'
 import { ITEM_TYPE } from '../constants'
 import FolderFormModal from './folderFormModal'
+import ShareItemModal from './shareItemModal'
 
-function createContextFromEvent(e) {
+function createContextFromEvent (e) {
   const left = e.clientX
   const top = e.clientY
   const right = left + 1
@@ -27,12 +28,12 @@ function createContextFromEvent(e) {
       bottom,
 
       height: 0,
-      width: 0,
-    }),
+      width: 0
+    })
   }
 }
 class GridView extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.folderContainerRef = React.createRef()
     this.contextRef = React.createRef()
@@ -42,7 +43,8 @@ class GridView extends Component {
       showFileEditModal: false,
       showDeleteModal: false,
       showFolderFormModal: false,
-      editFolder: {},
+      showShareItemModal: false,
+      editFolder: {}
     }
   }
   // componentDidUpdate(prevProps, prevState) {
@@ -62,10 +64,12 @@ class GridView extends Component {
             { key: '1', label: 'Edit', icon: 'edit' },
             { key: '2', label: 'Download', icon: 'download' },
             { key: '3', label: 'Delete', icon: 'delete' },
+            { key: '5', label: 'Share', icon: 'share' }
           ]
         : [
             { key: '4', label: 'Edit', icon: 'edit' },
             { key: '3', label: 'Delete', icon: 'delete' },
+            { key: '5', label: 'Share', icon: 'share' }
           ]
     } else return []
   }
@@ -80,9 +84,12 @@ class GridView extends Component {
     4: () => {
       this.setState({
         editFolder: this.props.activeItems[0].obj,
-        showFolderFormModal: true,
+        showFolderFormModal: true
       })
     },
+    5: () => {
+      this.setState({ showShareItemModal: true })
+    }
   }
 
   handleReset = e => {
@@ -106,7 +113,7 @@ class GridView extends Component {
     this.setState({ showDeleteModal: false })
   }
 
-  render() {
+  render () {
     const { currentFolder, activeItems } = this.props
     const {
       isPopupOpen,
@@ -114,6 +121,7 @@ class GridView extends Component {
       showFileEditModal,
       showFolderFormModal,
       editFolder,
+      showShareItemModal
     } = this.state
     return (
       <div
@@ -135,7 +143,7 @@ class GridView extends Component {
         }}
       >
         <div
-          styleName="grid.view-parent"
+          styleName='grid.view-parent'
           ref={this.folderContainerRef}
           onClick={this.handleReset}
         >
@@ -154,7 +162,7 @@ class GridView extends Component {
         </div>
         <Divider />
         <div
-          styleName="grid.view-parent"
+          styleName='grid.view-parent'
           ref={this.fileContainerRef}
           onClick={this.handleReset}
         >
@@ -192,7 +200,7 @@ class GridView extends Component {
           handleSubmit={() => {
             this.handleDelete()
           }}
-          type="remove"
+          type='remove'
           item={activeItems.length && activeItems[0].type}
         />
         <EditModal
@@ -200,6 +208,17 @@ class GridView extends Component {
           close={() => {
             this.setState({ showFileEditModal: false })
           }}
+        />
+        <ShareItemModal
+          showModal={showShareItemModal}
+          close={() => {
+            this.setState({ showShareItemModal: false })
+          }}
+          filemanager={
+            this.props.currentFolder
+              ? this.props.currentFolder.filemanagername
+              : ''
+          }
         />
         <FolderFormModal
           showModal={showFolderFormModal}
@@ -216,7 +235,7 @@ class GridView extends Component {
 const mapStateToProps = state => {
   return {
     currentFolder: state.folders.selectedFolder,
-    activeItems: state.items.activeItems,
+    activeItems: state.items.activeItems
   }
 }
 
@@ -228,7 +247,7 @@ const mapDispatchToProps = dispatch => {
     },
     deleteFolder: id => {
       dispatch(deleteFolder(id))
-    },
+    }
   }
 }
 

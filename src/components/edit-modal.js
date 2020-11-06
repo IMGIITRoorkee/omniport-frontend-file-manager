@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
-import { editFileName } from '../actions/fileActions'
+import { editFile } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
 
 class EditFileModal extends Component {
@@ -120,7 +120,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     editFile: (pk, data, callback) => {
-      return dispatch(editFileName(pk, data, callback))
+      return dispatch(editFile(pk, data, callback))
     },
     getFolder: id => {
       return dispatch(getFolder(id))

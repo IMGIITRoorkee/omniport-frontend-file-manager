@@ -1,6 +1,7 @@
 // Backend
 export const FILE_APIS = {
   fileItem: '/files',
+  filesShared: '/files/shared_with_me'
 }
 
 export const FOLDER_APIS = {
@@ -10,4 +11,10 @@ export const FOLDER_APIS = {
   getAllDataRequests: '/folder/get_data_request/',
   handleRequest: 'handle_request/',
   generateDataRequest: 'generate_data_request/',
+  foldersShared: '/folder/shared_with_me'
+}
+
+export const SHARED_ITEMS_APIS = {
+  sharedWithMe: '/all_shared_items',
+  sharedItem: '/shared_item'
 }

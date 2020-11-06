@@ -11,7 +11,7 @@ import { deleteFolder } from '../actions/folderActions'
 import { ITEM_TYPE } from '../constants'
 
 class FolderCard extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.ref = React.createRef()
   }
@@ -30,16 +30,41 @@ class FolderCard extends Component {
     }
   }
 
-  render() {
-    const { index, folder, activeItems } = this.props
+  handleDoubleClick = () => {
+    console.log('handling double click')
+    const {
+      index,
+      folder,
+      activeItems,
+      viewingSharedItems,
+      filemanager
+    } = this.props
+    console.log(this.props)
+    const uuid = this.props.match.params.uuid
+      ? this.props.match.params.uuid
+      : folder.sharingId
+    const type_shared = this.props.match.type_shared
+      ? this.props.match.type_shared
+      : 'folder'
+    const url = viewingSharedItems
+      ? `/file-manager/${this.props.match.params.filemanager}/${uuid}/${type_shared}/${folder.id}/folder/`
+      : `/file-manager/${this.props.match.params.filemanager}/${folder.id}/`
+    console.log(url)
+    this.props.history.push(url)
+  }
+
+  render () {
+    const { index, folder, activeItems, viewingSharedItems } = this.props
+    console.log(folder)
     const folderName =
       folder.folderName.length > 12
         ? folder.folderName.slice(0, 10) + '..'
         : folder.folderName
+    console.log(folder.folderName)
     return (
       <div
         id={`grid-card-${index}`}
-        styleName="grid.file-card"
+        styleName='grid.file-card'
         onContextMenu={e => {
           e.preventDefault()
           this.handleSelect(e)
@@ -55,26 +80,16 @@ class FolderCard extends Component {
               : 'grid.folder-inactive'
           }
         >
-          <div styleName="grid.folder-icon" onClick={e => this.handleSelect(e)}>
+          <div styleName='grid.folder-icon' onClick={e => this.handleSelect(e)}>
             <Icon
-              size="huge"
-              color="grey"
+              size='huge'
+              color='grey'
               name={'folder open'}
-              onDoubleClick={() => {
-                const url = `/file-manager/${this.props.match.params.filemanager}/${folder.id}/`
-                this.props.history.push(url)
-              }}
+              onDoubleClick={this.handleDoubleClick}
             />
           </div>
-          <div styleName="grid.folder-name">
-            <p
-              onDoubleClick={() => {
-                const url = `/file-manager/${this.props.match.params.filemanager}/${folder.id}/`
-                this.props.history.push(url)
-              }}
-            >
-              {folderName}
-            </p>
+          <div styleName='grid.folder-name'>
+            <p onDoubleClick={this.handleDoubleClick}>{folderName}</p>
           </div>
         </div>
       </div>
@@ -87,6 +102,7 @@ const mapStateToProps = state => {
     gridViewActiveIndex: state.files.gridViewActiveIndex,
     activeFolder: state.folders.activeFolder,
     activeItems: state.items.activeItems,
+    viewingSharedItems: state.items.viewingSharedItems
   }
 }
 
@@ -97,7 +113,7 @@ const mapDispatchToProps = dispatch => {
     },
     deleteFolder: id => {
       dispatch(deleteFolder(id))
-    },
+    }
   }
 }
 

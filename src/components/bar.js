@@ -8,20 +8,22 @@ import ConfirmModal from './confirmModal'
 
 import file from './css/file.css'
 import FolderFormModal from './folderFormModal'
+import ShareItemModal from './shareItemModal'
 import EditFileModal from './edit-modal'
-import { withRouter } from 'react-router-dom'
+import { Link, withRouter } from 'react-router-dom'
 import { deleteFolder, setActiveFolder } from '../actions/folderActions'
 import { deleteFile } from '../actions/fileActions'
 import { setActiveItems } from '../actions/itemActions'
 import { ITEM_TYPE } from '../constants'
 class Bar extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       isDelete: false,
       showEditFileModal: false,
       showFolderFormModal: false,
-      editFolder: {},
+      showShareItemModal: false,
+      editFolder: {}
     }
   }
   handleDownload = () => {
@@ -62,103 +64,133 @@ class Bar extends Component {
   successCallback = () => {
     this.props.fetchFiles()
     this.setState({
-      isDelete: false,
+      isDelete: false
     })
   }
-  render() {
-    const { tabular, activeItems } = this.props
+  render () {
+    const {
+      tabular,
+      activeItems,
+      currentFolder,
+      viewingSharedItems
+    } = this.props
     const {
       isDelete,
       showEditFileModal,
       showFolderFormModal,
       editFolder,
+      showShareItemModal
     } = this.state
     return (
-      <Segment styleName="file.navbar">
-        <div styleName="file.navbar-first">
-          <div>
+      <Segment styleName='file.navbar'>
+        <div styleName='file.navbar-first'>
+          {viewingSharedItems ? (
+            <div styleName='file.crud-icon'>
+              <Button
+                as={Link}
+                icon
+                labelPosition='left'
+                color='grey'
+                to={`/file-manager/${this.props.match.params.filemanager}/`}
+              >
+                <Icon name='home' />
+                Home
+              </Button>
+            </div>
+          ) : (
+            <div styleName='file.crud-icon'>
+              <Upload />
+            </div>
+          )}
+          <div styleName='file.crud-icon'>
             <Button
-              onClick={this.handleTabulation}
-              icon={tabular ? 'columns' : 'table'}
-            />
+              as={Link}
+              icon
+              labelPosition='left'
+              color='grey'
+              to={`/file-manager/${this.props.match.params.filemanager}/shared_with_me/`}
+            >
+              <Icon name='share' />
+              Shared With Me
+            </Button>
           </div>
         </div>
 
-        <div styleName="file.navbar-first">
-          <div>
-            <Upload />
-          </div>
-          <div>
-            <Button
-              labelPosition="left"
-              icon
-              primary
-              basic
-              onClick={() => {
-                this.setState({ editFolder: {}, showFolderFormModal: true })
-              }}
-            >
-              <Icon name="plus" />
-              Create Folder
-            </Button>
-          </div>
-          {!tabular ? (
+        <div styleName='file.navbar-first'>
+          {activeItems.length == 1 && !viewingSharedItems ? (
             <React.Fragment>
-              <div>
+              <div styleName='file.crud-icon'>
                 <Button
-                  disabled={activeItems.length !== 1}
+                  onClick={() => this.setState({ showShareItemModal: true })}
+                  icon='share'
+                  color='blue'
+                  inverted
+                  circular
+                />
+              </div>
+              <div styleName='file.crud-icon'>
+                <Button
                   onClick={() => {
                     if (activeItems[0].type === ITEM_TYPE.file) {
                       this.setState({ showEditFileModal: true })
                     } else {
                       this.setState({
                         editFolder: activeItems[0].obj,
-                        showFolderFormModal: true,
+                        showFolderFormModal: true
                       })
                     }
                   }}
-                  icon
-                  labelPosition="left"
-                  primary
-                  basic
-                >
-                  <Icon name="edit" />
-                  Edit
-                </Button>
+                  icon='edit'
+                  color='blue'
+                  inverted
+                  circular
+                />
               </div>
-              <div>
+              <div styleName='file.crud-icon'>
                 <Button
                   disabled={
                     activeItems.length !== 1 ||
                     activeItems[0].type !== ITEM_TYPE.file
                   }
                   onClick={this.handleDownload}
-                  icon
-                  labelPosition="left"
-                  primary
-                  basic
-                >
-                  <Icon name="download" />
-                  Download
-                </Button>
+                  icon='download'
+                  color='blue'
+                  inverted
+                  circular
+                />
               </div>
-              <div>
+              <div styleName='file.crud-icon'>
                 <Button
-                  disabled={activeItems.length !== 1}
                   onClick={() => {
                     this.setState({ isDelete: true })
                   }}
-                  icon
-                  labelPosition="left"
-                  primary
-                  basic
-                >
-                  <Icon name="delete" />
-                  Delete
-                </Button>
+                  icon='delete'
+                  color='red'
+                  inverted
+                  circular
+                />
               </div>
             </React.Fragment>
           ) : null}
+          <div styleName='file.crud-icon'>
+            <Button
+              icon='plus'
+              circular
+              inverted
+              color='blue'
+              onClick={() => {
+                this.setState({ editFolder: {}, showFolderFormModal: true })
+              }}
+            />
+          </div>
+          <div styleName='file.crud-icon'>
+            <Button
+              circular
+              onClick={this.handleTabulation}
+              icon={tabular ? 'columns' : 'table'}
+              color='grey'
+            />
+          </div>
           {isDelete && (
             <ConfirmModal
               show={isDelete}
@@ -177,6 +209,13 @@ class Bar extends Component {
               }}
             />
           )}
+          <ShareItemModal
+            showModal={showShareItemModal}
+            close={() => {
+              this.setState({ showShareItemModal: false })
+            }}
+            filemanager={this.props.match.params.filemanager}
+          />
           <FolderFormModal
             editFormObj={editFolder}
             showModal={showFolderFormModal}
@@ -195,6 +234,7 @@ const mapStateToProps = state => {
     tabular: state.items.tabular,
     currentFolder: state.folders.selectedFolder,
     activeItems: state.items.activeItems,
+    viewingSharedItems: state.items.viewingSharedItems
   }
 }
 
@@ -214,7 +254,7 @@ const mapDispatchToProps = dispatch => {
     },
     setActiveItems: items => {
       dispatch(setActiveItems(items))
-    },
+    }
   }
 }
 

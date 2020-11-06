@@ -4,6 +4,7 @@ import { Dimmer, Loader, Divider } from 'semantic-ui-react'
 
 import ErrorBoundary from './error-boundary'
 import { getFolder, getRootFolder } from '../actions/folderActions'
+import { getSharedItems, getSharedItem } from '../actions/itemActions'
 import { setActiveItems } from '../actions/itemActions'
 
 import index from './css/index.css'
@@ -27,13 +28,38 @@ class Root extends Component {
     this.ref = React.createRef()
   }
   componentDidMount () {
-    this.props.match.params.id
+    this.props.match.params.uuid &&
+    this.props.match.params.id &&
+    this.props.match.params.type_shared &&
+    this.props.match.params.type_access
+      ? this.props.getSharedItem(
+          this.props.match.params.uuid,
+          this.props.match.params.id,
+          this.props.match.params.type_shared,
+          this.props.match.params.type_access
+        )
+      : this.props.match.params.id == 'shared_with_me'
+      ? this.props.getSharedItems(this.props.match.params.filemanager)
+      : this.props.match.params.id
       ? this.props.getFolderDetails(this.props.match.params.id)
       : this.props.getRoot(this.props.match.params.filemanager)
   }
   componentDidUpdate (prevProps) {
+    console.log(this.props)
     if (prevProps.location.pathname !== this.props.location.pathname) {
-      this.props.match.params.id
+      this.props.match.params.uuid &&
+      this.props.match.params.id &&
+      this.props.match.params.type_shared &&
+      this.props.match.params.type_access
+        ? this.props.getSharedItem(
+            this.props.match.params.uuid,
+            this.props.match.params.id,
+            this.props.match.params.type_shared,
+            this.props.match.params.type_access
+          )
+        : this.props.match.params.id == 'shared_with_me'
+        ? this.props.getSharedItems(this.props.match.params.filemanager)
+        : this.props.match.params.id
         ? this.props.getFolderDetails(this.props.match.params.id)
         : this.props.getRoot(this.props.match.params.filemanager)
     }
@@ -93,6 +119,12 @@ const mapDispatchToProps = dispatch => {
     },
     getFolderDetails: id => {
       dispatch(getFolder(id))
+    },
+    getSharedItems: filemanager => {
+      dispatch(getSharedItems(filemanager))
+    },
+    getSharedItem: (uuid, id, type_shared, type_access) => {
+      dispatch(getSharedItem(uuid, id, type_shared, type_access))
     },
     setActiveItems: items => dispatch(setActiveItems(items))
   }

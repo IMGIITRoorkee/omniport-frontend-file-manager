@@ -1,8 +1,13 @@
-.navbar{
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 0px !important;
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0px !important;
 }
-.navbar-first{
-    display: flex;
+
+.navbar-first {
+  display: flex;
+}
+
+.crud-icon {
+  padding-right: 1em;
 }

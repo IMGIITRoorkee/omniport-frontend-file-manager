@@ -7,3 +7,13 @@
 .progress-parent {
   padding: 1rem;
 }
+.table-cell-file-icon-name {
+  display: flex;
+  align-items: center;
+}
+.table-cell-file-icon {
+  width: 1.5rem;
+}
+.table-cell-file-name {
+  padding-left: 0.4rem;
+}
