@@ -28,40 +28,37 @@ class Root extends Component {
     this.ref = React.createRef()
   }
   componentDidMount () {
-    this.props.match.params.uuid &&
-    this.props.match.params.id &&
-    this.props.match.params.type_shared &&
-    this.props.match.params.type_access
+    const { params } = this.props.match
+    const { getSharedItems, getFolderDetails, getRoot } = this.props
+    params.uuid && params.id && params.type_shared && params.type_access
       ? this.props.getSharedItem(
-          this.props.match.params.uuid,
-          this.props.match.params.id,
-          this.props.match.params.type_shared,
-          this.props.match.params.type_access
+          params.uuid,
+          params.id,
+          params.type_shared,
+          params.type_access
         )
-      : this.props.match.params.id == 'shared_with_me'
-      ? this.props.getSharedItems(this.props.match.params.filemanager)
-      : this.props.match.params.id
-      ? this.props.getFolderDetails(this.props.match.params.id)
-      : this.props.getRoot(this.props.match.params.filemanager)
+      : params.id == 'shared_with_me'
+      ? getSharedItems(params.filemanager)
+      : params.id
+      ? getFolderDetails(params.id)
+      : getRoot(params.filemanager)
   }
   componentDidUpdate (prevProps) {
-    console.log(this.props)
+    const { params } = this.props.match
+    const { getSharedItems, getFolderDetails, getRoot } = this.props
     if (prevProps.location.pathname !== this.props.location.pathname) {
-      this.props.match.params.uuid &&
-      this.props.match.params.id &&
-      this.props.match.params.type_shared &&
-      this.props.match.params.type_access
-        ? this.props.getSharedItem(
-            this.props.match.params.uuid,
-            this.props.match.params.id,
-            this.props.match.params.type_shared,
-            this.props.match.params.type_access
+      params.uuid && params.id && params.type_shared && params.type_access
+        ? getSharedItem(
+            params.uuid,
+            params.id,
+            params.type_shared,
+            params.type_access
           )
-        : this.props.match.params.id == 'shared_with_me'
-        ? this.props.getSharedItems(this.props.match.params.filemanager)
-        : this.props.match.params.id
-        ? this.props.getFolderDetails(this.props.match.params.id)
-        : this.props.getRoot(this.props.match.params.filemanager)
+        : params.id == 'shared_with_me'
+        ? getSharedItems(params.filemanager)
+        : params.id
+        ? getFolderDetails(params.id)
+        : getRoot(params.filemanager)
     }
   }
   handleReset = e => {

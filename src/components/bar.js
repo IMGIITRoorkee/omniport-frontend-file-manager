@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Segment, Button, Icon, Modal } from 'semantic-ui-react'
 import { tabulation } from '../actions/itemActions'
 import Upload from './app-upload'
-// import Edit from './edit-file'
 import ConfirmModal from './confirmModal'
 
 import file from './css/file.css'

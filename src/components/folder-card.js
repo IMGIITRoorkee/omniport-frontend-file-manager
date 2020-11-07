@@ -60,7 +60,6 @@ class FolderCard extends Component {
       folder.folderName.length > 12
         ? folder.folderName.slice(0, 10) + '..'
         : folder.folderName
-    console.log(folder.folderName)
     return (
       <div
         id={`grid-card-${index}`}
