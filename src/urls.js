@@ -18,3 +18,7 @@ export const SHARED_ITEMS_APIS = {
   sharedWithMe: '/all_shared_items',
   sharedItem: '/shared_item'
 }
+
+export const USER_APIS = {
+  getUserOptions: '/api/yellow_pages/person/'
+}

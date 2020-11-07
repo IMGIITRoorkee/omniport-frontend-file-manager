@@ -18,10 +18,12 @@ import {
   TableCell
 } from 'semantic-ui-react'
 
-import file from './css/share-item.css'
 import { FileIcon } from 'react-file-icon'
 import { FILE_TYPES } from '../constants'
 import { setActiveItems } from '../actions/itemActions'
+import { USER_APIS } from '../urls'
+
+import file from './css/share-item.css'
 
 class ShareItemModal extends Component {
   constructor (props) {
@@ -73,24 +75,22 @@ class ShareItemModal extends Component {
   handleSearchChange = (e, data) => {
     this.setState({ isLoading: true })
     const search = data.searchQuery
-    axios
-      .get(`http://0.0.0.0:61000/api/yellow_pages/person/?search=${search}`)
-      .then(res => {
-        this.setState({
-          ...this.state,
-          options: [
-            ...this.state.initialOptions,
-            ...res.data.map(user => {
-              return {
-                key: parseInt(`${user.id}`),
-                text: `${user.fullName}`,
-                value: parseInt(`${user.id}`)
-              }
-            })
-          ],
-          isLoading: false
-        })
+    axios.get(`${USER_APIS.getUserOptions}?search=${search}`).then(res => {
+      this.setState({
+        ...this.state,
+        options: [
+          ...this.state.initialOptions,
+          ...res.data.map(user => {
+            return {
+              key: parseInt(`${user.id}`),
+              text: `${user.fullName}`,
+              value: parseInt(`${user.id}`)
+            }
+          })
+        ],
+        isLoading: false
       })
+    })
   }
 
   handleSubmit = e => {

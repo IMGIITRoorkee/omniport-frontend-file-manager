@@ -114,7 +114,7 @@ class GridView extends Component {
   }
 
   render () {
-    const { currentFolder, activeItems } = this.props
+    const { currentFolder, activeItems, viewingSharedItems } = this.props
     const {
       isPopupOpen,
       showDeleteModal,
@@ -235,7 +235,8 @@ class GridView extends Component {
 const mapStateToProps = state => {
   return {
     currentFolder: state.folders.selectedFolder,
-    activeItems: state.items.activeItems
+    activeItems: state.items.activeItems,
+    viewingSharedItems: state.items.viewingSharedItems
   }
 }
 
