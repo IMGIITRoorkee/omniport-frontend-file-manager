@@ -83,11 +83,6 @@ class TabularView extends Component {
   render () {
     const { currentFolder, activeItems } = this.props
     const { showDeleteModal, showEditModal } = this.state
-    const popupChild = (
-      <Button icon floated='right'>
-        <Icon name='ellipsis horizontal' />
-      </Button>
-    )
     return (
       <div>
         <Table singleLine styleName='index.table-main' selectable>
@@ -124,14 +119,6 @@ class TabularView extends Component {
                     {getModifiedDate(folder.datetimeModified)}
                   </Table.Cell>
                   <Table.Cell>{folder.permission}</Table.Cell>
-                  {/* <Table.Cell>
-                    <PopupView
-                      children={popupChild}
-                      id={folder.id}
-                      options={options}
-                      handleOptions={this.handleOptions}
-                    />
-                  </Table.Cell> */}
                 </Table.Row>
               ))}
 
@@ -147,7 +134,6 @@ class TabularView extends Component {
                   <Table.Cell>
                     <div styleName='index.table-cell-file-icon-name'>
                       <div styleName='index.table-cell-file-icon'>
-                        {/* <Icon size='large' name='file' color={getTheme()} /> */}
                         <FileIcon
                           {...FILE_TYPES[file.extension]}
                           extension={file.extension}
@@ -162,14 +148,6 @@ class TabularView extends Component {
                     {getModifiedDate(file.datetimeModified)}
                   </Table.Cell>
                   <Table.Cell>{file.permission}</Table.Cell>
-                  {/* <Table.Cell>
-                    <PopupView
-                      child={popupChild}
-                      id={file.id}
-                      options={options}
-                      handleOptions={this.handleOptions}
-                    />
-                  </Table.Cell> */}
                 </Table.Row>
               ))}
           </Table.Body>
