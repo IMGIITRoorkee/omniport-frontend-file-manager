@@ -11,14 +11,14 @@ const initialObj = {
   size: 0,
   starred: false,
   extension: '',
-  showModal: false,
+  showModal: false
 }
 class AppUpload extends Component {
   constructor(props) {
     super(props)
     this.state = {
       showModal: false,
-      files: [],
+      files: []
     }
   }
   fileInputRef = React.createRef()
@@ -29,13 +29,15 @@ class AppUpload extends Component {
     const { uploadFile, currentFolder } = this.props
     if (files.length) {
       let formdata = new FormData()
-      formdata.append('upload', files[0])
-      formdata.append('file_name', files[0].name)
-      formdata.append('is_public', false)
-      formdata.append('extension', files[0].name.split('.').pop())
-      formdata.append('starred', false)
-      formdata.append('size', parseInt(files[0].size))
-      formdata.append('folder', parseInt(currentFolder.id))
+      for (const i in files) {
+        formdata.append(`upload`, files[i])
+        formdata.append('file_name', files[i].name)
+        formdata.append('is_public', false)
+        formdata.append('extension', files[i].name.split('.').pop())
+        formdata.append('starred', false)
+        formdata.append('size', parseInt(files[i].size))
+        formdata.append('folder', parseInt(currentFolder.id))
+      }
       uploadFile(formdata, this.handleSuccess)
     }
   }
@@ -56,16 +58,16 @@ class AppUpload extends Component {
             this.setState({ showModal: true })
           }}
           icon
-          labelPosition="left"
+          labelPosition='left'
           primary
           basic
         >
-          <Icon name="upload" />
+          <Icon name='upload' />
           Upload
         </Button>
         {showModal && (
           <UploadFilesModal
-            isMultiple={false}
+            isMultiple={true}
             files={files}
             isUploading={uploadFilePending}
             setFiles={files => {
@@ -75,7 +77,7 @@ class AppUpload extends Component {
             onHide={() => {
               this.setState({ showModal: false })
             }}
-            handleUpload={(e) => {
+            handleUpload={e => {
               this.handleSubmit(e)
             }}
           />
@@ -88,7 +90,7 @@ class AppUpload extends Component {
 const mapStateToProps = state => {
   return {
     uploadFilePending: state.files.uploadFilePending,
-    currentFolder: state.folders.selectedFolder,
+    currentFolder: state.folders.selectedFolder
   }
 }
 
@@ -99,7 +101,7 @@ const mapDispatchToProps = dispatch => {
     },
     uploadFile: (data, callback) => {
       return dispatch(uploadFile(data, callback))
-    },
+    }
   }
 }
 

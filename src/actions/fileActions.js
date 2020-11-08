@@ -108,8 +108,25 @@ export const deleteFile = id => {
   }
 }
 
+export const bulkDeleteFiles = obj => {
+  const url = `${FILE_APIS.fileItem}/${FILE_APIS.bulkDelete}`
+  return (dispatch, getState) => {
+    const parentFolder = getState().folders.selectedFolder
+    dispatch(apiDispatch(DELETE_FILE_PENDING, true))
+    apiClient
+      .post(url, obj)
+      .then(() => {
+        dispatch(apiDispatch(DELETE_FILE_PENDING, false))
+        dispatch(getFolder(parentFolder.id))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+      })
+  }
+}
+
 export const uploadFile = (data, callback) => {
-  const url = `${FILE_APIS.fileItem}/`
+  const url = `${FILE_APIS.fileItem}/bulk_create/`
   return dispatch => {
     dispatch(apiDispatch(UPLOAD_FILE_PENDING, true))
     apiClient

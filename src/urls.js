@@ -1,7 +1,8 @@
 // Backend
 export const FILE_APIS = {
   fileItem: '/files',
-  filesShared: '/files/shared_with_me'
+  filesShared: '/files/shared_with_me',
+  bulkDelete: 'bulk_delete/'
 }
 
 export const FOLDER_APIS = {
@@ -12,7 +13,8 @@ export const FOLDER_APIS = {
   handleRequest: 'handle_request/',
   generateDataRequest: 'generate_data_request/',
   foldersShared: '/folder/shared_with_me',
-  starred_items: '/all_starred_items/'
+  starred_items: '/all_starred_items/',
+  bulkDelete: 'bulk_delete/'
 }
 
 export const SHARED_ITEMS_APIS = {
