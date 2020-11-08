@@ -11,11 +11,21 @@ import FolderFormModal from './folderFormModal'
 import ShareItemModal from './shareItemModal'
 import EditFileModal from './edit-modal'
 import { Link, withRouter } from 'react-router-dom'
+<<<<<<< HEAD
 import { deleteFolder, setActiveFolder, editFolder, getFolder } from '../actions/folderActions'
 import { deleteFile, editFile } from '../actions/fileActions'
+=======
+import {
+  deleteFolder,
+  setActiveFolder,
+  bulkDeleteFolders
+} from '../actions/folderActions'
+import { bulkDeleteFiles, deleteFile } from '../actions/fileActions'
+import { setActiveItems } from '../actions/itemActions'
+>>>>>>> Feature: Multiple create and delete files and multiple delete folders
 import { ITEM_TYPE } from '../constants'
 class Bar extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isDelete: false,
@@ -77,12 +87,39 @@ class Bar extends Component {
   }
 
   handleDelete = () => {
-    const { deleteFolder, activeItems, deleteFile } = this.props
-    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.folder) {
-      deleteFolder(activeItems[0].obj.id)
-    }
-    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.file) {
-      deleteFile(activeItems[0].obj.id)
+    const {
+      deleteFolder,
+      activeItems,
+      deleteFile,
+      bulkDeleteFolders,
+      bulkDeleteFiles
+    } = this.props
+    if (activeItems.length === 1) {
+      if (
+        activeItems.length === 1 &&
+        activeItems[0].type === ITEM_TYPE.folder
+      ) {
+        deleteFolder(activeItems[0].obj.id)
+      }
+      if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.file) {
+        deleteFile(activeItems[0].obj.id)
+      }
+    } else if (activeItems.length > 1) {
+      const folders = []
+      const files = []
+      for (const item of activeItems) {
+        if (item.type === ITEM_TYPE.file) {
+          files.push(item.obj.id)
+        } else {
+          folders.push(item.obj.id)
+        }
+      }
+      if (folders.length > 0) {
+        bulkDeleteFolders({ folder_id_arr: folders })
+      }
+      if (files.length > 0) {
+        bulkDeleteFiles({ fileIdArr: files })
+      }
     }
     setActiveItems([])
     this.setState({ isDelete: false })
@@ -93,7 +130,7 @@ class Bar extends Component {
       isDelete: false
     })
   }
-  render () {
+  render() {
     const {
       tabular,
       activeItems,
@@ -155,6 +192,7 @@ class Bar extends Component {
         </div>
 
         <div styleName='file.navbar-first'>
+<<<<<<< HEAD
           {activeItems.length == 1 && !viewingSharedItems ? (
             <React.Fragment>
             <div styleName='file.crud-icon'>
@@ -167,6 +205,10 @@ class Bar extends Component {
                   circular
                 />
               </div>
+=======
+          <React.Fragment>
+            {activeItems.length == 1 && !viewingSharedItems && (
+>>>>>>> Feature: Multiple create and delete files and multiple delete folders
               <div styleName='file.crud-icon'>
                 <Button
                   onClick={() => this.setState({ showShareItemModal: true })}
@@ -176,6 +218,8 @@ class Bar extends Component {
                   circular
                 />
               </div>
+            )}
+            {activeItems.length == 1 && !viewingSharedItems && (
               <div styleName='file.crud-icon'>
                 <Button
                   onClick={() => {
@@ -194,6 +238,8 @@ class Bar extends Component {
                   circular
                 />
               </div>
+            )}
+            {activeItems.length == 1 && !viewingSharedItems && (
               <div styleName='file.crud-icon'>
                 <Button
                   disabled={
@@ -207,6 +253,8 @@ class Bar extends Component {
                   circular
                 />
               </div>
+            )}
+            {activeItems.length > 0 && !viewingSharedItems && (
               <div styleName='file.crud-icon'>
                 <Button
                   onClick={() => {
@@ -218,8 +266,9 @@ class Bar extends Component {
                   circular
                 />
               </div>
-            </React.Fragment>
-          ) : null}
+            )}
+          </React.Fragment>
+
           <div styleName='file.crud-icon'>
             <Button
               icon='plus'
@@ -246,7 +295,12 @@ class Bar extends Component {
                 this.setState({ isDelete: false })
               }}
               handleSubmit={this.handleDelete}
-              item={activeItems[0].type}
+              item={Array.from(
+                new Set(activeItems.map(item => item.type))
+              ).join(' and ')}
+              itemList={activeItems.map(
+                item => item.obj.fileName || item.obj.folderName
+              )}
             />
           )}
           {showEditFileModal && (
@@ -303,6 +357,7 @@ const mapDispatchToProps = dispatch => {
     setActiveItems: items => {
       dispatch(setActiveItems(items))
     },
+<<<<<<< HEAD
     editFile: (id, formdata, callback) => {
       dispatch(editFile(id, formdata, callback))
     },
@@ -314,6 +369,13 @@ const mapDispatchToProps = dispatch => {
     },
     getStarredItems: filemanager => {
       dispatch(getStarredItems(filemanager))
+=======
+    bulkDeleteFolders: data => {
+      dispatch(bulkDeleteFolders(data))
+    },
+    bulkDeleteFiles: data => {
+      dispatch(bulkDeleteFiles(data))
+>>>>>>> Feature: Multiple create and delete files and multiple delete folders
     }
   }
 }
