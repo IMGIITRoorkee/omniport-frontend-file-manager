@@ -4,7 +4,7 @@ import { Dimmer, Loader, Divider } from 'semantic-ui-react'
 
 import ErrorBoundary from './error-boundary'
 import { getFolder, getRootFolder } from '../actions/folderActions'
-import { getSharedItems, getSharedItem } from '../actions/itemActions'
+import { getSharedItems, getSharedItem, getStarredItems } from '../actions/itemActions'
 import { setActiveItems } from '../actions/itemActions'
 
 import index from './css/index.css'
@@ -28,37 +28,41 @@ class Root extends Component {
     this.ref = React.createRef()
   }
   componentDidMount () {
-    const { params } = this.props.match
-    const { getSharedItems, getFolderDetails, getRoot } = this.props
-    params.uuid && params.id && params.type_shared && params.type_access
-      ? this.props.getSharedItem(
-          params.uuid,
-          params.id,
-          params.type_shared,
-          params.type_access
+    const { uuid, id, type_access, type_shared, filemanager } = this.props.match.params
+    const { getSharedItems, getSharedItem, getFolderDetails, getRoot, getStarredItems } = this.props
+    uuid && id && type_shared && type_access
+      ? getSharedItem(
+          uuid,
+          id,
+          type_shared,
+          type_access
         )
-      : params.id == 'shared_with_me'
-      ? getSharedItems(params.filemanager)
-      : params.id
-      ? getFolderDetails(params.id)
-      : getRoot(params.filemanager)
+      : id == 'all_starred_items'
+      ? getStarredItems(filemanager)
+      : id == 'shared_with_me'
+      ? getSharedItems(filemanager)
+      : id
+      ? getFolderDetails(id)
+      : getRoot(filemanager)
   }
   componentDidUpdate (prevProps) {
-    const { params } = this.props.match
-    const { getSharedItems, getFolderDetails, getRoot } = this.props
+    const { uuid, id, type_access, type_shared, filemanager } = this.props.match.params
+    const { getSharedItems,getSharedItem, getFolderDetails, getRoot, getStarredItems } = this.props
     if (prevProps.location.pathname !== this.props.location.pathname) {
-      params.uuid && params.id && params.type_shared && params.type_access
+      uuid && id && type_shared && type_access
         ? getSharedItem(
-            params.uuid,
-            params.id,
-            params.type_shared,
-            params.type_access
+            uuid,
+            id,
+            type_shared,
+            type_access
           )
-        : params.id == 'shared_with_me'
-        ? getSharedItems(params.filemanager)
-        : params.id
-        ? getFolderDetails(params.id)
-        : getRoot(params.filemanager)
+        : id == 'all_starred_items'
+        ? getStarredItems(filemanager)
+        : id == 'shared_with_me'
+        ? getSharedItems(filemanager)
+        : id
+        ? getFolderDetails(id)
+        : getRoot(filemanager)
     }
   }
   handleReset = e => {
@@ -122,6 +126,9 @@ const mapDispatchToProps = dispatch => {
     },
     getSharedItem: (uuid, id, type_shared, type_access) => {
       dispatch(getSharedItem(uuid, id, type_shared, type_access))
+    },
+    getStarredItems: filemanager => {
+      dispatch(getStarredItems(filemanager))
     },
     setActiveItems: items => dispatch(setActiveItems(items))
   }

@@ -8,8 +8,9 @@ import { setActiveItems } from '../actions/itemActions'
 import { Divider, Menu, Popup } from 'semantic-ui-react'
 import ConfirmModal from './confirmModal'
 import EditModal from './edit-modal'
-import { deleteFolder } from '../actions/folderActions'
-import { deleteFile } from '../actions/fileActions'
+import { deleteFolder, editFolder, getFolder } from '../actions/folderActions'
+import { deleteFile, editFile } from '../actions/fileActions'
+import { getStarredItems } from '../actions/itemActions'
 import { ITEM_TYPE } from '../constants'
 import FolderFormModal from './folderFormModal'
 import ShareItemModal from './shareItemModal'
@@ -64,12 +65,14 @@ class GridView extends Component {
             { key: '1', label: 'Edit', icon: 'edit' },
             { key: '2', label: 'Download', icon: 'download' },
             { key: '3', label: 'Delete', icon: 'delete' },
-            { key: '5', label: 'Share', icon: 'share' }
+            { key: '5', label: 'Share', icon: 'share' },
+            { key: '6', label: activeItems[0].obj.starred ? 'Remove from starred' : 'Add to starred', icon: activeItems[0].obj.starred ? 'star': 'star outline'}
           ]
         : [
             { key: '4', label: 'Edit', icon: 'edit' },
             { key: '3', label: 'Delete', icon: 'delete' },
-            { key: '5', label: 'Share', icon: 'share' }
+            { key: '5', label: 'Share', icon: 'share' },
+            { key: '6', label: activeItems[0].obj.starred ? 'Remove from starred' : 'Add to starred', icon: activeItems[0].obj.starred ? 'star': 'star outline'}
           ]
     } else return []
   }
@@ -89,6 +92,34 @@ class GridView extends Component {
     },
     5: () => {
       this.setState({ showShareItemModal: true })
+    },
+    6: () => {
+      const { activeItems, editFile, editFolder } = this.props
+      var formdata = new FormData()
+      formdata.append('starred', !activeItems[0].obj.starred)
+      if(activeItems[0].type=='file'){
+        editFile(activeItems[0].obj.id,formdata, this.handleStarSuccess)
+      }
+      else{
+        editFolder(activeItems[0].obj.id,formdata, this.handleStarSuccess)
+      }
+    }
+  }
+
+  handleStarSuccess = () => {
+    const { activeItems, setActiveItems, getStarredItems, currentFolder } = this.props
+    if(currentFolder.type && currentFolder.type == 'starred'){
+      getStarredItems(currentFolder.filemanager)
+    }
+    else{
+      if(activeItems[0].type == 'file'){
+        this.props.getFolder(activeItems[0].obj.folder)
+        setActiveItems([])
+      }
+      else{
+        this.props.getFolder(activeItems[0].obj.parent)
+        setActiveItems([])
+      }
     }
   }
 
@@ -248,6 +279,18 @@ const mapDispatchToProps = dispatch => {
     },
     deleteFolder: id => {
       dispatch(deleteFolder(id))
+    },
+    editFile: (id, formdata, callback) => {
+      dispatch(editFile(id, formdata, callback))
+    },
+    editFolder: (id, formdata, callback) => {
+      dispatch(editFolder(id, formdata, callback))
+    },
+    getFolder : (id) => {
+      dispatch(getFolder(id))
+    },
+    getStarredItems: filemanager => {
+      dispatch(getStarredItems(filemanager))
     }
   }
 }

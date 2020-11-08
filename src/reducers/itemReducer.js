@@ -4,11 +4,13 @@ import {
   TABULATION,
   GET_SHARED_ITEMS_PENDING,
   ITEM_API_ERROR,
-  VIEWING_SHARED_ITEMS
+  VIEWING_SHARED_ITEMS,
+  GET_STARRED_ITEMS_PENDING
 } from '../actions/itemActionType'
 
 const initialPendingState = {
-  getallshareditems: false
+  getallshareditems: false,
+  getStarredItemsPending: false
 }
 
 const initialState = {
@@ -35,6 +37,8 @@ const itemReducer = (state = initialState, action) => {
       return { ...state, getallshareditems: payload }
     case VIEWING_SHARED_ITEMS:
       return { ...state, viewingSharedItems: payload }
+    case GET_STARRED_ITEMS_PENDING:
+      return { ...state, getStarredItemsPending: payload}
     case ITEM_API_ERROR:
       return { ...state, error: error }
     default:
