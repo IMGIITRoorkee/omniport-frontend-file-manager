@@ -11,7 +11,8 @@ export const FOLDER_APIS = {
   getAllDataRequests: '/folder/get_data_request/',
   handleRequest: 'handle_request/',
   generateDataRequest: 'generate_data_request/',
-  foldersShared: '/folder/shared_with_me'
+  foldersShared: '/folder/shared_with_me',
+  starred_items: '/all_starred_items/'
 }
 
 export const SHARED_ITEMS_APIS = {

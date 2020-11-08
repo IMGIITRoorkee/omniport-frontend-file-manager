@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Segment, Button, Icon, Modal } from 'semantic-ui-react'
-import { tabulation } from '../actions/itemActions'
+import { getStarredItems, tabulation, setActiveItems } from '../actions/itemActions'
 import Upload from './app-upload'
 import ConfirmModal from './confirmModal'
 
@@ -10,9 +10,8 @@ import FolderFormModal from './folderFormModal'
 import ShareItemModal from './shareItemModal'
 import EditFileModal from './edit-modal'
 import { Link, withRouter } from 'react-router-dom'
-import { deleteFolder, setActiveFolder } from '../actions/folderActions'
-import { deleteFile } from '../actions/fileActions'
-import { setActiveItems } from '../actions/itemActions'
+import { deleteFolder, setActiveFolder, editFolder, getFolder } from '../actions/folderActions'
+import { deleteFile, editFile } from '../actions/fileActions'
 import { ITEM_TYPE } from '../constants'
 class Bar extends Component {
   constructor (props) {
@@ -23,6 +22,33 @@ class Bar extends Component {
       showFolderFormModal: false,
       showShareItemModal: false,
       editFolder: {}
+    }
+  }
+  handleStarClick = () => {
+    const { activeItems, editFile, editFolder } = this.props
+    var formdata = new FormData()
+    formdata.append('starred', !activeItems[0].obj.starred)
+    if(activeItems[0].type=='file'){
+      editFile(activeItems[0].obj.id,formdata, this.handleStarSuccess)
+    }
+    else{
+      editFolder(activeItems[0].obj.id,formdata, this.handleStarSuccess)
+    }
+  }
+  handleStarSuccess = () => {
+    const { activeItems, currentFolder, getStarredItems, setActiveItems } = this.props
+    if(currentFolder.type && currentFolder.type == 'starred'){
+      getStarredItems(currentFolder.filemanager)
+    }
+    else{
+      if(activeItems[0].type == 'file'){
+        this.props.getFolder(activeItems[0].obj.folder)
+        setActiveItems([])
+      }
+      else{
+        this.props.getFolder(activeItems[0].obj.parent)
+        setActiveItems([])
+      }
     }
   }
   handleDownload = () => {
@@ -83,7 +109,7 @@ class Bar extends Component {
     return (
       <Segment styleName='file.navbar'>
         <div styleName='file.navbar-first'>
-          {viewingSharedItems ? (
+          {viewingSharedItems || currentFolder.type=='starred' ? (
             <div styleName='file.crud-icon'>
               <Button
                 as={Link}
@@ -113,11 +139,33 @@ class Bar extends Component {
               Shared With Me
             </Button>
           </div>
+          <div styleName='file.crud-icon'>
+            <Button
+              as={Link}
+              icon
+              labelPosition='left'
+              color='grey'
+              to={`/file-manager/${this.props.match.params.filemanager}/all_starred_items/`}
+            >
+              <Icon name='star' />
+              Starred
+            </Button>
+          </div>
         </div>
 
         <div styleName='file.navbar-first'>
           {activeItems.length == 1 && !viewingSharedItems ? (
             <React.Fragment>
+            <div styleName='file.crud-icon'>
+                <Button
+                  onClick={this.handleStarClick}
+                  title={activeItems[0].obj.starred ? 'Remove from starred': 'Add to starred'}
+                  icon={activeItems[0].obj.starred ? 'star': 'star outline'}
+                  color='blue'
+                  inverted
+                  circular
+                />
+              </div>
               <div styleName='file.crud-icon'>
                 <Button
                   onClick={() => this.setState({ showShareItemModal: true })}
@@ -253,6 +301,18 @@ const mapDispatchToProps = dispatch => {
     },
     setActiveItems: items => {
       dispatch(setActiveItems(items))
+    },
+    editFile: (id, formdata, callback) => {
+      dispatch(editFile(id, formdata, callback))
+    },
+    editFolder: (id, formdata, callback) => {
+      dispatch(editFolder(id, formdata, callback))
+    },
+    getFolder : (id) => {
+      dispatch(getFolder(id))
+    },
+    getStarredItems: filemanager => {
+      dispatch(getStarredItems(filemanager))
     }
   }
 }
