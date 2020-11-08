@@ -4,10 +4,11 @@ import {
   TABULATION,
   GET_SHARED_ITEMS_PENDING,
   ITEM_API_ERROR,
-  VIEWING_SHARED_ITEMS
+  VIEWING_SHARED_ITEMS,
+  GET_STARRED_ITEMS_PENDING
 } from './itemActionType'
 import { GET_FOLDER } from './folderActionType'
-import { SHARED_ITEMS_APIS } from '../urls'
+import { SHARED_ITEMS_APIS, FOLDER_APIS } from '../urls'
 import apiClient from '../helpers/apiClient'
 
 const apiDispatch = (actionType = '', data) => {
@@ -61,16 +62,33 @@ export const getSharedItems = filemanager => {
 }
 
 export const getSharedItem = (uuid, id, type_shared, type_access) => {
-  id = parseInt(id)
   const url = `${SHARED_ITEMS_APIS.sharedItem}/${uuid}/${type_shared}/${id}/${type_access}/`
   return dispatch => {
     dispatch(apiDispatch(GET_SHARED_ITEMS_PENDING, true))
     apiClient
       .get(url)
       .then(res => {
+        console.log(res)
         dispatch(apiDispatch(GET_FOLDER, res.data))
         dispatch(apiDispatch(GET_SHARED_ITEMS_PENDING, false))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, true))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+      })
+  }
+}
+
+export const getStarredItems = filemanager => {
+  const url = `${FOLDER_APIS.starred_items}?filemanager=${filemanager}`
+  return dispatch => {
+    dispatch(apiDispatch(GET_STARRED_ITEMS_PENDING, true))
+    apiClient
+      .get(url)
+      .then(res => {
+        dispatch(apiDispatch(GET_FOLDER, res.data))
+        dispatch(apiDispatch(GET_STARRED_ITEMS_PENDING, false))
+        dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
       })
       .catch(error => {
         dispatch(apiError(error))

@@ -91,6 +91,7 @@ class TabularView extends Component {
               <Table.HeaderCell>Title</Table.HeaderCell>
               <Table.HeaderCell>Last Modified</Table.HeaderCell>
               <Table.HeaderCell>Permissions</Table.HeaderCell>
+              <Table.HeaderCell>Starred</Table.HeaderCell>
               <Table.HeaderCell />
             </Table.Row>
           </Table.Header>
@@ -119,6 +120,7 @@ class TabularView extends Component {
                     {getModifiedDate(folder.datetimeModified)}
                   </Table.Cell>
                   <Table.Cell>{folder.permission}</Table.Cell>
+                  <Table.Cell>{folder.starred ? <Icon name='star' /> : <Icon name='star outline' />}</Table.Cell>
                 </Table.Row>
               ))}
 
@@ -148,6 +150,7 @@ class TabularView extends Component {
                     {getModifiedDate(file.datetimeModified)}
                   </Table.Cell>
                   <Table.Cell>{file.permission}</Table.Cell>
+                  <Table.Cell>{file.starred ? <Icon name='star' /> : <Icon name='star outline' />}</Table.Cell>
                 </Table.Row>
               ))}
           </Table.Body>
