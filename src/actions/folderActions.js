@@ -148,6 +148,23 @@ export const deleteFolder = id => {
   }
 }
 
+export const bulkDeleteFolders = data => {
+  const url = `${FOLDER_APIS.folderItem}/${FOLDER_APIS.bulkDelete}`
+  return (dispatch, getState) => {
+    const parentFolder = getState().folders.selectedFolder
+    dispatch(apiDispatch(DELETE_FOLDER_PENDING, true))
+    apiClient
+      .post(url, data)
+      .then(() => {
+        dispatch(apiDispatch(DELETE_FOLDER_PENDING, false))
+        dispatch(getFolder(parentFolder.id))
+      })
+      .catch(error => {
+        dispatch(apiError(error))
+      })
+  }
+}
+
 export const getRootFolder = filemanager => {
   const url = `${FOLDER_APIS.getRoot}?filemanager=${filemanager}`
   return dispatch => {
