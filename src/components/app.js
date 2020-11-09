@@ -10,7 +10,7 @@ import blocks from './css/app.css'
 import ApproveRequest from './approveRequest'
 
 class App extends Component {
-  render () {
+  render() {
     console.log('rendering app')
     const creators = [
       {
@@ -47,21 +47,25 @@ class App extends Component {
               <Route exact path={`${match.path}/`} component={Instances} />
               <Route
                 exact
+                key={1}
                 path={`${match.path}/approve`}
                 component={ApproveRequest}
               />
               <Route
                 exact
+                key={2}
                 path={`${match.path}/:filemanager/:id`}
                 component={Root}
               />
               <Route
                 exact
+                key={3}
                 path={`${match.path}/:filemanager`}
                 component={Root}
               />
               <Route
                 exact
+                key={4}
                 path={`${match.path}/:filemanager/:uuid/:type_shared/:id/:type_access`}
                 component={Root}
               />
