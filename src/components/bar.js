@@ -92,7 +92,8 @@ class Bar extends Component {
       activeItems,
       deleteFile,
       bulkDeleteFolders,
-      bulkDeleteFiles
+      bulkDeleteFiles,
+      setActiveItems
     } = this.props
     if (activeItems.length === 1) {
       if (

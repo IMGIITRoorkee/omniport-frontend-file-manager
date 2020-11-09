@@ -88,7 +88,7 @@ const ConfirmModal = ({
         {dialogText ? (
           <p>{dialogText}</p>
         ) : itemList.length ? (
-          itemList.map(elem => <p>{elem}</p>)
+          itemList.map((elem, index) => <p key={index}>{elem}</p>)
         ) : (
           ''
         )}
