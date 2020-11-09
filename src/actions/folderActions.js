@@ -66,7 +66,7 @@ export const getAllRootFoldersRequest = (pk, data) => {
 }
 
 export const getFolder = (id, params) => {
-  const url = `${FOLDER_APIS.folderItem}/${id}`
+  const url = `${FOLDER_APIS.folderItem}/${id}/`
   return dispatch => {
     dispatch(apiDispatch(GET_FOLDER_PENDING, true))
     apiClient
