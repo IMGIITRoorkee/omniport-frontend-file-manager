@@ -8,19 +8,8 @@ import { setActiveItems } from '../actions/itemActions'
 import { Divider, Menu, Popup } from 'semantic-ui-react'
 import ConfirmModal from './confirmModal'
 import EditModal from './edit-modal'
-import {
-  deleteFolder,
-  editFolder,
-  getFolder,
-  deleteFolder,
-  bulkDeleteFolders
-} from '../actions/folderActions'
-import {
-  deleteFile,
-  editFile,
-  deleteFile,
-  bulkDeleteFiles
-} from '../actions/fileActions'
+import { deleteFolder, editFolder, getFolder } from '../actions/folderActions'
+import { deleteFile, editFile } from '../actions/fileActions'
 import { getStarredItems } from '../actions/itemActions'
 import { ITEM_TYPE } from '../constants'
 import FolderFormModal from './folderFormModal'
@@ -77,27 +66,15 @@ class GridView extends Component {
             { key: '2', label: 'Download', icon: 'download' },
             { key: '3', label: 'Delete', icon: 'delete' },
             { key: '5', label: 'Share', icon: 'share' },
-            {
-              key: '6',
-              label: activeItems[0].obj.starred
-                ? 'Remove from starred'
-                : 'Add to starred',
-              icon: activeItems[0].obj.starred ? 'star' : 'star outline'
-            }
+            { key: '6', label: activeItems[0].obj.starred ? 'Remove from starred' : 'Add to starred', icon: activeItems[0].obj.starred ? 'star': 'star outline'}
           ]
         : [
             { key: '4', label: 'Edit', icon: 'edit' },
             { key: '3', label: 'Delete', icon: 'delete' },
             { key: '5', label: 'Share', icon: 'share' },
-            {
-              key: '6',
-              label: activeItems[0].obj.starred
-                ? 'Remove from starred'
-                : 'Add to starred',
-              icon: activeItems[0].obj.starred ? 'star' : 'star outline'
-            }
+            { key: '6', label: activeItems[0].obj.starred ? 'Remove from starred' : 'Add to starred', icon: activeItems[0].obj.starred ? 'star': 'star outline'}
           ]
-    } else return [{ key: '3', label: 'Delete', icon: 'delete' }]
+    } else return []
   }
   handleOptions = {
     1: () => {
@@ -120,28 +97,26 @@ class GridView extends Component {
       const { activeItems, editFile, editFolder } = this.props
       var formdata = new FormData()
       formdata.append('starred', !activeItems[0].obj.starred)
-      if (activeItems[0].type == 'file') {
-        editFile(activeItems[0].obj.id, formdata, this.handleStarSuccess)
-      } else {
-        editFolder(activeItems[0].obj.id, formdata, this.handleStarSuccess)
+      if(activeItems[0].type=='file'){
+        editFile(activeItems[0].obj.id,formdata, this.handleStarSuccess)
+      }
+      else{
+        editFolder(activeItems[0].obj.id,formdata, this.handleStarSuccess)
       }
     }
   }
 
   handleStarSuccess = () => {
-    const {
-      activeItems,
-      setActiveItems,
-      getStarredItems,
-      currentFolder
-    } = this.props
-    if (currentFolder.type && currentFolder.type == 'starred') {
+    const { activeItems, setActiveItems, getStarredItems, currentFolder } = this.props
+    if(currentFolder.type && currentFolder.type == 'starred'){
       getStarredItems(currentFolder.filemanager)
-    } else {
-      if (activeItems[0].type == 'file') {
+    }
+    else{
+      if(activeItems[0].type == 'file'){
         this.props.getFolder(activeItems[0].obj.folder)
         setActiveItems([])
-      } else {
+      }
+      else{
         this.props.getFolder(activeItems[0].obj.parent)
         setActiveItems([])
       }
@@ -158,41 +133,12 @@ class GridView extends Component {
   }
 
   handleDelete = () => {
-    const {
-      deleteFolder,
-      activeItems,
-      deleteFile,
-      bulkDeleteFolders,
-      bulkDeleteFiles,
-      setActiveItems
-    } = this.props
-
-    if (activeItems.length === 1) {
-      if (
-        activeItems.length === 1 &&
-        activeItems[0].type === ITEM_TYPE.folder
-      ) {
-        deleteFolder(activeItems[0].obj.id)
-      }
-      if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.file) {
-        deleteFile(activeItems[0].obj.id)
-      }
-    } else if (activeItems.length > 1) {
-      const folders = []
-      const files = []
-      for (const item of activeItems) {
-        if (item.type === ITEM_TYPE.file) {
-          files.push(item.obj.id)
-        } else {
-          folders.push(item.obj.id)
-        }
-      }
-      if (folders.length > 0) {
-        bulkDeleteFolders({ folder_id_arr: folders })
-      }
-      if (files.length > 0) {
-        bulkDeleteFiles({ fileIdArr: files })
-      }
+    const { deleteFolder, activeItems, deleteFile } = this.props
+    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.folder) {
+      deleteFolder(activeItems[0].obj.id)
+    }
+    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.file) {
+      deleteFile(activeItems[0].obj.id)
     }
     setActiveItems([])
     this.setState({ showDeleteModal: false })
@@ -345,18 +291,11 @@ const mapDispatchToProps = dispatch => {
     editFolder: (id, formdata, callback) => {
       dispatch(editFolder(id, formdata, callback))
     },
-    getFolder: id => {
+    getFolder : (id) => {
       dispatch(getFolder(id))
     },
     getStarredItems: filemanager => {
       dispatch(getStarredItems(filemanager))
-    },
-
-    bulkDeleteFolders: data => {
-      dispatch(bulkDeleteFolders(data))
-    },
-    bulkDeleteFiles: data => {
-      dispatch(bulkDeleteFiles(data))
     }
   }
 }

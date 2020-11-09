@@ -4,41 +4,33 @@ import { Button, Form, Icon, Modal } from 'semantic-ui-react'
 import { createFolder, editFolder } from '../actions/folderActions'
 import file from './css/file.css'
 
-class FolderFormModal extends Component {
-  constructor(props) {
-    super(props)
-    const { editFormObj, parentFolder } = this.props
+const initialObj = {
+  folder_name: '',
+  starred: false,
+  permission: 'r_w',
+  filemanager: null,
+  parent: null,
+  root: null
+}
 
+class FolderFormModal extends Component {
+  constructor (props) {
+    super(props)
+    const { editFormObj } = this.props
     this.state = {
-      formObj: {
-        folder_name: '',
-        starred: false,
-        permission: 'r_w',
-        filemanager: null,
-        parent: null,
-        root: null
-      }
+      formObj: initialObj
     }
     this.handleSubmit = this.handleSubmit.bind(this)
   }
-  componentDidMount() {
+  componentDidMount () {
     const { parentFolder } = this.props
     this.setState({
-      ...this.getInitialObj()
+      filemanager: parentFolder.filemanager,
+      root: parentFolder.root,
+      parent: parentFolder.id
     })
   }
-  getInitialObj = () => {
-    const { parentFolder } = this.props
-    return {
-      folder_name: '',
-      starred: false,
-      permission: 'r_w',
-      filemanager: parentFolder.filemanager,
-      parent: parentFolder.id,
-      root: parentFolder.root
-    }
-  }
-  componentDidUpdate(prevprops) {
+  componentDidUpdate (prevprops) {
     const { parentFolder } = this.props
 
     if (
@@ -69,29 +61,31 @@ class FolderFormModal extends Component {
       } else {
         this.setState({
           formObj: {
-            ...this.getInitialObj()
+            ...initialObj,
+            filemanager: parentFolder.filemanager,
+            root: parentFolder.root,
+            parent: parentFolder.id
           }
         })
       }
     }
   }
-  handleSubmit() {
+  handleSubmit () {
     const { formObj } = this.state
     if (formObj.id) {
       this.props.editFolder(formObj.id, formObj)
-      this.setState({ formObj: this.getInitialObj() })
+      this.setState({ formObj: initialObj })
       this.props.setShowModal(false)
     } else {
       this.props.createFolder(formObj)
-      this.setState({ formObj: this.getInitialObj() })
+      this.setState({ formObj: initialObj })
       this.props.setShowModal(false)
     }
   }
 
-  render() {
+  render () {
     const { formObj } = this.state
     const { showModal, setShowModal } = this.props
-
     return (
       <div>
         {showModal && (
