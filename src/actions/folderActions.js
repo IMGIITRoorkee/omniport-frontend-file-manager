@@ -98,7 +98,7 @@ export const createFolder = data => {
       })
   }
 }
-export const editFolder = (id, data, callback) => {
+export const editFolder = (id, data, callback = () => {return}) => {
   const url = `${FOLDER_APIS.folderItem}/${id}/`
   return dispatch => {
     dispatch(apiDispatch(UPDATE_FOLDER_PENDING, true))

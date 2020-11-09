@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Segment, Button, Icon, Modal } from 'semantic-ui-react'
+
 import { getStarredItems, tabulation, setActiveItems } from '../actions/itemActions'
 import Upload from './app-upload'
 import ConfirmModal from './confirmModal'

@@ -68,7 +68,6 @@ export const getSharedItem = (uuid, id, type_shared, type_access) => {
     apiClient
       .get(url)
       .then(res => {
-        console.log(res)
         dispatch(apiDispatch(GET_FOLDER, res.data))
         dispatch(apiDispatch(GET_SHARED_ITEMS_PENDING, false))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, true))
