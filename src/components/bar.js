@@ -2,27 +2,26 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Segment, Button, Icon, Modal } from 'semantic-ui-react'
 
-import { getStarredItems, tabulation, setActiveItems } from '../actions/itemActions'
+import {
+  getStarredItems,
+  tabulation,
+  setActiveItems
+} from '../actions/itemActions'
 import Upload from './app-upload'
 import ConfirmModal from './confirmModal'
-
 import file from './css/file.css'
 import FolderFormModal from './folderFormModal'
 import ShareItemModal from './shareItemModal'
 import EditFileModal from './edit-modal'
 import { Link, withRouter } from 'react-router-dom'
-<<<<<<< HEAD
-import { deleteFolder, setActiveFolder, editFolder, getFolder } from '../actions/folderActions'
-import { deleteFile, editFile } from '../actions/fileActions'
-=======
 import {
   deleteFolder,
   setActiveFolder,
+  editFolder,
+  getFolder,
   bulkDeleteFolders
 } from '../actions/folderActions'
-import { bulkDeleteFiles, deleteFile } from '../actions/fileActions'
-import { setActiveItems } from '../actions/itemActions'
->>>>>>> Feature: Multiple create and delete files and multiple delete folders
+import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
 import { ITEM_TYPE } from '../constants'
 class Bar extends Component {
   constructor(props) {
@@ -39,24 +38,26 @@ class Bar extends Component {
     const { activeItems, editFile, editFolder } = this.props
     var formdata = new FormData()
     formdata.append('starred', !activeItems[0].obj.starred)
-    if(activeItems[0].type=='file'){
-      editFile(activeItems[0].obj.id,formdata, this.handleStarSuccess)
-    }
-    else{
-      editFolder(activeItems[0].obj.id,formdata, this.handleStarSuccess)
+    if (activeItems[0].type == 'file') {
+      editFile(activeItems[0].obj.id, formdata, this.handleStarSuccess)
+    } else {
+      editFolder(activeItems[0].obj.id, formdata, this.handleStarSuccess)
     }
   }
   handleStarSuccess = () => {
-    const { activeItems, currentFolder, getStarredItems, setActiveItems } = this.props
-    if(currentFolder.type && currentFolder.type == 'starred'){
+    const {
+      activeItems,
+      currentFolder,
+      getStarredItems,
+      setActiveItems
+    } = this.props
+    if (currentFolder.type && currentFolder.type == 'starred') {
       getStarredItems(currentFolder.filemanager)
-    }
-    else{
-      if(activeItems[0].type == 'file'){
+    } else {
+      if (activeItems[0].type == 'file') {
         this.props.getFolder(activeItems[0].obj.folder)
         setActiveItems([])
-      }
-      else{
+      } else {
         this.props.getFolder(activeItems[0].obj.parent)
         setActiveItems([])
       }
@@ -148,7 +149,7 @@ class Bar extends Component {
     return (
       <Segment styleName='file.navbar'>
         <div styleName='file.navbar-first'>
-          {viewingSharedItems || currentFolder.type=='starred' ? (
+          {viewingSharedItems || currentFolder.type == 'starred' ? (
             <div styleName='file.crud-icon'>
               <Button
                 as={Link}
@@ -193,82 +194,81 @@ class Bar extends Component {
         </div>
 
         <div styleName='file.navbar-first'>
-<<<<<<< HEAD
-          {activeItems.length == 1 && !viewingSharedItems ? (
-            <React.Fragment>
+          {activeItems.length == 1 && !viewingSharedItems && (
             <div styleName='file.crud-icon'>
-                <Button
-                  onClick={this.handleStarClick}
-                  title={activeItems[0].obj.starred ? 'Remove from starred': 'Add to starred'}
-                  icon={activeItems[0].obj.starred ? 'star': 'star outline'}
-                  color='blue'
-                  inverted
-                  circular
-                />
-              </div>
-=======
-          <React.Fragment>
-            {activeItems.length == 1 && !viewingSharedItems && (
->>>>>>> Feature: Multiple create and delete files and multiple delete folders
-              <div styleName='file.crud-icon'>
-                <Button
-                  onClick={() => this.setState({ showShareItemModal: true })}
-                  icon='share'
-                  color='blue'
-                  inverted
-                  circular
-                />
-              </div>
-            )}
-            {activeItems.length == 1 && !viewingSharedItems && (
-              <div styleName='file.crud-icon'>
-                <Button
-                  onClick={() => {
-                    if (activeItems[0].type === ITEM_TYPE.file) {
-                      this.setState({ showEditFileModal: true })
-                    } else {
-                      this.setState({
-                        editFolder: activeItems[0].obj,
-                        showFolderFormModal: true
-                      })
-                    }
-                  }}
-                  icon='edit'
-                  color='blue'
-                  inverted
-                  circular
-                />
-              </div>
-            )}
-            {activeItems.length == 1 && !viewingSharedItems && (
-              <div styleName='file.crud-icon'>
-                <Button
-                  disabled={
-                    activeItems.length !== 1 ||
-                    activeItems[0].type !== ITEM_TYPE.file
+              <Button
+                onClick={this.handleStarClick}
+                title={
+                  activeItems[0].obj.starred
+                    ? 'Remove from starred'
+                    : 'Add to starred'
+                }
+                icon={activeItems[0].obj.starred ? 'star' : 'star outline'}
+                color='blue'
+                inverted
+                circular
+              />
+            </div>
+          )}
+          {activeItems.length == 1 && !viewingSharedItems && (
+            <div styleName='file.crud-icon'>
+              <Button
+                onClick={() => this.setState({ showShareItemModal: true })}
+                icon='share'
+                color='blue'
+                inverted
+                circular
+              />
+            </div>
+          )}
+          {activeItems.length == 1 && !viewingSharedItems && (
+            <div styleName='file.crud-icon'>
+              <Button
+                onClick={() => {
+                  if (activeItems[0].type === ITEM_TYPE.file) {
+                    this.setState({ showEditFileModal: true })
+                  } else {
+                    this.setState({
+                      editFolder: activeItems[0].obj,
+                      showFolderFormModal: true
+                    })
                   }
-                  onClick={this.handleDownload}
-                  icon='download'
-                  color='blue'
-                  inverted
-                  circular
-                />
-              </div>
-            )}
-            {activeItems.length > 0 && !viewingSharedItems && (
-              <div styleName='file.crud-icon'>
-                <Button
-                  onClick={() => {
-                    this.setState({ isDelete: true })
-                  }}
-                  icon='delete'
-                  color='red'
-                  inverted
-                  circular
-                />
-              </div>
-            )}
-          </React.Fragment>
+                }}
+                icon='edit'
+                color='blue'
+                inverted
+                circular
+              />
+            </div>
+          )}
+          {activeItems.length == 1 && !viewingSharedItems && (
+            <div styleName='file.crud-icon'>
+              <Button
+                disabled={
+                  activeItems.length !== 1 ||
+                  activeItems[0].type !== ITEM_TYPE.file
+                }
+                onClick={this.handleDownload}
+                icon='download'
+                color='blue'
+                inverted
+                circular
+              />
+            </div>
+          )}
+          {activeItems.length > 0 && !viewingSharedItems && (
+            <div styleName='file.crud-icon'>
+              <Button
+                onClick={() => {
+                  this.setState({ isDelete: true })
+                }}
+                icon='delete'
+                color='red'
+                inverted
+                circular
+              />
+            </div>
+          )}
 
           <div styleName='file.crud-icon'>
             <Button
@@ -358,25 +358,23 @@ const mapDispatchToProps = dispatch => {
     setActiveItems: items => {
       dispatch(setActiveItems(items))
     },
-<<<<<<< HEAD
     editFile: (id, formdata, callback) => {
       dispatch(editFile(id, formdata, callback))
     },
     editFolder: (id, formdata, callback) => {
       dispatch(editFolder(id, formdata, callback))
     },
-    getFolder : (id) => {
+    getFolder: id => {
       dispatch(getFolder(id))
     },
     getStarredItems: filemanager => {
       dispatch(getStarredItems(filemanager))
-=======
+    },
     bulkDeleteFolders: data => {
       dispatch(bulkDeleteFolders(data))
     },
     bulkDeleteFiles: data => {
       dispatch(bulkDeleteFiles(data))
->>>>>>> Feature: Multiple create and delete files and multiple delete folders
     }
   }
 }
