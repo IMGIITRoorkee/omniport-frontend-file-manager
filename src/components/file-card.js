@@ -27,6 +27,16 @@ class Filecard extends Component {
     }
   }
 
+  handleContextSelect = e => {
+    const { file, activeItems, setActiveItems } = this.props
+    const newActiveItems = activeItems.some(
+      elem => elem.obj.id === file.id && elem.type == 'file'
+    )
+      ? activeItems
+      : [{ type: ITEM_TYPE.file, obj: file }]
+    setActiveItems(newActiveItems)
+  }
+
   render() {
     const { index, activeItems, file } = this.props
     const extension = file.extension
@@ -36,15 +46,11 @@ class Filecard extends Component {
         : file.fileName
 
     return (
-      <div
-        id={`grid-card-${index}`}
-        styleName="grid.file-card"
-        onContextMenu={this.handleSelect}
-        secondary
-      >
+      <div id={`grid-card-${index}`} styleName='grid.file-card' secondary>
         <div
-          styleName="grid.file-icon"
+          styleName='grid.file-icon'
           onClick={e => this.handleSelect(e)}
+          onContextMenu={this.handleContextSelect}
           styleName={
             activeItems.some(
               elem => elem.obj.id === file.id && elem.type == 'file'
@@ -54,7 +60,7 @@ class Filecard extends Component {
           }
         >
           <FileIcon {...FILE_TYPES[extension]} extension={extension} />
-          <div styleName="grid.file-name">{fileName}</div>
+          <div styleName='grid.file-name'>{fileName}</div>
         </div>
       </div>
     )
@@ -64,7 +70,7 @@ class Filecard extends Component {
 const mapStateToProps = state => {
   return {
     activeItems: state.items.activeItems,
-    currentFolder: state.folders.selectedFolder,
+    currentFolder: state.folders.selectedFolder
   }
 }
 
@@ -75,7 +81,7 @@ const mapDispatchToProps = dispatch => {
     },
     deleteFile: pk => {
       dispatch(deleteFile(pk))
-    },
+    }
   }
 }
 

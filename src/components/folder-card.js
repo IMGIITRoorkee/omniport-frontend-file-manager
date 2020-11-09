@@ -17,7 +17,7 @@ class FolderCard extends Component {
   }
 
   handleSelect = e => {
-    const { setActiveFolder, folder, activeItems, setActiveItems } = this.props
+    const { folder, activeItems, setActiveItems } = this.props
     if (e.ctrlKey) {
       const newActiveItems = activeItems.some(
         elem => elem.obj.id === folder.id && elem.type == 'folder'
@@ -28,6 +28,16 @@ class FolderCard extends Component {
     } else {
       setActiveItems([{ type: ITEM_TYPE.folder, obj: folder }])
     }
+  }
+  handleContextSelect = e => {
+    const { folder, activeItems, setActiveItems } = this.props
+
+    const newActiveItems = activeItems.some(
+      elem => elem.obj.id === folder.id && elem.type == 'folder'
+    )
+      ? activeItems
+      : [ { type: ITEM_TYPE.folder, obj: folder }]
+    setActiveItems(newActiveItems)
   }
 
   handleDoubleClick = () => {
@@ -57,15 +67,7 @@ class FolderCard extends Component {
         ? folder.folderName.slice(0, 10) + '..'
         : folder.folderName
     return (
-      <div
-        id={`grid-card-${index}`}
-        styleName='grid.file-card'
-        onContextMenu={e => {
-          e.preventDefault()
-          this.handleSelect(e)
-        }}
-        secondary
-      >
+      <div id={`grid-card-${index}`} styleName='grid.file-card' secondary>
         <div
           styleName={
             activeItems.some(
@@ -75,7 +77,11 @@ class FolderCard extends Component {
               : 'grid.folder-inactive'
           }
         >
-          <div styleName='grid.folder-icon' onClick={e => this.handleSelect(e)}>
+          <div
+            styleName='grid.folder-icon'
+            onClick={e => this.handleSelect(e)}
+            onContextMenu={this.handleContextSelect}
+          >
             <Icon
               size='huge'
               color='grey'
