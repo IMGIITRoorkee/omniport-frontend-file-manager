@@ -7,24 +7,22 @@ import file from './css/file.css'
 class FolderFormModal extends Component {
   constructor(props) {
     super(props)
-    const { editFormObj, parentFolder } = this.props
-
+    const { parentFolder } = this.props
     this.state = {
       formObj: {
         folder_name: '',
         starred: false,
         permission: 'r_w',
-        filemanager: null,
-        parent: null,
-        root: null
+        filemanager: parentFolder.filemanager,
+        parent: parentFolder.id,
+        root: parentFolder.root || parentFolder.id
       }
     }
     this.handleSubmit = this.handleSubmit.bind(this)
   }
   componentDidMount() {
-    const { parentFolder } = this.props
     this.setState({
-      ...this.getInitialObj()
+      formObj: this.getInitialObj()
     })
   }
   getInitialObj = () => {
@@ -35,7 +33,7 @@ class FolderFormModal extends Component {
       permission: 'r_w',
       filemanager: parentFolder.filemanager,
       parent: parentFolder.id,
-      root: parentFolder.root
+      root: parentFolder.root || parentFolder.id
     }
   }
   componentDidUpdate(prevprops) {
@@ -49,7 +47,7 @@ class FolderFormModal extends Component {
         formObj: {
           ...this.state.formObj,
           filemanager: parentFolder.filemanager,
-          root: parentFolder.root,
+          root: parentFolder.root || parentFolder.id,
           parent: parentFolder.id
         }
       })
@@ -90,8 +88,7 @@ class FolderFormModal extends Component {
 
   render() {
     const { formObj } = this.state
-    const { showModal, setShowModal } = this.props
-
+    const { showModal, setShowModal,parentFolder } = this.props
     return (
       <div>
         {showModal && (
