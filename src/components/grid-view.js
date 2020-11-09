@@ -15,7 +15,7 @@ import { ITEM_TYPE } from '../constants'
 import FolderFormModal from './folderFormModal'
 import ShareItemModal from './shareItemModal'
 
-function createContextFromEvent(e) {
+function createContextFromEvent (e) {
   const left = e.clientX
   const top = e.clientY
   const right = left + 1
@@ -34,7 +34,7 @@ function createContextFromEvent(e) {
   }
 }
 class GridView extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.folderContainerRef = React.createRef()
     this.contextRef = React.createRef()
@@ -144,7 +144,7 @@ class GridView extends Component {
     this.setState({ showDeleteModal: false })
   }
 
-  render() {
+  render () {
     const { currentFolder, activeItems, viewingSharedItems } = this.props
     const {
       isPopupOpen,
@@ -232,12 +232,7 @@ class GridView extends Component {
             this.handleDelete()
           }}
           type='remove'
-          item={Array.from(new Set(activeItems.map(item => item.type))).join(
-            ' and '
-          )}
-          itemList={activeItems.map(
-            item => item.obj.fileName || item.obj.folderName
-          )}
+          item={activeItems.length && activeItems[0].type}
         />
         <EditModal
           showModal={showFileEditModal}

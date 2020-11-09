@@ -9,7 +9,7 @@ const modalTypes = item => ({
       main: (
         <>
           <Icon name='trash' Color='red' />
-          Are you sure you want to remove following {item} ?
+          Are you sure you want to remove {item} ?
         </>
       ),
       extras: ''
@@ -62,11 +62,10 @@ const ConfirmModal = ({
   type = 'remove',
   item = 'task',
   dialogText = '',
-  dialogMessage = '',
-  itemList = []
+  dialogMessage = ''
 }) => {
-  item = itemList.length > 1 ? item + 's' : item
   const stateObject = modalTypes(item)[type]
+
   return (
     <Modal open={show} onClose={handleClose}>
       <Modal.Header>{stateObject.header}</Modal.Header>
@@ -85,13 +84,7 @@ const ConfirmModal = ({
             </>
           )}
         </Modal.Description>
-        {dialogText ? (
-          <p>{dialogText}</p>
-        ) : itemList.length ? (
-          itemList.map(elem => <p>{elem}</p>)
-        ) : (
-          ''
-        )}
+        <p>{dialogText}</p>
       </Modal.Content>
       <Modal.Actions>
         <Button onClick={handleClose}>Cancel</Button>
