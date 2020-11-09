@@ -59,7 +59,7 @@ export const getFileDetails = id => {
   }
 }
 
-export const editFile = (id, data, callback) => {
+export const editFile = (id, data, callback = () => {return}) => {
   const url = `${FILE_APIS.fileItem}/${id}/`
   return dispatch => {
     dispatch(apiDispatch(UPDATE_FILE_PENDING, true))
