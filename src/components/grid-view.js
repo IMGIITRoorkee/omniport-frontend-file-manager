@@ -12,13 +12,11 @@ import {
   deleteFolder,
   editFolder,
   getFolder,
-  deleteFolder,
   bulkDeleteFolders
 } from '../actions/folderActions'
 import {
   deleteFile,
   editFile,
-  deleteFile,
   bulkDeleteFiles
 } from '../actions/fileActions'
 import { getStarredItems } from '../actions/itemActions'
