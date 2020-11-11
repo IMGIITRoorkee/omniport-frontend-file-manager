@@ -106,6 +106,7 @@ class ShareItemModal extends Component {
       for (let i = 0; i < selectedUsersFinally.length; i++) {
         formdata.append('shared_users', parseInt(selectedUsersFinally[i]))
       }
+      console.log(formdata['shared_users'])
       if (activeItems[0].type == 'file') {
         editFileUsers(activeItems[0].obj.id, formdata, this.handleSuccess)
       } else {
