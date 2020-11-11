@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link, Button, Card, Container, Divider } from 'semantic-ui-react'
+import { Card, Container, Divider } from 'semantic-ui-react'
 import css from './css/approveRequest.css'
 import ErrorBoundary from './error-boundary'
 
