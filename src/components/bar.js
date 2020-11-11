@@ -24,7 +24,7 @@ import {
 import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
 import { ITEM_TYPE } from '../constants'
 class Bar extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       isDelete: false,
@@ -132,7 +132,7 @@ class Bar extends Component {
       isDelete: false
     })
   }
-  render() {
+  render () {
     const {
       tabular,
       activeItems,
@@ -155,7 +155,7 @@ class Bar extends Component {
                 as={Link}
                 icon
                 labelPosition='left'
-                color='grey'
+                color='blue'
                 to={`/file-manager/${this.props.match.params.filemanager}/`}
               >
                 <Icon name='home' />
