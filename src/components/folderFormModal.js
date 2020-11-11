@@ -27,7 +27,6 @@ class FolderFormModal extends Component {
   }
   getInitialObj = () => {
     const { parentFolder } = this.props
-    console.log(parentFolder)
     return {
       folder_name: '',
       starred: false,
@@ -92,7 +91,6 @@ class FolderFormModal extends Component {
   render() {
     const { formObj } = this.state
     const { showModal, setShowModal, parentFolder } = this.props
-    console.log(parentFolder)
     return (
       <div>
         {showModal && (
