@@ -10,66 +10,73 @@ import {
 } from 'semantic-ui-react'
 import css from './css/approveRequest.css'
 import ErrorBoundary from './error-boundary'
-import { createFilemanager } from '../actions/itemActions'
-import { ONE_GB } from '../constants'
-
-const spaceOptions = [
-  { key: '1', text: '1 GB', value: 1 * ONE_GB },
-  { key: '2', text: '2 GB', value: 2 * ONE_GB },
-  { key: '3', text: '5 GB', value: 5 * ONE_GB },
-  { key: '4', text: '10 GB', value: 10 * ONE_GB }
-]
-
-const roleOptions = [
-  { key: '1', text: 'Student', value: 'Student' },
-  { key: '2', text: 'FacultyMember', value: 'FacultyMember' },
-  { key: '3', text: 'Maintainer', value: 'Maintainer' },
-  { key: '4', text: 'Guest', value: 'Guest' }
-]
+import { createFilemanager } from '../actions/filemanagerActions'
+import { spaceOptions, roleOptions } from '../constants'
 
 class CreateInstance extends Component {
   constructor (props) {
     super(props)
     this.state = {
+      formObj: {
+        filemanagerName: '',
+        rootFolderName: '',
+        rolesAllowed: [],
+        logo: null,
+        maxSpace: null,
+        // isLoading: false,
+        success: false
+      }
+    }
+  }
+
+  componentDidMount = () => {
+    this.state = {
+      formObj: this.getInitialObj()
+    }
+  }
+
+  getInitialObj = () => {
+    return {
       filemanagerName: '',
       rootFolderName: '',
       rolesAllowed: [],
       logo: null,
       maxSpace: null,
-      isLoading: false,
       success: false
     }
   }
-  componentDidMount = () => {}
 
-  handleChange = (e, { name, value }) => this.setState({ [name]: value })
+  handleChange = (e, { name, value }) =>
+    this.setState({ formObj: { ...this.state.formObj, [name]: value } })
 
   handleImageChange = e => {
     const image = e.target.files[0]
     this.setState({
-      ...this.state,
-      logo: image
+      formObj: {
+        ...this.state.formObj,
+        logo: image
+      }
     })
   }
 
   handleChangeSelect = (e, data) => {
-    console.log(data)
     this.setState({
-      ...this.state,
-      [data.name]: data.value
+      formObj: {
+        ...this.state.formObj,
+        [data.name]: data.value
+      }
     })
   }
 
   handleSubmit = e => {
     e.preventDefault()
-    this.setState({ isLoading: true })
     const {
       filemanagerName,
       rootFolderName,
       logo,
       rolesAllowed,
       maxSpace
-    } = this.state
+    } = this.state.formObj
     const { createFilemanager } = this.props
     if (filemanagerName && rootFolderName && logo && rolesAllowed) {
       let formdata = new FormData()
@@ -80,27 +87,22 @@ class CreateInstance extends Component {
         formdata.append('filemanager_access_roles', rolesAllowed[i].toString())
       }
       formdata.append('max_space', parseInt(maxSpace))
-      console.log(formdata['filemanager_access_roles'])
       createFilemanager(formdata, this.handleSuccess)
     }
   }
 
   handleSuccess = () => {
     this.setState({
-      isLoading: false,
-      success: true
+      formObj: {
+        ...this.state.formObj,
+        success: true
+      }
     })
   }
 
   handleCreateAnother = () => {
     this.setState({
-      filemanagerName: '',
-      rootFolderName: '',
-      rolesAllowed: [],
-      logo: null,
-      maxSpace: null,
-      isLoading: false,
-      success: false
+      formObj: this.getInitialObj()
     })
   }
   render () {
@@ -110,9 +112,10 @@ class CreateInstance extends Component {
       rolesAllowed,
       logo,
       maxSpace,
-      success,
-      isLoading
-    } = this.state
+      success
+    } = this.state.formObj
+    const { createFilemanagerPending } = this.props
+
     return (
       <ErrorBoundary>
         <Container styleName='css.main-container'>
@@ -179,7 +182,11 @@ class CreateInstance extends Component {
                 />
               </span>
             ) : (
-              <Form.Button success content='Submit' loading={isLoading} />
+              <Form.Button
+                success
+                content='Submit'
+                loading={createFilemanagerPending}
+              />
             )}
           </Form>
         </Container>
@@ -189,7 +196,9 @@ class CreateInstance extends Component {
 }
 
 const mapStateToProps = state => {
-  return {}
+  return {
+    createFilemanagerPending: state.filemanagers.createFilemanagerPending
+  }
 }
 
 const mapDispatchToProps = dispatch => {
