@@ -22,11 +22,12 @@ class FolderFormModal extends Component {
   }
   componentDidMount() {
     this.setState({
-      formObj: this.getInitialObj()
+      formObj: { ...this.getInitialObj() }
     })
   }
   getInitialObj = () => {
     const { parentFolder } = this.props
+    console.log(parentFolder)
     return {
       folder_name: '',
       starred: false,
@@ -40,8 +41,10 @@ class FolderFormModal extends Component {
     const { parentFolder } = this.props
 
     if (
-      this.props.parentFolder.id &&
-      prevprops.parentFolder.id !== this.props.parentFolder.id
+      // this.props.parentFolder.id &&
+      // prevprops.parentFolder.id !== this.props.parentFolder.id
+      JSON.stringify(this.props.parentFolder) !==
+      JSON.stringify(prevprops.parentFolder)
     ) {
       this.setState({
         formObj: {
@@ -88,7 +91,8 @@ class FolderFormModal extends Component {
 
   render() {
     const { formObj } = this.state
-    const { showModal, setShowModal,parentFolder } = this.props
+    const { showModal, setShowModal, parentFolder } = this.props
+    console.log(parentFolder)
     return (
       <div>
         {showModal && (
