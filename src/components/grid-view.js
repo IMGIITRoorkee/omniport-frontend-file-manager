@@ -14,11 +14,7 @@ import {
   getFolder,
   bulkDeleteFolders
 } from '../actions/folderActions'
-import {
-  deleteFile,
-  editFile,
-  bulkDeleteFiles
-} from '../actions/fileActions'
+import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
 import { getStarredItems } from '../actions/itemActions'
 import { ITEM_TYPE } from '../constants'
 import FolderFormModal from './folderFormModal'
@@ -57,15 +53,7 @@ class GridView extends Component {
       editFolder: {}
     }
   }
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (
-  //     prevState.isPopupOpen !== this.props.isPopupOpen &&
-  //     JSON.stringify(prevProps.activeItems[0]) !==
-  //       JSON.stringify(this.props.activeItems[0])
-  //   ) {
-  //     this.setState({ isPopupOpen: true })
-  //   }
-  // }
+
   getOptions = () => {
     const { activeItems } = this.props
     if (activeItems.length == 1) {
@@ -95,13 +83,21 @@ class GridView extends Component {
               icon: activeItems[0].obj.starred ? 'star' : 'star outline'
             }
           ]
-    } else return [{ key: '3', label: 'Delete', icon: 'delete' }]
+    } else
+      return !activeItems.some(item => item.type === ITEM_TYPE.folder)
+        ? [
+            { key: '2', label: 'Download', icon: 'download' },
+            { key: '3', label: 'Delete', icon: 'delete' }
+          ]
+        : [{ key: '3', label: 'Delete', icon: 'delete' }]
   }
   handleOptions = {
     1: () => {
       this.setState({ showFileEditModal: true })
     },
-    2: () => {},
+    2: () => {
+      this.handleDownload()
+    },
     3: () => {
       this.setState({ showDeleteModal: true })
     },
@@ -122,6 +118,20 @@ class GridView extends Component {
         editFile(activeItems[0].obj.id, formdata, this.handleStarSuccess)
       } else {
         editFolder(activeItems[0].obj.id, formdata, this.handleStarSuccess)
+      }
+    }
+  }
+
+  handleDownload = () => {
+    const { activeItems } = this.props
+    for (const item of activeItems) {
+      if (item.type === ITEM_TYPE.file) {
+        let link = document.createElement('a')
+        link.download = item.obj.fileName
+        link.href = item.obj.upload
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
       }
     }
   }
