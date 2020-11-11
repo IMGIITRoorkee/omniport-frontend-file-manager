@@ -5,10 +5,11 @@ import {
   GET_SHARED_ITEMS_PENDING,
   ITEM_API_ERROR,
   VIEWING_SHARED_ITEMS,
-  GET_STARRED_ITEMS_PENDING
+  GET_STARRED_ITEMS_PENDING,
+  CREATE_FILEMANAGER_PENDING
 } from './itemActionType'
 import { GET_FOLDER } from './folderActionType'
-import { SHARED_ITEMS_APIS, FOLDER_APIS } from '../urls'
+import { SHARED_ITEMS_APIS, FOLDER_APIS, FILEMANAGER_APIS } from '../urls'
 import apiClient from '../helpers/apiClient'
 
 const apiDispatch = (actionType = '', data) => {
@@ -90,6 +91,24 @@ export const getStarredItems = filemanager => {
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
       })
       .catch(error => {
+        dispatch(apiError(error))
+      })
+  }
+}
+
+export const createFilemanager = (data, callback) => {
+  const url = `${FILEMANAGER_APIS.filemanagerItem}/`
+  return dispatch => {
+    dispatch(apiDispatch(CREATE_FILEMANAGER_PENDING, true))
+    apiClient
+      .post(url, data)
+      .then(res => {
+        dispatch(apiDispatch(CREATE_FILEMANAGER_PENDING, false))
+        // dispatch(apiDispatch(UPLOAD_FILE, res.data))
+        callback()
+      })
+      .catch(error => {
+        dispatch(apiDispatch(CREATE_FILEMANAGER_PENDING, false))
         dispatch(apiError(error))
       })
   }

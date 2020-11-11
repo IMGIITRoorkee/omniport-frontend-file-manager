@@ -20,12 +20,12 @@ import { formatStorage } from '../helpers/helperfunctions'
 
 const options = [
   { key: '1', label: '1 GB', value: 1 * ONE_GB, color: 'red' },
-  { key: '2', label: '2 GB', value: 5 * ONE_GB, color: 'orange' },
+  { key: '2', label: '2 GB', value: 2 * ONE_GB, color: 'orange' },
   { key: '3', label: '5 GB', value: 5 * ONE_GB, color: 'green' }
 ]
 
 class RequestData extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       add_data: null,
@@ -61,7 +61,7 @@ class RequestData extends Component {
       showModal: false
     })
   }
-  render() {
+  render () {
     const { add_data, showModal, labelColor } = this.state
     const { currentFolder } = this.props
     return (

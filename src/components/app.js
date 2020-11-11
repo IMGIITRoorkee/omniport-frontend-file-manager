@@ -8,9 +8,11 @@ import Instances from './instances'
 import main from 'formula_one/src/css/app.css'
 import blocks from './css/app.css'
 import ApproveRequest from './approveRequest'
+import Admin from './admin'
+import CreateInstance from './createInstance'
 
 class App extends Component {
-  render() {
+  render () {
     console.log('rendering app')
     const creators = [
       {
@@ -45,10 +47,15 @@ class App extends Component {
           <Scrollbars>
             <Switch>
               <Route exact path={`${match.path}/`} component={Instances} />
+              <Route exact path={`${match.path}/admin`} component={Admin} />
               <Route
                 exact
-                key={1}
-                path={`${match.path}/approve`}
+                path={`${match.path}/admin/create`}
+                component={CreateInstance}
+              />
+              <Route
+                exact
+                path={`${match.path}/admin/approve`}
                 component={ApproveRequest}
               />
               <Route
