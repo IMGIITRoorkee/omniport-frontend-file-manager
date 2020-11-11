@@ -64,14 +64,16 @@ class Bar extends Component {
     }
   }
   handleDownload = () => {
-    const { isSelected, selectedData } = this.props
-    if (isSelected) {
-      let link = document.createElement('a')
-      link.download = selectedData.fileName
-      link.href = selectedData.link
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+    const { activeItems } = this.props
+    for (const item of activeItems) {
+      if (item.type === ITEM_TYPE.file) {
+        let link = document.createElement('a')
+        link.download = item.obj.fileName
+        link.href = item.obj.upload
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      }
     }
   }
   handleBack = () => {
@@ -241,21 +243,19 @@ class Bar extends Component {
               />
             </div>
           )}
-          {activeItems.length == 1 && !viewingSharedItems && (
-            <div styleName='file.crud-icon'>
-              <Button
-                disabled={
-                  activeItems.length !== 1 ||
-                  activeItems[0].type !== ITEM_TYPE.file
-                }
-                onClick={this.handleDownload}
-                icon='download'
-                color='blue'
-                inverted
-                circular
-              />
-            </div>
-          )}
+          {activeItems.length > 0 &&
+            !activeItems.some(item => item.type === ITEM_TYPE.folder) &&
+            !viewingSharedItems && (
+              <div styleName='file.crud-icon'>
+                <Button
+                  onClick={this.handleDownload}
+                  icon='download'
+                  color='blue'
+                  inverted
+                  circular
+                />
+              </div>
+            )}
           {activeItems.length > 0 && !viewingSharedItems && (
             <div styleName='file.crud-icon'>
               <Button
