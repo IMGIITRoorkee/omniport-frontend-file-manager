@@ -16,9 +16,10 @@ import {
 } from '../actions/folderActions'
 import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
 import { getStarredItems } from '../actions/itemActions'
-import { ITEM_TYPE } from '../constants'
+import { ITEM_TYPE, IMAGE_EXTENSIONS } from '../constants'
 import FolderFormModal from './folderFormModal'
 import ShareItemModal from './shareItemModal'
+import MultipleImagesModal from './multipleImageModal'
 
 function createContextFromEvent(e) {
   const left = e.clientX
@@ -50,7 +51,8 @@ class GridView extends Component {
       showDeleteModal: false,
       showFolderFormModal: false,
       showShareItemModal: false,
-      editFolder: {}
+      editFolder: {},
+      isDetailViewOpen: false
     }
   }
 
@@ -206,6 +208,15 @@ class GridView extends Component {
     this.setState({ showDeleteModal: false })
   }
 
+  handleFileDoubleClick = (file, index) => {
+    this.props.setActiveItems([{ type: ITEM_TYPE.file, obj: file }])
+    if (IMAGE_EXTENSIONS.includes(file.extension)) {
+      this.setState({ isDetailViewOpen: true })
+    } else {
+      this.handleDownload()
+    }
+  }
+
   render() {
     const { currentFolder, activeItems, viewingSharedItems } = this.props
     const {
@@ -214,7 +225,8 @@ class GridView extends Component {
       showFileEditModal,
       showFolderFormModal,
       editFolder,
-      showShareItemModal
+      showShareItemModal,
+      isDetailViewOpen
     } = this.state
     return (
       <div
@@ -262,7 +274,12 @@ class GridView extends Component {
           {currentFolder &&
             currentFolder.files &&
             currentFolder.files.map((file, index) => (
-              <Filecard key={index} index={index} file={file} />
+              <Filecard
+                key={index}
+                index={index}
+                file={file}
+                handleDoubleClick={this.handleFileDoubleClick}
+              />
             ))}
         </div>
         <Popup
@@ -323,6 +340,12 @@ class GridView extends Component {
           editFormObj={editFolder}
           setShowModal={value => {
             this.setState({ showFolderFormModal: value })
+          }}
+        />
+        <MultipleImagesModal
+          show={isDetailViewOpen}
+          onHide={() => {
+            this.setState({ isDetailViewOpen: false })
           }}
         />
       </div>

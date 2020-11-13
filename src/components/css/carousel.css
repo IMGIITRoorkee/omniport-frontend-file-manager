@@ -1,0 +1,43 @@
+.button-container-back {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.button-container-next {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-container {
+  display: grid;
+  grid-template-columns: 10% 80% 10%;
+  justify-content: center;
+}
+.button {
+  background: none;
+  border: none;
+}
+
+.button-icon {
+  color: white;
+  box-shadow: 0 0 0 0.1em rgba(255, 255, 255, 0.3) inset !important;
+}
+.dot-group {
+  grid-column-start: 2;
+  justify-self: center;
+}
+.cross-icon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  box-shadow: none !important;
+  cursor: pointer;
+}
+.download-icon {
+  position: absolute;
+  top: 0;
+  right: 50px;
+  box-shadow: none !important;
+  cursor: pointer;
+}
