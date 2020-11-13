@@ -418,3 +418,5 @@ export const REQUEST_STATUS = Object.freeze({
   ACCEPT: '2',
   REJECT: '3'
 })
+
+export const IMAGE_EXTENSIONS = ['jpg', 'png', 'jpeg', 'svg', '']

@@ -5,6 +5,7 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import rootReducers from './reducers'
+import "pure-react-carousel/dist/react-carousel.es.css";
 
 export default class AppRouter extends Component {
   constructor (props) {

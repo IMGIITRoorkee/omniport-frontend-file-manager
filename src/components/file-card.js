@@ -38,7 +38,12 @@ class Filecard extends Component {
   }
 
   render() {
-    const { index, activeItems, file } = this.props
+    const {
+      index,
+      activeItems,
+      file,
+      handleDoubleClick = () => {}
+    } = this.props
     const extension = file.extension
     const fileName =
       file.fileName.length > 12
@@ -51,6 +56,9 @@ class Filecard extends Component {
           styleName='grid.file-icon'
           onClick={e => this.handleSelect(e)}
           onContextMenu={this.handleContextSelect}
+          onDoubleClick={() => {
+            handleDoubleClick(file, index)
+          }}
           styleName={
             activeItems.some(
               elem => elem.obj.id === file.id && elem.type == 'file'
