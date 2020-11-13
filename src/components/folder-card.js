@@ -101,7 +101,6 @@ class FolderCard extends Component {
 const mapStateToProps = state => {
   return {
     gridViewActiveIndex: state.files.gridViewActiveIndex,
-    activeFolder: state.folders.activeFolder,
     activeItems: state.items.activeItems,
     viewingSharedItems: state.items.viewingSharedItems
   }
