@@ -13,7 +13,9 @@ import {
   SET_ACTIVE_FOLDER,
   DATA_REQUEST_PENDING,
   UPDATE_FOLDER_PENDING,
-  GET_ALL_DATA_REQUESTS
+  GET_ALL_DATA_REQUESTS,
+  GET_PARENT_FOLDERS,
+  GET_PARENT_FOLDERS_PENDING
 } from './folderActionType'
 import { VIEWING_SHARED_ITEMS } from './itemActionType'
 
@@ -98,7 +100,13 @@ export const createFolder = data => {
       })
   }
 }
-export const editFolder = (id, data, callback = () => {return}) => {
+export const editFolder = (
+  id,
+  data,
+  callback = () => {
+    return
+  }
+) => {
   const url = `${FOLDER_APIS.folderItem}/${id}/`
   return dispatch => {
     dispatch(apiDispatch(UPDATE_FOLDER_PENDING, true))
@@ -227,6 +235,23 @@ export const handleRequest = (id, data, callback) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+      })
+  }
+}
+
+export const getParentFolders = (id, callback = () => {}) => {
+  const url = `${FOLDER_APIS.folderItem}/${id}/${FOLDER_APIS.parents}`
+  return dispatch => {
+    dispatch(apiDispatch(GET_PARENT_FOLDERS_PENDING, true))
+    apiClient
+      .get(url)
+      .then(res => {
+        dispatch(apiDispatch(GET_PARENT_FOLDERS, res.data))
+        dispatch(apiDispatch(GET_PARENT_FOLDERS_PENDING, false))
+      })
+      .catch(err => {
+        dispatch(apiError(err))
+        dispatch(apiDispatch(GET_PARENT_FOLDERS_PENDING, false))
       })
   }
 }

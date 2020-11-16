@@ -14,7 +14,8 @@ export const FOLDER_APIS = {
   generateDataRequest: 'generate_data_request/',
   foldersShared: '/folder/shared_with_me',
   starred_items: '/all_starred_items/',
-  bulkDelete: 'bulk_delete/'
+  bulkDelete: 'bulk_delete/',
+  parents: 'parents/'
 }
 
 export const SHARED_ITEMS_APIS = {
