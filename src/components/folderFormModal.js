@@ -40,8 +40,6 @@ class FolderFormModal extends Component {
     const { parentFolder } = this.props
 
     if (
-      // this.props.parentFolder.id &&
-      // prevprops.parentFolder.id !== this.props.parentFolder.id
       JSON.stringify(this.props.parentFolder) !==
       JSON.stringify(prevprops.parentFolder)
     ) {
