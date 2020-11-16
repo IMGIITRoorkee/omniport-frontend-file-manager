@@ -4,7 +4,11 @@ import { Dimmer, Loader, Divider } from 'semantic-ui-react'
 
 import ErrorBoundary from './error-boundary'
 import { getFolder, getRootFolder } from '../actions/folderActions'
-import { getSharedItems, getSharedItem, getStarredItems } from '../actions/itemActions'
+import {
+  getSharedItems,
+  getSharedItem,
+  getStarredItems
+} from '../actions/itemActions'
 import { setActiveItems } from '../actions/itemActions'
 
 import index from './css/index.css'
@@ -23,20 +27,27 @@ const GridView = React.lazy(() => import('./grid-view'))
 const TabularView = React.lazy(() => import('./tabular-view'))
 
 class Root extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.ref = React.createRef()
   }
-  componentDidMount () {
-    const { uuid, id, type_access, type_shared, filemanager } = this.props.match.params
-    const { getSharedItems, getSharedItem, getFolderDetails, getRoot, getStarredItems } = this.props
+  componentDidMount() {
+    const {
+      uuid,
+      id,
+      type_access,
+      type_shared,
+      filemanager
+    } = this.props.match.params
+    const {
+      getSharedItems,
+      getSharedItem,
+      getFolderDetails,
+      getRoot,
+      getStarredItems
+    } = this.props
     uuid && id && type_shared && type_access
-      ? getSharedItem(
-          uuid,
-          id,
-          type_shared,
-          type_access
-        )
+      ? getSharedItem(uuid, id, type_shared, type_access)
       : id == 'all_starred_items'
       ? getStarredItems(filemanager)
       : id == 'shared_with_me'
@@ -45,17 +56,24 @@ class Root extends Component {
       ? getFolderDetails(id)
       : getRoot(filemanager)
   }
-  componentDidUpdate (prevProps) {
-    const { uuid, id, type_access, type_shared, filemanager } = this.props.match.params
-    const { getSharedItems,getSharedItem, getFolderDetails, getRoot, getStarredItems } = this.props
+  componentDidUpdate(prevProps) {
+    const {
+      uuid,
+      id,
+      type_access,
+      type_shared,
+      filemanager
+    } = this.props.match.params
+    const {
+      getSharedItems,
+      getSharedItem,
+      getFolderDetails,
+      getRoot,
+      getStarredItems
+    } = this.props
     if (prevProps.location.pathname !== this.props.location.pathname) {
       uuid && id && type_shared && type_access
-        ? getSharedItem(
-            uuid,
-            id,
-            type_shared,
-            type_access
-          )
+        ? getSharedItem(uuid, id, type_shared, type_access)
         : id == 'all_starred_items'
         ? getStarredItems(filemanager)
         : id == 'shared_with_me'
@@ -71,8 +89,16 @@ class Root extends Component {
     }
   }
 
-  render () {
-    const { tabular, isLoading } = this.props
+  render() {
+    const {
+      tabular,
+      getFilePending,
+      getFilesPending,
+      getFolderPending,
+      getFoldersPending
+    } = this.props
+    const isLoading =
+      getFilePending || getFilesPending || getFolderPending || getFoldersPending
     return (
       <React.Fragment>
         <div styleName='manager.bar-progress-parent'>
@@ -106,10 +132,11 @@ class Root extends Component {
 const mapStateToProps = state => {
   return {
     tabular: state.items.tabular,
-    // isLoading: state.files.isLoading,
-    // selectedData: state.files.selectedData,
-    // isTarget: state.files.isTarget,
-    folder: state.folders.selectedFolder
+    folder: state.folders.selectedFolder,
+    getFolderPending: state.folders.getFolderPending,
+    getFoldersPending: state.folders.getFoldersPending,
+    getFilePending: state.files.getFilePending,
+    getFilesPending: state.files.getFilesPending
   }
 }
 
