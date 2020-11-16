@@ -12,6 +12,8 @@ import {
   SET_ACTIVE_FOLDER,
   DATA_REQUEST_PENDING,
   GET_ALL_DATA_REQUESTS,
+  GET_PARENT_FOLDERS,
+  GET_PARENT_FOLDERS_PENDING
 } from '../actions/folderActionType'
 
 const initialPendingState = {
@@ -21,6 +23,7 @@ const initialPendingState = {
   getFoldersPending: false,
   updateFolderPending: false,
   dataRequestPending: false,
+  getParentsPending: false
 }
 
 const initialState = {
@@ -30,6 +33,7 @@ const initialState = {
   Folders: [],
   activeFolder: {},
   dataRequests: [],
+  parents: []
 }
 const folderReducer = (state = initialState, action) => {
   const { type, payload, error } = action
@@ -60,6 +64,10 @@ const folderReducer = (state = initialState, action) => {
       return { ...state, error: error }
     case GET_ALL_DATA_REQUESTS:
       return { ...state, dataRequests: payload }
+    case GET_PARENT_FOLDERS:
+      return { ...state, parents: payload }
+    case GET_PARENT_FOLDERS_PENDING:
+      return { ...state, getParentsPending: payload }
     default:
       return state
   }
