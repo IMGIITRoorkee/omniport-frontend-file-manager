@@ -39,6 +39,7 @@ class CreateInstance extends Component {
     return {
       filemanagerName: '',
       rootFolderName: '',
+      filemanagerUrlPath:'',
       rolesAllowed: [],
       logo: null,
       maxSpace: null,
@@ -72,6 +73,7 @@ class CreateInstance extends Component {
     e.preventDefault()
     const {
       filemanagerName,
+      filemanagerUrlPath,
       rootFolderName,
       logo,
       rolesAllowed,
@@ -82,6 +84,7 @@ class CreateInstance extends Component {
       let formdata = new FormData()
       formdata.append(`logo`, logo)
       formdata.append('filemanager_name', filemanagerName)
+      formdata.append('filemanager_url_path',filemanagerUrlPath)
       formdata.append('folder_name_template', rootFolderName)
       for (let i = 0; i < rolesAllowed.length; i++) {
         formdata.append('filemanager_access_roles', rolesAllowed[i].toString())
@@ -109,6 +112,7 @@ class CreateInstance extends Component {
     const {
       filemanagerName,
       rootFolderName,
+      filemanagerUrlPath,
       rolesAllowed,
       logo,
       maxSpace,
@@ -131,6 +135,13 @@ class CreateInstance extends Component {
               name='filemanagerName'
               label='Filemanager Name : '
               value={filemanagerName}
+              onChange={this.handleChange}
+            />
+            <Form.Input
+              placeholder='Root Folder url path'
+              name='filemanagerUrlPath'
+              label='Root Folder Url Path :'
+              value={filemanagerUrlPath}
               onChange={this.handleChange}
             />
             <Form.Input
