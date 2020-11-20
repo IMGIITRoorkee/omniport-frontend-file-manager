@@ -32,7 +32,7 @@ class Progress extends Component {
   }
 
   render() {
-    const { parents, isParentsPending } = this.props
+    const { parents, isParentsPending, folder } = this.props
     const arr = parents.slice(1)
     return (
       <div styleName='index.progress-parent'>
@@ -41,13 +41,24 @@ class Progress extends Component {
             <>
               <Breadcrumb.Section
                 onClick={() => {
+                  this.props.history.push(`/file-manager/`)
+                }}
+                link
+              >
+                Filemanager
+              </Breadcrumb.Section>
+              <React.Fragment>
+                <Breadcrumb.Divider icon='right chevron' />
+              </React.Fragment>
+              <Breadcrumb.Section
+                onClick={() => {
                   this.props.history.push(
                     `/file-manager/${this.props.match.params.filemanager}/`
                   )
                 }}
                 link
               >
-                Root
+                {folder.filemanagername}
               </Breadcrumb.Section>
               {arr && arr.length
                 ? arr.map((data, index) => (
