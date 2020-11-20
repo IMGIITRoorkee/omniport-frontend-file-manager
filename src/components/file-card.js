@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FileIcon } from 'react-file-icon'
+import { Icon } from 'semantic-ui-react'
 
 import { deleteFile } from '../actions/fileActions'
 import { setActiveItems } from '../actions/itemActions'
@@ -67,6 +68,14 @@ class Filecard extends Component {
               : 'grid.file-inactive'
           }
         >
+          {file.starred && (
+            <Icon
+              corner='top right'
+              name='star'
+              styleName='grid.file-star-icon'
+              color='yellow'
+            />
+          )}
           <FileIcon {...FILE_TYPES[extension]} extension={extension} />
           <div styleName='grid.file-name'>{fileName}</div>
         </div>
