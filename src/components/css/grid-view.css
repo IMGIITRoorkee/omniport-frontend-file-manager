@@ -7,7 +7,9 @@
 }
 
 .file-card {
-  width: 16%;
+  width: 85px;
+  margin-left: 3rem;
+  margin-right: 3rem;
   padding: 1em;
   height: max-content;
 }
