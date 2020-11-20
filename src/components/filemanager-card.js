@@ -51,7 +51,7 @@ class Filemanagercard extends Component {
           {content} /{maxSpace} GB used
           {currentFolder && currentFolder.id === folder.id ? (
             <span className="right floated">
-              <Icon name="setting" title="Storage" color="black" size="large" />
+              {/* <Icon name="setting" title="Storage" color="black" size="large" /> */}
               {folder.dataRequestStatus === REQUEST_STATUS.PENDING ? (
                 <Label
                   color="red"
