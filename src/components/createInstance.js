@@ -129,7 +129,7 @@ class CreateInstance extends Component {
             </Breadcrumb.Section>
           </Breadcrumb>
           <Header dividing />
-          <Form center ui inverted onSubmit={this.handleSubmit}>
+          <Form center ui  onSubmit={this.handleSubmit}>
             <Form.Input
               placeholder='Filemanager Name'
               name='filemanagerName'
@@ -145,9 +145,9 @@ class CreateInstance extends Component {
               onChange={this.handleChange}
             />
             <Form.Input
-              placeholder='Root Folder name'
+              placeholder='Default: person.user.username'
               name='rootFolderName'
-              label='Root Folder name :'
+              label='Root Folder Template :'
               value={rootFolderName}
               onChange={this.handleChange}
             />
