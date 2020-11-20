@@ -16,8 +16,13 @@
 .file-icon {
   width: 80px;
   margin: auto;
+  position: relative;
 }
-
+.file-star-icon{
+  position: absolute;
+  right:0;
+  bottom: 2.4rem;
+}
 .file-card:hover {
   cursor: pointer;
 }
