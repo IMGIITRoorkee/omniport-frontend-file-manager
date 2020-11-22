@@ -209,11 +209,25 @@ class GridView extends Component {
   }
 
   handleFileDoubleClick = (file, index) => {
-    this.props.setActiveItems([{ type: ITEM_TYPE.file, obj: file }])
-    if (IMAGE_EXTENSIONS.includes(file.extension)) {
-      this.setState({ isDetailViewOpen: true })
+    const { currentFolder, setActiveItems } = this.props
+    if (Boolean(window.opener)) {
+      window.opener.postMessage(
+        {
+          file: file.upload,
+          fileName: file.fileName,
+          path: file.path,
+          filemanager_name: currentFolder.filemanagername
+        },
+        '*'
+      )
+      window.close()
     } else {
-      this.handleDownload()
+      setActiveItems([{ type: ITEM_TYPE.file, obj: file }])
+      if (IMAGE_EXTENSIONS.includes(file.extension)) {
+        this.setState({ isDetailViewOpen: true })
+      } else {
+        this.handleDownload()
+      }
     }
   }
 
