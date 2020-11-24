@@ -20,6 +20,7 @@ import { ITEM_TYPE, IMAGE_EXTENSIONS } from '../constants'
 import FolderFormModal from './folderFormModal'
 import ShareItemModal from './shareItemModal'
 import MultipleImagesModal from './multipleImageModal'
+import ItemDetailsModal from './itemDetailsModal'
 
 function createContextFromEvent(e) {
   const left = e.clientX
@@ -52,7 +53,8 @@ class GridView extends Component {
       showFolderFormModal: false,
       showShareItemModal: false,
       editFolder: {},
-      isDetailViewOpen: false
+      isDetailViewOpen: false,
+      showDetailsModal: false,
     }
   }
 
@@ -71,7 +73,8 @@ class GridView extends Component {
                 ? 'Remove from starred'
                 : 'Add to starred',
               icon: activeItems[0].obj.starred ? 'star' : 'star outline'
-            }
+            },
+            { key: '7', label: 'View details', icon: 'info'},
           ]
         : [
             { key: '4', label: 'Edit', icon: 'edit' },
@@ -83,7 +86,8 @@ class GridView extends Component {
                 ? 'Remove from starred'
                 : 'Add to starred',
               icon: activeItems[0].obj.starred ? 'star' : 'star outline'
-            }
+            },
+            { key: '7', label: 'View details', icon: 'info'},
           ]
     } else
       return !activeItems.some(item => item.type === ITEM_TYPE.folder)
@@ -121,7 +125,10 @@ class GridView extends Component {
       } else {
         editFolder(activeItems[0].obj.id, formdata, this.handleStarSuccess)
       }
-    }
+    },
+    7: () => {
+      this.setState({ showDetailsModal: true})
+    },
   }
 
   handleDownload = () => {
@@ -240,7 +247,8 @@ class GridView extends Component {
       showFolderFormModal,
       editFolder,
       showShareItemModal,
-      isDetailViewOpen
+      isDetailViewOpen,
+      showDetailsModal
     } = this.state
     return (
       <div
@@ -337,6 +345,17 @@ class GridView extends Component {
           close={() => {
             this.setState({ showFileEditModal: false })
           }}
+        />
+        <ItemDetailsModal 
+          showModal={showDetailsModal}
+          close={() => {
+            this.setState({ showDetailsModal: false })
+          }}
+          filemanager={
+            this.props.currentFolder
+              ? this.props.currentFolder.filemanagername
+              : ''
+          }
         />
         <ShareItemModal
           showModal={showShareItemModal}
