@@ -23,6 +23,8 @@ import {
 } from '../actions/folderActions'
 import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
 import { ITEM_TYPE } from '../constants'
+import ItemDetailsModal from './itemDetailsModal'
+
 class Bar extends Component {
   constructor (props) {
     super(props)
@@ -31,6 +33,7 @@ class Bar extends Component {
       showEditFileModal: false,
       showFolderFormModal: false,
       showShareItemModal: false,
+      showDetailsModal: false,
       editFolder: {}
     }
   }
@@ -146,7 +149,8 @@ class Bar extends Component {
       showEditFileModal,
       showFolderFormModal,
       editFolder,
-      showShareItemModal
+      showShareItemModal,
+      showDetailsModal
     } = this.state
     return (
       <Segment styleName='file.navbar'>
@@ -206,6 +210,18 @@ class Bar extends Component {
                     : 'Add to starred'
                 }
                 icon={activeItems[0].obj.starred ? 'star' : 'star outline'}
+                color='blue'
+                inverted
+                circular
+              />
+            </div>
+          )}
+          {activeItems.length == 1 && (
+            <div styleName='file.crud-icon'>
+              <Button
+                onClick={() => this.setState({ showDetailsModal: true })}
+                title='View detials'
+                icon='info'
                 color='blue'
                 inverted
                 circular
@@ -316,6 +332,13 @@ class Bar extends Component {
             showModal={showShareItemModal}
             close={() => {
               this.setState({ showShareItemModal: false })
+            }}
+            filemanager={this.props.match.params.filemanager}
+          />
+          <ItemDetailsModal
+            showModal={showDetailsModal}
+            close={() => {
+              this.setState({ showDetailsModal: false })
             }}
             filemanager={this.props.match.params.filemanager}
           />
