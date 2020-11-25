@@ -20,7 +20,7 @@ import { ITEM_TYPE, IMAGE_EXTENSIONS } from '../constants'
 import FolderFormModal from './folderFormModal'
 import ShareItemModal from './shareItemModal'
 import MultipleImagesModal from './multipleImageModal'
-import ItemDetailsModal from './itemDetailsModal'
+import ItemDetailsModal from './item-detail-modal'
 
 function createContextFromEvent(e) {
   const left = e.clientX

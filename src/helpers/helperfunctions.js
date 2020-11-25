@@ -34,6 +34,8 @@ export const formatStorage = storage => {
     formattedStr = `${divide(storage, ONE_MB)} MB`
   } else if (value >= ONE_KB) {
     formattedStr = `${divide(storage, ONE_KB)} KB`
+  } else {
+    formattedStr = `${storage} Bytes`
   }
   return formattedStr
 }

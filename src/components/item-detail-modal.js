@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Modal, ModalContent, Table } from 'semantic-ui-react'
 
-import { ONE_MB } from '../constants'
 import { setActiveItems } from '../actions/itemActions'
 
-import file from './css/details-modal.css'
+import file from './css/item-properties-modal.css'
+import { formatStorage } from '../helpers/helperfunctions'
 
 class ItemDetailsModal extends Component {
   constructor (props) {
@@ -33,7 +33,6 @@ class ItemDetailsModal extends Component {
 
   render () {
     const { showModal, close, filemanager, currentFolder } = this.props
-    console.log(currentFolder)
     const { active_item } = this.state
     return (
       <Modal
@@ -86,14 +85,8 @@ class ItemDetailsModal extends Component {
                 <Table.Cell>
                   {active_item
                     ? active_item.type == 'file'
-                      ? (active_item.obj.size / ONE_MB).toFixed(3) +
-                        'MB(' +
-                        active_item.obj.size +
-                        ' bytes)'
-                      : (active_item.obj.contentSize / ONE_MB).toFixed(3) +
-                        'MB(' +
-                        active_item.obj.contentSize +
-                        ' bytes)'
+                      ? formatStorage(active_item.obj.size)
+                      : formatStorage(active_item.obj.contentSize)
                     : ''}
                 </Table.Cell>
               </Table.Row>
