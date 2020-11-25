@@ -23,7 +23,7 @@ import {
 } from '../actions/folderActions'
 import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
 import { ITEM_TYPE } from '../constants'
-import ItemDetailsModal from './itemDetailsModal'
+import ItemDetailsModal from './item-detail-modal'
 
 class Bar extends Component {
   constructor (props) {
