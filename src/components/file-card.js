@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FileIcon } from 'react-file-icon'
-import { Icon } from 'semantic-ui-react'
+import { Icon, Popup } from 'semantic-ui-react'
 
 import { deleteFile } from '../actions/fileActions'
 import { setActiveItems } from '../actions/itemActions'
@@ -53,32 +53,40 @@ class Filecard extends Component {
 
     return (
       <div id={`grid-card-${index}`} styleName='grid.file-card' secondary>
-        <div
-          styleName='grid.file-icon'
-          onClick={e => this.handleSelect(e)}
-          onContextMenu={this.handleContextSelect}
-          onDoubleClick={() => {
-            handleDoubleClick(file, index)
-          }}
-          styleName={
-            activeItems.some(
-              elem => elem.obj.id === file.id && elem.type == 'file'
-            )
-              ? 'grid.file-active'
-              : 'grid.file-inactive'
+        <Popup
+          trigger={
+            <div
+              styleName='grid.file-icon'
+              onClick={e => this.handleSelect(e)}
+              onContextMenu={this.handleContextSelect}
+              onDoubleClick={() => {
+                handleDoubleClick(file, index)
+              }}
+              styleName={
+                activeItems.some(
+                  elem => elem.obj.id === file.id && elem.type == 'file'
+                )
+                  ? 'grid.file-active'
+                  : 'grid.file-inactive'
+              }
+            >
+              {file.starred && (
+                <Icon
+                  corner='top right'
+                  name='star'
+                  styleName='grid.file-star-icon'
+                  color='yellow'
+                />
+              )}
+              <FileIcon {...FILE_TYPES[extension]} extension={extension} />
+              <div styleName='grid.file-name'>{fileName}</div>
+            </div>
           }
-        >
-          {file.starred && (
-            <Icon
-              corner='top right'
-              name='star'
-              styleName='grid.file-star-icon'
-              color='yellow'
-            />
-          )}
-          <FileIcon {...FILE_TYPES[extension]} extension={extension} />
-          <div styleName='grid.file-name'>{fileName}</div>
-        </div>
+          content={file.fileName}
+          basic
+          size="small"
+          position="bottom left"
+        />
       </div>
     )
   }
