@@ -1,6 +1,6 @@
 import React, { Component, Suspense } from 'react'
 import { connect } from 'react-redux'
-import { Dimmer, Loader, Divider } from 'semantic-ui-react'
+import { Dimmer, Loader, Divider, Segment } from 'semantic-ui-react'
 
 import ErrorBoundary from './error-boundary'
 import { getFolder, getRootFolder } from '../actions/folderActions'
@@ -95,11 +95,18 @@ class Root extends Component {
       getFilePending,
       getFilesPending,
       getFolderPending,
-      getFoldersPending
+      getFoldersPending,
+      folder
     } = this.props
     const isLoading =
       getFilePending || getFilesPending || getFolderPending || getFoldersPending
-    return (
+
+    Object.keys(folder) === 0
+    return Object.keys(folder).length === 0 ? (
+      <Segment basic padded textAlign='center'>
+        This url is Invalid. Please check your url again.
+      </Segment>
+    ) : (
       <React.Fragment>
         <div styleName='manager.bar-progress-parent'>
           <ErrorBoundary>
