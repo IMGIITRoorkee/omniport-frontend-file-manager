@@ -48,6 +48,11 @@ export const getAllFoldersRequest = (pk, data) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(GET_FOLDERS_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in fetching the folders '
+        })
       })
   }
 }
@@ -67,7 +72,7 @@ export const getAllRootFoldersRequest = (pk, data) => {
         dispatch(apiError(error))
         dispatch(apiDispatch(GET_FOLDERS_PENDING, false))
         toast({
-          type: "error",
+          type: 'error',
           description: 'error occured in fetching root folders '
         })
       })
@@ -87,6 +92,11 @@ export const getFolder = (id, params) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(GET_FOLDER_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in fetching requested folder '
+        })
       })
   }
 }
@@ -104,6 +114,11 @@ export const createFolder = data => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(CREATE_FOLDER_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in creating folder'
+        })
       })
   }
 }
@@ -126,6 +141,11 @@ export const editFolder = (
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(UPDATE_FOLDER_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in updating folder'
+        })
       })
   }
 }
@@ -142,6 +162,12 @@ export const editFolderUsers = (id, data, callback) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(UPDATE_FOLDER_PENDING, false))
+        toast({
+          type: 'error',
+          description:
+            'error occured in updating shared users of the selected folder'
+        })
       })
   }
 }
@@ -159,6 +185,11 @@ export const deleteFolder = id => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(DELETE_FOLDER_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in deleting folder'
+        })
       })
   }
 }
@@ -176,6 +207,11 @@ export const bulkDeleteFolders = data => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(DELETE_FOLDER_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in deleting selected folders'
+        })
       })
   }
 }
@@ -193,6 +229,17 @@ export const getRootFolder = filemanager => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(GET_FOLDER_PENDING, false))
+        let message =
+          'Error in finding filemanager. Please check details once again'
+        if (error.response.data) {
+          message = error.response.data
+        }
+        toast({
+          type: 'error',
+          description: message
+        })
+        return error
       })
   }
 }
@@ -215,6 +262,11 @@ export const generateDataRequest = (id, data, callback) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(DATA_REQUEST_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error in requesting data'
+        })
       })
   }
 }
@@ -228,6 +280,10 @@ export const getAllDataRequests = (url = FOLDER_APIS.getAllDataRequests) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        toast({
+          type: 'error',
+          description: 'error in fetching data requests'
+        })
       })
   }
 }
@@ -259,6 +315,10 @@ export const getParentFolders = (id, callback = () => {}) => {
       .catch(err => {
         dispatch(apiError(err))
         dispatch(apiDispatch(GET_PARENT_FOLDERS_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error in fetching parent folders'
+        })
       })
   }
 }
