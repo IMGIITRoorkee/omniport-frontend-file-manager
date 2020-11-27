@@ -80,7 +80,7 @@ class CreateInstance extends Component {
       maxSpace
     } = this.state.formObj
     const { createFilemanager } = this.props
-    if (filemanagerName && rootFolderName && logo && rolesAllowed) {
+    if (filemanagerName && filemanagerUrlPath && logo && rolesAllowed) {
       let formdata = new FormData()
       formdata.append(`logo`, logo)
       formdata.append('filemanager_name', filemanagerName)
