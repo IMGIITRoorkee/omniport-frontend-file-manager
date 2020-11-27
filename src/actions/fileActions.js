@@ -1,3 +1,5 @@
+import { toast } from 'react-semantic-toasts'
+
 import apiClient from '../helpers/apiClient'
 import { FILE_APIS, FOLDER_APIS } from '../urls'
 import { getFolder } from './folderActions'
@@ -39,6 +41,11 @@ export const getALLFiles = (id, params) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(GET_ALL_FILES_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in fetching the files'
+        })
       })
   }
 }
@@ -55,11 +62,22 @@ export const getFileDetails = id => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(GET_FILE_DETAILS_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in fetching the requested file '
+        })
       })
   }
 }
 
-export const editFile = (id, data, callback = () => {return}) => {
+export const editFile = (
+  id,
+  data,
+  callback = () => {
+    return
+  }
+) => {
   const url = `${FILE_APIS.fileItem}/${id}/`
   return dispatch => {
     dispatch(apiDispatch(UPDATE_FILE_PENDING, true))
@@ -71,6 +89,11 @@ export const editFile = (id, data, callback = () => {return}) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(UPDATE_FILE_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in updating the requested file '
+        })
       })
   }
 }
@@ -87,6 +110,12 @@ export const editFileUsers = (id, data, callback) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(UPDATE_FILE_PENDING, false))
+        toast({
+          type: 'error',
+          description:
+            'error occured in updating the shared users for requested file '
+        })
       })
   }
 }
@@ -104,6 +133,11 @@ export const deleteFile = id => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(DELETE_FILE_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in deleting the request file '
+        })
       })
   }
 }
@@ -121,6 +155,11 @@ export const bulkDeleteFiles = obj => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(DELETE_FILE_PENDING, false))
+        toast({
+          type: 'error',
+          description: 'error occured in deleting the selected files '
+        })
       })
   }
 }
@@ -139,6 +178,10 @@ export const uploadFile = (data, callback) => {
       .catch(error => {
         dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
         dispatch(apiError(error))
+        toast({
+          type: 'error',
+          description: 'error occured in uploading the file '
+        })
       })
   }
 }
