@@ -36,7 +36,7 @@ class FolderCard extends Component {
       elem => elem.obj.id === folder.id && elem.type == 'folder'
     )
       ? activeItems
-      : [ { type: ITEM_TYPE.folder, obj: folder }]
+      : [{ type: ITEM_TYPE.folder, obj: folder }]
     setActiveItems(newActiveItems)
   }
 
@@ -68,31 +68,47 @@ class FolderCard extends Component {
         : folder.folderName
     return (
       <div id={`grid-card-${index}`} styleName='grid.file-card' secondary>
-        <div
-          styleName={
-            activeItems.some(
-              elem => elem.obj.id === folder.id && elem.type == 'folder'
-            )
-              ? 'grid.folder-active'
-              : 'grid.folder-inactive'
+        <Popup
+          content={folder.folderName}
+          basic
+          size='small'
+          position='bottom left'
+          trigger={
+            <div
+              styleName={
+                activeItems.some(
+                  elem => elem.obj.id === folder.id && elem.type == 'folder'
+                )
+                  ? 'grid.folder-active'
+                  : 'grid.folder-inactive'
+              }
+            >
+              <div
+                styleName='grid.folder-icon'
+                onClick={e => this.handleSelect(e)}
+                onContextMenu={this.handleContextSelect}
+              >
+                <Icon
+                  size='huge'
+                  color='grey'
+                  name={'folder open'}
+                  onDoubleClick={this.handleDoubleClick}
+                />
+              </div>
+              {folder.starred && (
+                <Icon
+                  corner='top right'
+                  name='star'
+                  styleName='grid.folder-star-icon'
+                  color='yellow'
+                />
+              )}
+              <div styleName='grid.folder-name'>
+                <p onDoubleClick={this.handleDoubleClick}>{folderName}</p>
+              </div>
+            </div>
           }
-        >
-          <div
-            styleName='grid.folder-icon'
-            onClick={e => this.handleSelect(e)}
-            onContextMenu={this.handleContextSelect}
-          >
-            <Icon
-              size='huge'
-              color='grey'
-              name={'folder open'}
-              onDoubleClick={this.handleDoubleClick}
-            />
-          </div>
-          <div styleName='grid.folder-name'>
-            <p onDoubleClick={this.handleDoubleClick}>{folderName}</p>
-          </div>
-        </div>
+        />
       </div>
     )
   }

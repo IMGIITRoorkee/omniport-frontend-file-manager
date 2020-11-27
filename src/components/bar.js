@@ -58,7 +58,7 @@ class Bar extends Component {
       getStarredItems(currentFolder.filemanager)
     } else {
       if (activeItems[0].type == 'file') {
-        this.props.getFolder(activeItems[0].obj.folder)
+        this.props.getFolder(activeItems[0].obj.folder.id)
         setActiveItems([])
       } else {
         this.props.getFolder(activeItems[0].obj.parent)
