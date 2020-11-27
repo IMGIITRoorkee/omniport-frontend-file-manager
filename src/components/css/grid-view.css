@@ -61,6 +61,11 @@
   width: max-content;
   margin: auto;
 }
+.folder-star-icon{
+  position: absolute;
+  right:0.75rem;
+  bottom: 2.2rem;
+}
 
 .folder-active {
   display: block;
@@ -72,6 +77,7 @@
   border: 3px solid #e0e0e0;
   background-color: #eaeaea;
   text-align: center;
+  position: relative;
 }
 .folder-inactive {
   display: block;
@@ -81,4 +87,5 @@
   margin-right: auto;
   margin-left: auto;
   text-align: center;
+  position: relative;
 }
