@@ -1,21 +1,31 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { CardGroup, Card, CardHeader, CardMeta } from 'semantic-ui-react'
+import { CardGroup, Dimmer, Loader, Segment } from 'semantic-ui-react'
+
 import { getAllRootFoldersRequest } from '../actions/folderActions'
 import Filemanagercard from '../components/filemanager-card'
 import ErrorBoundary from './error-boundary'
 import main from './css/instances.css'
 
 class Instances extends Component {
-  componentDidMount () {
+  componentDidMount() {
     this.props.getRootFolders()
   }
-  render () {
-    const { Folders } = this.props
+  render() {
+    const { Folders, getFoldersPending } = this.props
     const filemanagers = Folders.map(folder => {
       return <Filemanagercard folder={folder} key={folder.id} />
     })
-    return (
+    return getFoldersPending ? (
+      <Dimmer active inverted>
+        <Loader inverted content='Loading' />
+      </Dimmer>
+    ) : !Boolean(Folders) || Folders.length == 0 ? (
+      <Segment basic padded textAlign='center'>
+        You don't have any filemanagers now. Contact your administrator or check
+        back later.
+      </Segment>
+    ) : (
       <ErrorBoundary>
         <CardGroup styleName='filemanager-cards' className='container'>
           {filemanagers}
@@ -27,7 +37,8 @@ class Instances extends Component {
 
 const mapStateToProps = state => {
   return {
-    Folders: state.folders.Folders
+    Folders: state.folders.Folders,
+    getFoldersPending: state.folders.getFoldersPending
   }
 }
 
