@@ -4,5 +4,16 @@
   float: right;
 }
 .main-container {
-  margin-top:3rem;
+  margin-top: 3rem;
+}
+
+.error {
+  color: #FF0033;
+}
+.image {
+  border-radius: 0.3125rem;
+  height: 5rem;
+  width: 5rem;
+  display: block;
+  margin-top:1rem;
 }

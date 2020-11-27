@@ -6,15 +6,17 @@ import {
   Header,
   Form,
   Button,
-  Icon
+  Icon,
+  Divider,
 } from 'semantic-ui-react'
 import css from './css/approveRequest.css'
 import ErrorBoundary from './error-boundary'
 import { createFilemanager } from '../actions/filemanagerActions'
 import { spaceOptions, roleOptions } from '../constants'
+import UploadFilesModal from './uploadFileModal'
 
 class CreateInstance extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       formObj: {
@@ -23,9 +25,10 @@ class CreateInstance extends Component {
         rolesAllowed: [],
         logo: null,
         maxSpace: null,
-        // isLoading: false,
         success: false
-      }
+      },
+      showModal: false,
+      files: []
     }
   }
 
@@ -39,7 +42,7 @@ class CreateInstance extends Component {
     return {
       filemanagerName: '',
       rootFolderName: '',
-      filemanagerUrlPath:'',
+      filemanagerUrlPath: '',
       rolesAllowed: [],
       logo: null,
       maxSpace: null,
@@ -51,12 +54,14 @@ class CreateInstance extends Component {
     this.setState({ formObj: { ...this.state.formObj, [name]: value } })
 
   handleImageChange = e => {
-    const image = e.target.files[0]
+    e.preventDefault()
+    const image = this.state.files[0]
     this.setState({
       formObj: {
         ...this.state.formObj,
         logo: image
-      }
+      },
+      showModal: false
     })
   }
 
@@ -84,7 +89,7 @@ class CreateInstance extends Component {
       let formdata = new FormData()
       formdata.append(`logo`, logo)
       formdata.append('filemanager_name', filemanagerName)
-      formdata.append('filemanager_url_path',filemanagerUrlPath)
+      formdata.append('filemanager_url_path', filemanagerUrlPath)
       formdata.append('folder_name_template', rootFolderName)
       for (let i = 0; i < rolesAllowed.length; i++) {
         formdata.append('filemanager_access_roles', rolesAllowed[i].toString())
@@ -108,7 +113,7 @@ class CreateInstance extends Component {
       formObj: this.getInitialObj()
     })
   }
-  render () {
+  render() {
     const {
       filemanagerName,
       rootFolderName,
@@ -118,7 +123,8 @@ class CreateInstance extends Component {
       maxSpace,
       success
     } = this.state.formObj
-    const { createFilemanagerPending } = this.props
+    const { showModal, files } = this.state
+    const { createFilemanagerPending, uploadFilePending } = this.props
 
     return (
       <ErrorBoundary>
@@ -129,7 +135,7 @@ class CreateInstance extends Component {
             </Breadcrumb.Section>
           </Breadcrumb>
           <Header dividing />
-          <Form center ui  onSubmit={this.handleSubmit}>
+          <Form center ui onSubmit={this.handleSubmit}>
             <Form.Input
               placeholder='Filemanager Name'
               name='filemanagerName'
@@ -160,16 +166,6 @@ class CreateInstance extends Component {
               value={maxSpace}
               onChange={this.handleChangeSelect}
             />
-            <Form.Input
-              placeholder='Logo'
-              name='image'
-              label='Add Logo : '
-              id='image'
-              type='file'
-              accept='image/png, image/jpeg, image/jfif'
-              // value = {logo}
-              onChange={this.handleImageChange}
-            />
             <Form.Select
               search
               multiple
@@ -180,6 +176,20 @@ class CreateInstance extends Component {
               value={rolesAllowed}
               onChange={this.handleChangeSelect}
             />
+
+            <Button
+              onClick={() => {
+                this.setState({ showModal: true })
+              }}
+              label={!Boolean(logo) ? 'Add Logo' : 'Update Logo'}
+              icon='upload'
+            />
+            {Boolean(logo) && (
+              <div>
+                <img src={logo.preview} alt={logo.name} styleName='css.image' />
+              </div>
+            )}
+            <Divider hidden />
             {success ? (
               <span>
                 <Button onClick={this.handleCreateAnother}>
@@ -201,6 +211,23 @@ class CreateInstance extends Component {
             )}
           </Form>
         </Container>
+        <UploadFilesModal
+          isMultiple={false}
+          files={files}
+          label="Click to upload your filemanager's logo"
+          isUploading={uploadFilePending}
+          setFiles={files => {
+            this.setState({ files: files })
+          }}
+          acceptedFiles={['image/*']}
+          show={showModal}
+          onHide={() => {
+            this.setState({ showModal: false })
+          }}
+          handleUpload={e => {
+            this.handleImageChange(e)
+          }}
+        />
       </ErrorBoundary>
     )
   }
@@ -208,7 +235,8 @@ class CreateInstance extends Component {
 
 const mapStateToProps = state => {
   return {
-    createFilemanagerPending: state.filemanagers.createFilemanagerPending
+    createFilemanagerPending: state.filemanagers.createFilemanagerPending,
+    uploadFilePending: state.files.uploadFilePending
   }
 }
 
