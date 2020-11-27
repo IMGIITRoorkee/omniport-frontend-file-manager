@@ -1,3 +1,5 @@
+import { toast } from 'react-semantic-toasts'
+
 import apiClient from '../helpers/apiClient'
 import { FOLDER_APIS } from '../urls'
 import {
@@ -63,6 +65,11 @@ export const getAllRootFoldersRequest = (pk, data) => {
       })
       .catch(error => {
         dispatch(apiError(error))
+        dispatch(apiDispatch(GET_FOLDERS_PENDING, false))
+        toast({
+          type: "error",
+          description: 'error occured in fetching root folders '
+        })
       })
   }
 }
