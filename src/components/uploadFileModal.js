@@ -14,6 +14,7 @@ function MyDropzone(props) {
     acceptedFiles,
     handleUpload,
     isUploading,
+    label
   } = props
 
   useEffect(() => {
@@ -27,16 +28,16 @@ function MyDropzone(props) {
     .map((file, index) => {
       return (
         <div key={index}>
-          <div styleName="css.thumb" key={file.name}>
+          <div styleName='css.thumb' key={file.name}>
             <div>
-              <img src={file.preview} alt={file.name} styleName="css.image" />
+              <img src={file.preview} alt={file.name} styleName='css.image' />
             </div>
             <div style={{ position: 'relative' }}>
               <Icon
-                name="remove"
-                styleName="css.thumb-cross"
+                name='remove'
+                styleName='css.thumb-cross'
                 circular
-                color="grey"
+                color='grey'
                 bordered={false}
                 onClick={() => {
                   const index = files.indexOf(file)
@@ -56,18 +57,18 @@ function MyDropzone(props) {
     .filter(file => !file.type.match('image/'))
     .map((file, index) => {
       return (
-        <div key={index} styleName="css.file">
+        <div key={index} styleName='css.file'>
           <div style={{ paddingTop: '10px' }}>
-            <a href={file.url} styleName="css.fileName">
+            <a href={file.url} styleName='css.fileName'>
               {file.name}
             </a>
           </div>{' '}
           <div style={{ position: 'relative' }}>
             <Icon
-              name="remove"
-              styleName="css.thumb-cross"
+              name='remove'
+              styleName='css.thumb-cross'
               circular
-              color="grey"
+              color='grey'
               onClick={() => {
                 const index = files.indexOf(file)
                 const newFiles = files.slice(0)
@@ -85,7 +86,7 @@ function MyDropzone(props) {
     setFiles(
       acceptedFiles.map(file => {
         return Object.assign(file, {
-          preview: URL.createObjectURL(file),
+          preview: URL.createObjectURL(file)
         })
       })
     )
@@ -94,24 +95,24 @@ function MyDropzone(props) {
   const { getRootProps, getInputProps } = useDropzone({
     accept: acceptedFiles,
     multiple: isMultiple,
-    onDrop,
+    onDrop
   })
 
   return (
     <Modal.Content>
       <Modal.Description>
-        <div {...getRootProps()} styleName="css.dropzone">
+        <div {...getRootProps()} styleName='css.dropzone'>
           <input {...getInputProps()} />
-          <Icon name="cloud upload" color="grey" />
-          Click or drag files to upload
+          <Icon name='cloud upload' color='grey' />
+          {label}
         </div>
       </Modal.Description>
       <Modal.Description>
         <div style={{ display: 'flex', flexWrap: 'wrap' }}>
           {thumbs && thumbs.length !== 0 && (
-            <div styleName="css.thumb-container">{thumbs}</div>
+            <div styleName='css.thumb-container'>{thumbs}</div>
           )}
-          <div styleName="css.thumb-container">{fileNames}</div>
+          <div styleName='css.thumb-container'>{fileNames}</div>
         </div>
         {files.length > 0 && (
           <div>
@@ -119,8 +120,8 @@ function MyDropzone(props) {
               loading={isUploading}
               disabled={isUploading}
               onClick={handleUpload}
-              label="Upload"
-              icon="upload"
+              label='Upload'
+              icon='upload'
               primary
             />
           </div>
@@ -131,11 +132,16 @@ function MyDropzone(props) {
 }
 
 const UploadFilesModal = props => {
-  const { show, onHide, ...restProps } = props
+  const {
+    show,
+    onHide,
+    label = 'Click or drag files to upload',
+    ...restProps
+  } = props
 
   return (
     <Modal open={show} centered onClose={onHide} closeIcon>
-      <MyDropzone {...restProps} />
+      <MyDropzone label={label} {...restProps} />
     </Modal>
   )
 }
