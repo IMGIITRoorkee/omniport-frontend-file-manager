@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
+import { Button, Icon } from 'semantic-ui-react'
 import { uploadFile } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
 import UploadFilesModal from './uploadFileModal'
