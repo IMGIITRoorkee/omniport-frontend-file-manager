@@ -12,7 +12,7 @@ import Admin from './admin'
 import CreateInstance from './createInstance'
 
 class App extends Component {
-  render () {
+  render() {
     console.log('rendering app')
     const creators = [
       {
@@ -34,15 +34,7 @@ class App extends Component {
     const { match } = this.props
     return (
       <div styleName='main.app'>
-        {/* <AppHeader appName='file_manager' mode='app' /> */}
-        <AppHeader
-          mode='site'
-          userDropdown
-          appName='file_manager'
-          // onSidebarClick={() => ChangeSidebarVisibility(sidebarVisibility)}
-          // sideBarButton
-          // sideBarVisibility={sidebarVisibility}
-        />
+        <AppHeader mode='site' userDropdown appName='file_manager' />
         <AppMain>
           <Scrollbars>
             <Switch>
