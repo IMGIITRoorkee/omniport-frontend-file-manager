@@ -2,16 +2,24 @@ import React, { Component } from 'react'
 import { AppFooter, AppMain, AppHeader } from 'formula_one'
 import { Route, Switch } from 'react-router-dom'
 import { Scrollbars } from 'react-custom-scrollbars'
+import { connect } from 'react-redux'
+import PRoute from 'services/auth/pRoute'
+
 import Root from './root'
 import Instances from './instances'
+import { store } from 'core'
 
 import main from 'formula_one/src/css/app.css'
 import blocks from './css/app.css'
 import ApproveRequest from './approveRequest'
 import Admin from './admin'
 import CreateInstance from './createInstance'
-
+// import { setUser } from 'settings/src/actions/index'
+import { whoami } from 'auth/src/actions/index'
 class App extends Component {
+  componentDidMount() {
+    store.dispatch(whoami())
+  }
   render() {
     console.log('rendering app')
     const creators = [
@@ -31,42 +39,64 @@ class App extends Component {
         link: 'https://github.com/ayu023ban'
       }
     ]
-    const { match } = this.props
+    const { match, user } = this.props
+    const roles =
+      (user.details && user.details.profile && user.details.profile.roles) || []
+    console.log(roles)
+    const isAdmin =
+      roles.some(elem => elem.role === 'Maintainer') &&
+      roles.find(elem => elem.role === 'Maintainer').data.designation ==
+        'Hub coordinator'
+    console.log(isAdmin)
     return (
       <div styleName='main.app'>
         <AppHeader mode='site' userDropdown appName='file_manager' />
         <AppMain>
           <Scrollbars>
             <Switch>
-              <Route exact path={`${match.path}/`} component={Instances} />
-              <Route exact path={`${match.path}/admin`} component={Admin} />
-              <Route
+              <PRoute
+                exact
+                path={`${match.path}/`}
+                component={Instances}
+                guestAllowed={false}
+              />
+              <PRoute
+                exact
+                path={`${match.path}/admin`}
+                component={Admin}
+                guestAllowed={false}
+              />
+              <PRoute
                 exact
                 path={`${match.path}/admin/create`}
                 component={CreateInstance}
+                guestAllowed={false}
               />
-              <Route
+              <PRoute
                 exact
                 path={`${match.path}/admin/approve`}
                 component={ApproveRequest}
               />
-              <Route
+              <PRoute
                 exact
                 key={2}
                 path={`${match.path}/:filemanager/:id`}
                 component={Root}
+                guestAllowed={false}
               />
-              <Route
+              <PRoute
                 exact
                 key={3}
                 path={`${match.path}/:filemanager`}
                 component={Root}
+                guestAllowed={false}
               />
-              <Route
+              <PRoute
                 exact
                 key={4}
                 path={`${match.path}/:filemanager/:uuid/:type_shared/:id/:type_access`}
                 component={Root}
+                guestAllowed={false}
               />
             </Switch>
           </Scrollbars>
@@ -76,5 +106,15 @@ class App extends Component {
     )
   }
 }
+const mapStateToProps = () => {
+  return {
+    user: store.getState().user
+  }
+}
+const mapDisPatchToProps = dispatch => {
+  return {
+    setUser: () => dispatch(setUser())
+  }
+}
 
-export default App
+export default connect(mapStateToProps, mapDisPatchToProps)(App)
