@@ -287,7 +287,7 @@ class GridView extends Component {
               />
             ))}
         </div>
-        <Divider />
+        {currentFolder.folders.length==0 || currentFolder.files.length==0 ? '' : <Divider />}
         <div
           styleName='grid.view-parent'
           ref={this.fileContainerRef}
