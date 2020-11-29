@@ -3,8 +3,7 @@ import { AppFooter, AppMain, AppHeader } from 'formula_one'
 import { Route, Switch } from 'react-router-dom'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { connect } from 'react-redux'
-import PRoute from 'services/auth/pRoute'
-
+import PrivateRoute from './privateRoute'
 import Root from './root'
 import Instances from './instances'
 import { store } from 'core'
@@ -14,8 +13,8 @@ import blocks from './css/app.css'
 import ApproveRequest from './approveRequest'
 import Admin from './admin'
 import CreateInstance from './createInstance'
-// import { setUser } from 'settings/src/actions/index'
 import { whoami } from 'auth/src/actions/index'
+import { MAINTAINER_DESIGNATIONS, PERSON_ROLES } from '../constants'
 class App extends Component {
   componentDidMount() {
     store.dispatch(whoami())
@@ -42,56 +41,60 @@ class App extends Component {
     const { match, user } = this.props
     const roles =
       (user.details && user.details.profile && user.details.profile.roles) || []
-    console.log(roles)
     const isAdmin =
-      roles.some(elem => elem.role === 'Maintainer') &&
-      roles.find(elem => elem.role === 'Maintainer').data.designation ==
-        'Hub coordinator'
-    console.log(isAdmin)
+      roles.some(elem => elem.role === PERSON_ROLES.MAINTAINER) &&
+      roles.find(elem => elem.role === PERSON_ROLES.MAINTAINER).data
+        .designation == MAINTAINER_DESIGNATIONS.HUB_COORDINATOR
     return (
       <div styleName='main.app'>
         <AppHeader mode='site' userDropdown appName='file_manager' />
         <AppMain>
           <Scrollbars>
             <Switch>
-              <PRoute
+              {isAdmin && (
+                <Route
+                  exact
+                  path={`${match.path}/admin`}
+                  component={Admin}
+                  guestAllowed={false}
+                />
+              )}
+              {isAdmin && (
+                <Route
+                  exact
+                  path={`${match.path}/admin/create`}
+                  component={CreateInstance}
+                  guestAllowed={false}
+                />
+              )}
+              {isAdmin && (
+                <Route
+                  exact
+                  path={`${match.path}/admin/approve`}
+                  component={ApproveRequest}
+                />
+              )}
+              <PrivateRoute
                 exact
                 path={`${match.path}/`}
                 component={Instances}
                 guestAllowed={false}
               />
-              <PRoute
-                exact
-                path={`${match.path}/admin`}
-                component={Admin}
-                guestAllowed={false}
-              />
-              <PRoute
-                exact
-                path={`${match.path}/admin/create`}
-                component={CreateInstance}
-                guestAllowed={false}
-              />
-              <PRoute
-                exact
-                path={`${match.path}/admin/approve`}
-                component={ApproveRequest}
-              />
-              <PRoute
+              <PrivateRoute
                 exact
                 key={2}
                 path={`${match.path}/:filemanager/:id`}
                 component={Root}
                 guestAllowed={false}
               />
-              <PRoute
+              <PrivateRoute
                 exact
                 key={3}
                 path={`${match.path}/:filemanager`}
                 component={Root}
                 guestAllowed={false}
               />
-              <PRoute
+              <PrivateRoute
                 exact
                 key={4}
                 path={`${match.path}/:filemanager/:uuid/:type_shared/:id/:type_access`}
