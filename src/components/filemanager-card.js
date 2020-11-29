@@ -28,7 +28,7 @@ class Filemanagercard extends Component {
       <Card
         styleName="filemanager-card"
         onDoubleClick={() => {
-          const url = `/file-manager/${folder.filemanagerUrlPath}/`
+          const url = `/file-manager/${folder.filemanager.filemanagerUrlPath}/`
           this.props.history.push(url)
         }}
         onClick={() => setActiveFolder(folder)}
@@ -37,9 +37,9 @@ class Filemanagercard extends Component {
           <Image
             floated="right"
             size="mini"
-            src="https://img2.pngio.com/yellow-folder-transparent-png-clipart-free-download-ywd-yellow-folder-png-2400_1729.png"
+            src={folder.filemanager.logo ? folder.filemanager.logo : require('../media/default_filemanager_logo.png')}
           />
-          <Card.Header>{folder.filemanagername}</Card.Header>
+          <Card.Header>{folder.filemanager.filemanagerName}</Card.Header>
           <Card.Meta>filemanager</Card.Meta>
           <Card.Description>
             <Progress percent={percentage} color="red" size="tiny">
