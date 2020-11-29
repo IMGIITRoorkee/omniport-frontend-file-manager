@@ -420,3 +420,17 @@ export const REQUEST_STATUS = Object.freeze({
 })
 
 export const IMAGE_EXTENSIONS = ['jpg', 'png', 'jpeg', 'svg', '']
+
+export const MAINTAINER_DESIGNATIONS = Object.freeze({
+  WEBMASTER: 'Webmaster',
+  HUB_COORDINATOR: 'Hub coordinator',
+  PROJECT_LEADER: 'Project leader',
+  COORDINATOR: 'Coordinator',
+  TECHNICAL_ADVISER: 'Technical adviser'
+})
+export const PERSON_ROLES = Object.freeze({
+  STUDENT: 'Student',
+  FACULTY_MEMBER: 'FacultyMember',
+  MAINTAINER: 'Maintainer',
+  GUEST: 'Guest'
+})
