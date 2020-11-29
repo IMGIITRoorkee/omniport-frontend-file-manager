@@ -73,6 +73,7 @@ class ShareItemModal extends Component {
   }
 
   handleSearchChange = (e, data) => {
+    const { activeItems } = this.props
     this.setState({ isLoading: true })
     const search = data.searchQuery
     axios.get(`${USER_APIS.getUserOptions}?search=${search}`).then(res => {
@@ -80,13 +81,27 @@ class ShareItemModal extends Component {
         ...this.state,
         options: [
           ...this.state.initialOptions,
-          ...res.data.map(user => {
-            return {
-              key: parseInt(`${user.id}`),
-              text: `${user.fullName}`,
-              value: parseInt(`${user.id}`)
-            }
-          })
+          ...res.data
+            .filter(user => {
+              if (
+                user.id ==
+                (activeItems[0]
+                  ? activeItems[0].type == 'file'
+                    ? activeItems[0].obj.folder.person.id
+                    : activeItems[0].obj.person.id
+                  : '')
+              ) {
+                return false // skip
+              }
+              return true
+            })
+            .map(user => {
+              return {
+                key: parseInt(`${user.id}`),
+                text: `${user.fullName}`,
+                value: parseInt(`${user.id}`)
+              }
+            })
         ],
         isLoading: false
       })
