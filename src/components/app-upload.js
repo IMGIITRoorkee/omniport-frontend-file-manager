@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Button, Icon } from 'semantic-ui-react'
+import { Dropdown, Icon } from 'semantic-ui-react'
 import { uploadFile } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
 import UploadFilesModal from './uploadFileModal'
@@ -53,7 +53,7 @@ class AppUpload extends Component {
     const { uploadFilePending } = this.props
     return (
       <React.Fragment>
-        <Button
+        <Dropdown.Item
           onClick={() => {
             this.setState({ showModal: true })
           }}
@@ -63,8 +63,8 @@ class AppUpload extends Component {
           basic
         >
           <Icon name='upload' />
-          Upload
-        </Button>
+          Upload file
+        </Dropdown.Item>
         {showModal && (
           <UploadFilesModal
             isMultiple={true}

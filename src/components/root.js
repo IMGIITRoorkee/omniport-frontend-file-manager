@@ -27,11 +27,11 @@ const GridView = React.lazy(() => import('./grid-view'))
 const TabularView = React.lazy(() => import('./tabular-view'))
 
 class Root extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.ref = React.createRef()
   }
-  componentDidMount() {
+  componentDidMount () {
     const {
       uuid,
       id,
@@ -56,7 +56,7 @@ class Root extends Component {
       ? getFolderDetails(id)
       : getRoot(filemanager)
   }
-  componentDidUpdate(prevProps) {
+  componentDidUpdate (prevProps) {
     const {
       uuid,
       id,
@@ -89,7 +89,7 @@ class Root extends Component {
     }
   }
 
-  render() {
+  render () {
     const {
       tabular,
       getFilePending,
@@ -102,7 +102,11 @@ class Root extends Component {
       getFilePending || getFilesPending || getFolderPending || getFoldersPending
 
     Object.keys(folder) === 0
-    return Object.keys(folder).length === 0 ? (
+    return isLoading ? (
+      <Dimmer active inverted>
+        <Loader inverted content='Loading' />
+      </Dimmer>
+    ) : Object.keys(folder).length === 0 ? (
       <Segment basic padded textAlign='center'>
         This url is Invalid. Please check your url again.
       </Segment>
@@ -119,17 +123,11 @@ class Root extends Component {
         </div>
 
         <div styleName='manager.view' ref={this.ref} onClick={this.handleReset}>
-          {isLoading ? (
-            <Dimmer active inverted>
-              <Loader inverted content='Loading' />
-            </Dimmer>
-          ) : (
-            <ErrorBoundary>
-              <Suspense fallback={<Loading />}>
-                {tabular ? <TabularView /> : <GridView />}
-              </Suspense>
-            </ErrorBoundary>
-          )}
+          <ErrorBoundary>
+            <Suspense fallback={<Loading />}>
+              {tabular ? <TabularView /> : <GridView />}
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </React.Fragment>
     )
