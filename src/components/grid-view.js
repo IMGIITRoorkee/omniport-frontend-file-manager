@@ -136,7 +136,8 @@ class GridView extends Component {
     for (const item of activeItems) {
       if (item.type === ITEM_TYPE.file) {
         let link = document.createElement('a')
-        link.download = item.obj.fileName
+        link.setAttribute('target','_blank')
+        // link.download = item.obj.fileName
         link.href = item.obj.upload
         document.body.appendChild(link)
         link.click()

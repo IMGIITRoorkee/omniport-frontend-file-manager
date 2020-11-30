@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Segment, Button, Icon, Modal } from 'semantic-ui-react'
+import { Segment, Button, Icon, Modal, Dropdown } from 'semantic-ui-react'
 
 import {
   getStarredItems,
@@ -170,7 +170,30 @@ class Bar extends Component {
             </div>
           ) : (
             <div styleName='file.crud-icon'>
-              <Upload />
+            <Dropdown
+              text='New'
+              icon='add'
+              floating
+              labeled
+              button
+              className='icon'
+            >
+              <Dropdown.Menu>
+                <Dropdown.Item
+                  onClick={() => {
+                    this.setState({ editFolder: {}, showFolderFormModal: true })
+                  }}
+                  icon
+                  labelPosition='left'
+                  primary
+                  basic
+                >
+                  <Icon name='folder' />
+                  Create folder
+                </Dropdown.Item>
+                <Upload />
+              </Dropdown.Menu>
+            </Dropdown>
             </div>
           )}
           <div styleName='file.crud-icon'>
@@ -285,18 +308,6 @@ class Bar extends Component {
               />
             </div>
           )}
-
-          <div styleName='file.crud-icon'>
-            <Button
-              icon='plus'
-              circular
-              inverted
-              color='blue'
-              onClick={() => {
-                this.setState({ editFolder: {}, showFolderFormModal: true })
-              }}
-            />
-          </div>
           <div styleName='file.crud-icon'>
             <Button
               circular
