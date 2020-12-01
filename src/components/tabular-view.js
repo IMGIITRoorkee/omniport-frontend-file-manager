@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Table, Icon } from 'semantic-ui-react'
+import { Table, Icon, Ref } from 'semantic-ui-react'
 import { withRouter } from 'react-router-dom'
 
 import { getModifiedDate } from '../utils/get-modified-date'
@@ -20,7 +20,10 @@ class TabularView extends Component {
   constructor(props) {
     super(props)
     this.contextRef = React.createRef()
-    this.headerRef = React.createRef()
+    this.column1Ref = React.createRef()
+    this.column2Ref = React.createRef()
+    this.column3Ref = React.createRef()
+    this.column4Ref = React.createRef()
     this.state = {
       isPopupOpen: false,
       showDeleteModal: false,
@@ -69,7 +72,6 @@ class TabularView extends Component {
   }
 
   handleFolderContextSelect = folder => e => {
-    // e.stopPropagation()
     const { activeItems, setActiveItems } = this.props
     const newActiveItems = activeItems.some(
       elem => elem.obj.id === folder.id && elem.type == 'folder'
@@ -86,9 +88,15 @@ class TabularView extends Component {
       <div
         onContextMenu={e => {
           e.preventDefault()
-          // if (e.target === this.headerRef.current) {
-          //   return
-          // }
+          console.log(e.target)
+          if (
+            e.target === this.column1Ref.current ||
+            e.target === this.column2Ref.current ||
+            e.target === this.column3Ref.current ||
+            e.target === this.column4Ref.current
+          ) {
+            return
+          }
           this.contextRef = createContextFromEvent(e)
           if (isPopupOpen) {
             this.setState({ isPopupOpen: false })
@@ -100,13 +108,21 @@ class TabularView extends Component {
         <Table singleLine styleName='index.table-main' selectable>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Title</Table.HeaderCell>
-              <Table.HeaderCell>Last Modified</Table.HeaderCell>
-              <Table.HeaderCell>Space Used</Table.HeaderCell>
-              <Table.HeaderCell>Starred</Table.HeaderCell>
-              <Table.HeaderCell />
+              <Ref innerRef={this.column1Ref}>
+                <Table.HeaderCell>Title</Table.HeaderCell>
+              </Ref>
+              <Ref innerRef={this.column2Ref}>
+                <Table.HeaderCell>Last Modified</Table.HeaderCell>
+              </Ref>
+              <Ref innerRef={this.column3Ref}>
+                <Table.HeaderCell>Space Used</Table.HeaderCell>
+              </Ref>
+              <Ref innerRef={this.column4Ref}>
+                <Table.HeaderCell>Starred</Table.HeaderCell>
+              </Ref>
             </Table.Row>
           </Table.Header>
+
           <Table.Body>
             {currentFolder &&
               currentFolder.folders &&
