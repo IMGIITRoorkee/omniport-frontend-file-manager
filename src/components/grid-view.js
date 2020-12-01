@@ -13,9 +13,8 @@ import MultipleImagesModal from './multipleImageModal'
 import PopupView from './popup'
 import { createContextFromEvent } from '../helpers/helperfunctions'
 
-
 class GridView extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.folderContainerRef = React.createRef()
     this.contextRef = React.createRef()
@@ -31,8 +30,7 @@ class GridView extends Component {
     }
   }
 
-
-  render() {
+  render () {
     const { currentFolder } = this.props
     const { isPopupOpen, isDetailViewOpen } = this.state
     return (
@@ -60,16 +58,21 @@ class GridView extends Component {
         >
           {currentFolder &&
             currentFolder.folders &&
-            currentFolder.folders.map((folder, index) => (
-              <FolderCard
-                key={index}
-                index={index}
-                id={folder.id}
-                folderName={folder.folderName}
-                isStarred={folder.starred}
-                folder={folder}
-              />
-            ))}
+            currentFolder.folders
+              .sort(
+                ({ id: previousID }, { id: currentID }) =>
+                  previousID - currentID
+              )
+              .map((folder, index) => (
+                <FolderCard
+                  key={index}
+                  index={index}
+                  id={folder.id}
+                  folderName={folder.folderName}
+                  isStarred={folder.starred}
+                  folder={folder}
+                />
+              ))}
         </div>
         {currentFolder.folders.length == 0 ||
         currentFolder.files.length == 0 ? (
@@ -84,14 +87,19 @@ class GridView extends Component {
         >
           {currentFolder &&
             currentFolder.files &&
-            currentFolder.files.map((file, index) => (
-              <Filecard
-                key={index}
-                index={index}
-                file={file}
-                handleDoubleClick={this.handleFileDoubleClick}
-              />
-            ))}
+            currentFolder.files
+              .sort(
+                ({ id: previousID }, { id: currentID }) =>
+                  previousID - currentID
+              )
+              .map((file, index) => (
+                <Filecard
+                  key={index}
+                  index={index}
+                  file={file}
+                  handleDoubleClick={this.handleFileDoubleClick}
+                />
+              ))}
         </div>
         <PopupView
           contextRef={this.contextRef}

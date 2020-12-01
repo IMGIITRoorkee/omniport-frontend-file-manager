@@ -400,6 +400,12 @@ export const spaceOptions = [
   { key: '4', text: '10 GB', value: 10 * ONE_GB }
 ]
 
+export const spaceOptionUnits = [
+  { key: '1', text: 'GB', value: ONE_GB },
+  { key: '2', text: 'MB', value: ONE_MB },
+  { key: '3', text: 'KB', value: ONE_KB },
+]
+
 export const roleOptions = [
   { key: '1', text: 'Student', value: 'Student' },
   { key: '2', text: 'FacultyMember', value: 'FacultyMember' },

@@ -139,7 +139,7 @@ class ShareItemModal extends Component {
   handleClick = () => {
     var copyText = document.getElementById('link')
     copyText.select()
-    copyText.setSelectionRange(0, 100)
+    copyText.setSelectionRange(0, 1000)
     document.execCommand('copy')
   }
 
@@ -148,8 +148,8 @@ class ShareItemModal extends Component {
     const { isLoading, options, selectedUsersFinally } = this.state
     const link =
       activeItems.length == 1
-        ? `http://0.0.0.0:61000/file-manager/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
-        : ''
+        ? activeItems[0].type=="folder" ? `http://0.0.0.0:61000/file-manager/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
+        : `http://0.0.0.0:61000${activeItems[0].obj.upload}` : ''
     return (
       <Modal
         size='large'
