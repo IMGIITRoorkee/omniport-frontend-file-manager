@@ -125,7 +125,7 @@ class CreateInstance extends Component {
       extraSpaceOptions
     } = this.state.formObj
     const { createFilemanager } = this.props
-    if (filemanagerName && filemanagerUrlPath && logo && rolesAllowed) {
+    if (filemanagerName && filemanagerUrlPath && logo && rolesAllowed && extraSpaceOptions && maxSpace) {
       let formdata = new FormData()
       formdata.append(`logo`, logo)
       formdata.append('filemanager_name', filemanagerName)
@@ -230,6 +230,7 @@ class CreateInstance extends Component {
               <Form.Group widths='equal' styleName='css.extra-data-form-group'>
                 <Form.Input
                   placeholder='Int'
+                  type='Number'
                   name='extraSpaceNumber'
                   label='Extra Space Value'
                   value={extraSpaceNumber}
