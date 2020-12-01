@@ -18,24 +18,17 @@ import setActiveItems from '../actions/itemActions'
 import { ONE_GB } from '../constants'
 import { formatStorage } from '../helpers/helperfunctions'
 
-const options = [
-  { key: '1', label: '1 GB', value: 1 * ONE_GB, color: 'red' },
-  { key: '2', label: '2 GB', value: 2 * ONE_GB, color: 'orange' },
-  { key: '3', label: '5 GB', value: 5 * ONE_GB, color: 'green' }
-]
-
 class RequestData extends Component {
   constructor (props) {
     super(props)
     this.state = {
       add_data: null,
-      showModal: false,
-      labelColor: null
+      showModal: false
     }
   }
 
-  handleChange = (value, color) => {
-    this.setState({ add_data: value, labelColor: color })
+  handleChange = value => {
+    this.setState({ add_data: value })
   }
 
   handleSubmit = () => {
@@ -86,19 +79,19 @@ class RequestData extends Component {
             <Modal.Content>
               <h4>Extra Data needed</h4>
               <LabelGroup>
-                {options.map(opt => (
-                  <Label
-                    color={opt.color}
-                    key={opt.key}
-                    as='a'
-                    title={`add ${opt.label} extra`}
-                    onClick={() => this.handleChange(opt.value, opt.color)}
-                    horizontal
-                    size='large'
-                  >
-                    {opt.label}
-                  </Label>
-                ))}
+                {currentFolder.filemanager.filemanagerExtraSpaceOptions.map(
+                  opt => (
+                    <Label
+                      as='a'
+                      title={`add ${opt.label} extra`}
+                      onClick={() => this.handleChange(opt)}
+                      horizontal
+                      size='large'
+                    >
+                      {formatStorage(opt)}
+                    </Label>
+                  )
+                )}
               </LabelGroup>
               <Divider />
               {add_data ? (

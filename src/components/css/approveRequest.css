@@ -17,3 +17,11 @@
   display: block;
   margin-top:1rem;
 }
+
+.extra-data-form-group{
+  align-items: flex-end;
+}
+
+.extra-data-form{
+  padding-bottom: 2rem;
+}

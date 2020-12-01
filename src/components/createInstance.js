@@ -8,21 +8,26 @@ import {
   Button,
   Icon,
   Divider,
+  Label
 } from 'semantic-ui-react'
 import css from './css/approveRequest.css'
 import ErrorBoundary from './error-boundary'
 import { createFilemanager } from '../actions/filemanagerActions'
-import { spaceOptions, roleOptions } from '../constants'
+import { spaceOptions, roleOptions, spaceOptionUnits } from '../constants'
 import UploadFilesModal from './uploadFileModal'
+import { formatStorage } from '../helpers/helperfunctions'
 
 class CreateInstance extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       formObj: {
         filemanagerName: '',
         rootFolderName: '',
         rolesAllowed: [],
+        extraSpaceOptions: [],
+        extraSpaceNumber: null,
+        extraSpaceUnit: null,
         logo: null,
         maxSpace: null,
         success: false
@@ -44,6 +49,9 @@ class CreateInstance extends Component {
       rootFolderName: '',
       filemanagerUrlPath: '',
       rolesAllowed: [],
+      extraSpaceOptions: [],
+      extraSpaceNumber: null,
+      extraSpaceUnit: null,
       logo: null,
       maxSpace: null,
       success: false
@@ -74,6 +82,37 @@ class CreateInstance extends Component {
     })
   }
 
+  handleExtraDataSubmit = e => {
+    e.preventDefault()
+    if (
+      this.state.formObj.extraSpaceNumber &&
+      this.state.formObj.extraSpaceUnit
+    ) {
+      this.setState({
+        formObj: {
+          ...this.state.formObj,
+          extraSpaceOptions: [
+            ...this.state.formObj.extraSpaceOptions,
+            parseInt(this.state.formObj.extraSpaceNumber) *
+              this.state.formObj.extraSpaceUnit
+          ]
+        }
+      })
+    }
+  }
+
+  handleExtraSpaceOptionsChange = opt => {
+    var array = [...this.state.formObj.extraSpaceOptions] // make a separate copy of the array
+    var index = array.indexOf(opt)
+    array.splice(index, 1)
+    this.setState({
+      formObj: {
+        ...this.state.formObj,
+        extraSpaceOptions: array
+      }
+    })
+  }
+
   handleSubmit = e => {
     e.preventDefault()
     const {
@@ -82,7 +121,8 @@ class CreateInstance extends Component {
       rootFolderName,
       logo,
       rolesAllowed,
-      maxSpace
+      maxSpace,
+      extraSpaceOptions
     } = this.state.formObj
     const { createFilemanager } = this.props
     if (filemanagerName && filemanagerUrlPath && logo && rolesAllowed) {
@@ -93,6 +133,9 @@ class CreateInstance extends Component {
       formdata.append('folder_name_template', rootFolderName)
       for (let i = 0; i < rolesAllowed.length; i++) {
         formdata.append('filemanager_access_roles', rolesAllowed[i].toString())
+      }
+      for (let i = 0; i < extraSpaceOptions.length; i++) {
+        formdata.append('filemanager_extra_space_options', extraSpaceOptions[i])
       }
       formdata.append('max_space', parseInt(maxSpace))
       createFilemanager(formdata, this.handleSuccess)
@@ -113,14 +156,17 @@ class CreateInstance extends Component {
       formObj: this.getInitialObj()
     })
   }
-  render() {
+  render () {
     const {
       filemanagerName,
       rootFolderName,
       filemanagerUrlPath,
       rolesAllowed,
+      extraSpaceNumber,
+      extraSpaceOptions,
       logo,
       maxSpace,
+      extraSpaceUnit,
       success
     } = this.state.formObj
     const { showModal, files } = this.state
@@ -176,6 +222,43 @@ class CreateInstance extends Component {
               value={rolesAllowed}
               onChange={this.handleChangeSelect}
             />
+
+            <Form
+              onSubmit={this.handleExtraDataSubmit}
+              styleName='css.extra-data-form'
+            >
+              <Form.Group widths='equal' styleName='css.extra-data-form-group'>
+                <Form.Input
+                  placeholder='Int'
+                  name='extraSpaceNumber'
+                  label='Extra Space Value'
+                  value={extraSpaceNumber}
+                  onChange={this.handleChange}
+                />
+                <Form.Select
+                  search
+                  placeholder='Extra Space Unit'
+                  name='extraSpaceUnit'
+                  options={spaceOptionUnits}
+                  label='Extra Space Unit : '
+                  value={extraSpaceUnit}
+                  onChange={this.handleChangeSelect}
+                />
+                <Form.Button success content='Submit' />
+              </Form.Group>
+              {extraSpaceOptions &&
+                extraSpaceOptions.map(opt => (
+                  <Label
+                    as='a'
+                    title={`add ${formatStorage(opt)} extra`}
+                    onClick={() => this.handleExtraSpaceOptionsChange(opt)}
+                    horizontal
+                    size='large'
+                  >
+                    {formatStorage(opt)}
+                  </Label>
+                ))}
+            </Form>
 
             <Button
               onClick={() => {

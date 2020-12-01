@@ -8,16 +8,18 @@ import { getTheme } from 'formula_one'
 import PopupView from './popup'
 
 import index from './css/index.css'
-import { setActiveItems } from '../actions/itemActions'
+import { getStarredItems, setActiveItems } from '../actions/itemActions'
 import { FILE_TYPES, ITEM_TYPE } from '../constants'
 import { FileIcon } from 'react-file-icon'
 import {
   createContextFromEvent,
   formatStorage
 } from '../helpers/helperfunctions'
+import { editFile } from '../actions/fileActions'
+import { editFolder, getFolder } from '../actions/folderActions'
 
 class TabularView extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.contextRef = React.createRef()
     this.column1Ref = React.createRef()
@@ -28,6 +30,35 @@ class TabularView extends Component {
       isPopupOpen: false,
       showDeleteModal: false,
       showEditModal: false
+    }
+  }
+  handleStarClick = (type, id, value) => {
+    const { editFile, editFolder } = this.props
+    var formdata = new FormData()
+    formdata.append('starred', !value)
+    if (type == 'file') {
+      editFile(id, formdata, this.handleStarSuccess)
+    } else {
+      editFolder(id, formdata, this.handleStarSuccess)
+    }
+  }
+  handleStarSuccess = () => {
+    const {
+      activeItems,
+      setActiveItems,
+      getStarredItems,
+      currentFolder
+    } = this.props
+    if (currentFolder.type && currentFolder.type == 'starred') {
+      getStarredItems(currentFolder.filemanager)
+    } else {
+      if (activeItems[0].type == 'file') {
+        this.props.getFolder(activeItems[0].obj.folder.id)
+        setActiveItems([])
+      } else {
+        this.props.getFolder(activeItems[0].obj.parent)
+        setActiveItems([])
+      }
     }
   }
   handleFolderClick = folder => event => {
@@ -81,14 +112,13 @@ class TabularView extends Component {
     setActiveItems(newActiveItems)
   }
 
-  render() {
+  render () {
     const { currentFolder, activeItems } = this.props
     const { isPopupOpen } = this.state
     return (
       <div
         onContextMenu={e => {
           e.preventDefault()
-          console.log(e.target)
           if (
             e.target === this.column1Ref.current ||
             e.target === this.column2Ref.current ||
@@ -126,75 +156,109 @@ class TabularView extends Component {
           <Table.Body>
             {currentFolder &&
               currentFolder.folders &&
-              currentFolder.folders.map((folder, index) => (
-                <Table.Row
-                  key={index}
-                  active={activeItems.some(elem => elem.obj.id == folder.id)}
-                  styleName='index.table-row'
-                  onClick={this.handleFolderClick(folder)}
-                  onDoubleClick={() => {
-                    const url =
-                      this.props.location.pathname.slice(-1) === '/'
-                        ? `${this.props.match.url}${folder.id}`
-                        : `${this.props.match.url}/${folder.id}`
-                    this.props.history.push(url)
-                  }}
-                  onContextMenu={this.handleFolderContextSelect(folder)}
-                >
-                  <Table.Cell>
-                    <Icon size='large' name='folder open' color='grey' />
-                    {folder.folderName}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {getModifiedDate(folder.datetimeModified)}
-                  </Table.Cell>
-                  <Table.Cell>{formatStorage(folder.contentSize)}</Table.Cell>
-                  <Table.Cell>
-                    {folder.starred ? (
-                      <Icon name='star' />
-                    ) : (
-                      <Icon name='star outline' />
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+              currentFolder.folders
+                .sort(
+                  ({ id: previousID }, { id: currentID }) =>
+                    previousID - currentID
+                )
+                .map((folder, index) => (
+                  <Table.Row
+                    key={index}
+                    active={activeItems.some(elem => elem.obj.id == folder.id)}
+                    styleName='index.table-row'
+                    onClick={this.handleFolderClick(folder)}
+                    onDoubleClick={() => {
+                      const url =
+                        this.props.location.pathname.slice(-1) === '/'
+                          ? `${this.props.match.url}${folder.id}`
+                          : `${this.props.match.url}/${folder.id}`
+                      this.props.history.push(url)
+                    }}
+                    onContextMenu={this.handleFolderContextSelect(folder)}
+                  >
+                    <Table.Cell>
+                      <Icon size='large' name='folder open' color='grey' />
+                      {folder.folderName}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {getModifiedDate(folder.datetimeModified)}
+                    </Table.Cell>
+                    <Table.Cell>{formatStorage(folder.contentSize)}</Table.Cell>
+                    <Table.Cell>
+                      {folder.starred ? (
+                        <Icon
+                          name='star'
+                          title='Remove from starred'
+                          onClick={() =>
+                            this.handleStarClick('folder', folder.id, true)
+                          }
+                        />
+                      ) : (
+                        <Icon
+                          name='star outline'
+                          title='Add to starred'
+                          onClick={() =>
+                            this.handleStarClick('folder', folder.id, false)
+                          }
+                        />
+                      )}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
 
             {currentFolder &&
               currentFolder.files &&
-              currentFolder.files.map((file, index) => (
-                <Table.Row
-                  key={index}
-                  active={activeItems.some(elem => elem.obj.id == file.id)}
-                  styleName='index.table-row'
-                  onClick={this.handleFileClick(file)}
-                  onContextMenu={this.handleFileContextSelect(file)}
-                >
-                  <Table.Cell>
-                    <div styleName='index.table-cell-file-icon-name'>
-                      <div styleName='index.table-cell-file-icon'>
-                        <FileIcon
-                          {...FILE_TYPES[file.extension]}
-                          extension={file.extension}
+              currentFolder.files
+                .sort(
+                  ({ id: previousID }, { id: currentID }) =>
+                    previousID - currentID
+                )
+                .map((file, index) => (
+                  <Table.Row
+                    key={index}
+                    active={activeItems.some(elem => elem.obj.id == file.id)}
+                    styleName='index.table-row'
+                    onClick={this.handleFileClick(file)}
+                    onContextMenu={this.handleFileContextSelect(file)}
+                  >
+                    <Table.Cell>
+                      <div styleName='index.table-cell-file-icon-name'>
+                        <div styleName='index.table-cell-file-icon'>
+                          <FileIcon
+                            {...FILE_TYPES[file.extension]}
+                            extension={file.extension}
+                          />
+                        </div>
+                        <div styleName='index.table-cell-file-name'>
+                          {file.fileName}
+                        </div>
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {getModifiedDate(file.datetimeModified)}
+                    </Table.Cell>
+                    <Table.Cell>{formatStorage(file.size)}</Table.Cell>
+                    <Table.Cell>
+                      {file.starred ? (
+                        <Icon
+                          name='star'
+                          title='Remove from starred'
+                          onClick={() =>
+                            this.handleStarClick('file', file.id, true)
+                          }
                         />
-                      </div>
-                      <div styleName='index.table-cell-file-name'>
-                        {file.fileName}
-                      </div>
-                    </div>
-                  </Table.Cell>
-                  <Table.Cell>
-                    {getModifiedDate(file.datetimeModified)}
-                  </Table.Cell>
-                  <Table.Cell>{formatStorage(file.size)}</Table.Cell>
-                  <Table.Cell>
-                    {file.starred ? (
-                      <Icon name='star' />
-                    ) : (
-                      <Icon name='star outline' />
-                    )}
-                  </Table.Cell>
-                </Table.Row>
-              ))}
+                      ) : (
+                        <Icon
+                          name='star outline'
+                          title='Add to starred'
+                          onClick={() =>
+                            this.handleStarClick('file', file.id, false)
+                          }
+                        />
+                      )}
+                    </Table.Cell>
+                  </Table.Row>
+                ))}
           </Table.Body>
         </Table>
         <PopupView
@@ -219,6 +283,18 @@ const mapDispatchToProps = dispatch => {
   return {
     setActiveItems: items => {
       dispatch(setActiveItems(items))
+    },
+    editFile: (id, formdata, callback) => {
+      dispatch(editFile(id, formdata, callback))
+    },
+    editFolder: (id, formdata, callback) => {
+      dispatch(editFolder(id, formdata, callback))
+    },
+    getFolder: id => {
+      dispatch(getFolder(id))
+    },
+    getStarredItems: filemanager => {
+      dispatch(getStarredItems(filemanager))
     }
   }
 }
