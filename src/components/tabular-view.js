@@ -14,6 +14,7 @@ import { deleteFolder } from '../actions/folderActions'
 import { setActiveItems } from '../actions/itemActions'
 import { FILE_TYPES, ITEM_TYPE } from '../constants'
 import { FileIcon } from 'react-file-icon'
+import { formatStorage } from '../helpers/helperfunctions'
 
 const options = [
   { key: '1', label: 'Edit' },
@@ -22,7 +23,7 @@ const options = [
 ]
 
 class TabularView extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isPopupOpen: false,
@@ -80,9 +81,10 @@ class TabularView extends Component {
     setActiveItems([])
     this.setState({ showDeleteModal: false })
   }
-  render () {
+  render() {
     const { currentFolder, activeItems } = this.props
     const { showDeleteModal, showEditModal } = this.state
+
     return (
       <div>
         <Table singleLine styleName='index.table-main' selectable>
@@ -90,7 +92,7 @@ class TabularView extends Component {
             <Table.Row>
               <Table.HeaderCell>Title</Table.HeaderCell>
               <Table.HeaderCell>Last Modified</Table.HeaderCell>
-              <Table.HeaderCell>Permissions</Table.HeaderCell>
+              <Table.HeaderCell>Space Used</Table.HeaderCell>
               <Table.HeaderCell>Starred</Table.HeaderCell>
               <Table.HeaderCell />
             </Table.Row>
@@ -119,8 +121,14 @@ class TabularView extends Component {
                   <Table.Cell>
                     {getModifiedDate(folder.datetimeModified)}
                   </Table.Cell>
-                  <Table.Cell>{folder.permission}</Table.Cell>
-                  <Table.Cell>{folder.starred ? <Icon name='star' /> : <Icon name='star outline' />}</Table.Cell>
+                  <Table.Cell>{formatStorage(folder.contentSize)}</Table.Cell>
+                  <Table.Cell>
+                    {folder.starred ? (
+                      <Icon name='star' />
+                    ) : (
+                      <Icon name='star outline' />
+                    )}
+                  </Table.Cell>
                 </Table.Row>
               ))}
 
@@ -149,8 +157,14 @@ class TabularView extends Component {
                   <Table.Cell>
                     {getModifiedDate(file.datetimeModified)}
                   </Table.Cell>
-                  <Table.Cell>{file.permission}</Table.Cell>
-                  <Table.Cell>{file.starred ? <Icon name='star' /> : <Icon name='star outline' />}</Table.Cell>
+                  <Table.Cell>{formatStorage(file.size)}</Table.Cell>
+                  <Table.Cell>
+                    {file.starred ? (
+                      <Icon name='star' />
+                    ) : (
+                      <Icon name='star outline' />
+                    )}
+                  </Table.Cell>
                 </Table.Row>
               ))}
           </Table.Body>
