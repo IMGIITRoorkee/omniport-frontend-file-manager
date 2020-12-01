@@ -54,48 +54,58 @@ class GridView extends Component {
       showShareItemModal: false,
       editFolder: {},
       isDetailViewOpen: false,
-      showDetailsModal: false,
+      showDetailsModal: false
     }
   }
 
   getOptions = () => {
     const { activeItems } = this.props
+    const options = [
+      {
+        key: '1',
+        label: 'Edit',
+        icon: 'edit',
+        condition:
+          activeItems.length == 1 && activeItems[0].type === ITEM_TYPE.file
+      },
+      {
+        key: '2',
+        label: 'Download',
+        icon: 'download',
+        condition: !activeItems.some(item => item.type === ITEM_TYPE.folder)
+      },
+      { key: '3', label: 'Delete', icon: 'delete', condition: true },
+      {
+        key: '4',
+        label: 'Edit',
+        icon: 'edit',
+        condition:
+          activeItems.length == 1 && activeItems[0].type == ITEM_TYPE.folder
+      },
+      {
+        key: '5',
+        label: 'Share',
+        icon: 'share',
+        condition: activeItems.length == 1
+      },
+      {
+        key: '7',
+        label: 'View details',
+        icon: 'info',
+        condition: activeItems.length == 1
+      }
+    ]
     if (activeItems.length == 1) {
-      return activeItems[0].type === ITEM_TYPE.file
-        ? [
-            { key: '1', label: 'Edit', icon: 'edit' },
-            { key: '2', label: 'Download', icon: 'download' },
-            { key: '3', label: 'Delete', icon: 'delete' },
-            { key: '5', label: 'Share', icon: 'share' },
-            {
-              key: '6',
-              label: activeItems[0].obj.starred
-                ? 'Remove from starred'
-                : 'Add to starred',
-              icon: activeItems[0].obj.starred ? 'star' : 'star outline'
-            },
-            { key: '7', label: 'View details', icon: 'info'},
-          ]
-        : [
-            { key: '4', label: 'Edit', icon: 'edit' },
-            { key: '3', label: 'Delete', icon: 'delete' },
-            { key: '5', label: 'Share', icon: 'share' },
-            {
-              key: '6',
-              label: activeItems[0].obj.starred
-                ? 'Remove from starred'
-                : 'Add to starred',
-              icon: activeItems[0].obj.starred ? 'star' : 'star outline'
-            },
-            { key: '7', label: 'View details', icon: 'info'},
-          ]
-    } else
-      return !activeItems.some(item => item.type === ITEM_TYPE.folder)
-        ? [
-            { key: '2', label: 'Download', icon: 'download' },
-            { key: '3', label: 'Delete', icon: 'delete' }
-          ]
-        : [{ key: '3', label: 'Delete', icon: 'delete' }]
+      options.push({
+        key: '6',
+        label: activeItems[0].obj.starred
+          ? 'Remove from starred'
+          : 'Add to starred',
+        icon: activeItems[0].obj.starred ? 'star' : 'star outline',
+        condition: activeItems.length == 1
+      })
+    }
+    return options
   }
   handleOptions = {
     1: () => {
@@ -127,8 +137,8 @@ class GridView extends Component {
       }
     },
     7: () => {
-      this.setState({ showDetailsModal: true})
-    },
+      this.setState({ showDetailsModal: true })
+    }
   }
 
   handleDownload = () => {
@@ -136,7 +146,7 @@ class GridView extends Component {
     for (const item of activeItems) {
       if (item.type === ITEM_TYPE.file) {
         let link = document.createElement('a')
-        link.setAttribute('target','_blank')
+        link.setAttribute('target', '_blank')
         // link.download = item.obj.fileName
         link.href = item.obj.upload
         document.body.appendChild(link)
@@ -186,13 +196,9 @@ class GridView extends Component {
     } = this.props
 
     if (activeItems.length === 1) {
-      if (
-        activeItems.length === 1 &&
-        activeItems[0].type === ITEM_TYPE.folder
-      ) {
+      if (activeItems[0].type === ITEM_TYPE.folder) {
         deleteFolder(activeItems[0].obj.id)
-      }
-      if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.file) {
+      } else {
         deleteFile(activeItems[0].obj.id)
       }
     } else if (activeItems.length > 1) {
@@ -288,7 +294,12 @@ class GridView extends Component {
               />
             ))}
         </div>
-        {currentFolder.folders.length==0 || currentFolder.files.length==0 ? '' : <Divider />}
+        {currentFolder.folders.length == 0 ||
+        currentFolder.files.length == 0 ? (
+          ''
+        ) : (
+          <Divider />
+        )}
         <div
           styleName='grid.view-parent'
           ref={this.fileContainerRef}
@@ -312,17 +323,19 @@ class GridView extends Component {
           open={isPopupOpen}
         >
           <Menu vertical>
-            {this.getOptions().map(option => (
-              <Menu.Item
-                key={option.key}
-                name={option.label}
-                icon={option.icon ? option.icon : false}
-                onClick={() => {
-                  this.setState({ isPopupOpen: false })
-                  this.handleOptions[option.key]()
-                }}
-              />
-            ))}
+            {this.getOptions()
+              .filter(option => option.condition)
+              .map(option => (
+                <Menu.Item
+                  key={option.key}
+                  name={option.label}
+                  icon={option.icon ? option.icon : false}
+                  onClick={() => {
+                    this.setState({ isPopupOpen: false })
+                    this.handleOptions[option.key]()
+                  }}
+                />
+              ))}
           </Menu>
         </Popup>
         <ConfirmModal
@@ -347,7 +360,7 @@ class GridView extends Component {
             this.setState({ showFileEditModal: false })
           }}
         />
-        <ItemDetailsModal 
+        <ItemDetailsModal
           showModal={showDetailsModal}
           close={() => {
             this.setState({ showDetailsModal: false })
