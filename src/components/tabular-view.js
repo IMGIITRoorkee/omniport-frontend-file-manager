@@ -1,30 +1,26 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Table, Icon, Button } from 'semantic-ui-react'
+import { Table, Icon } from 'semantic-ui-react'
 import { withRouter } from 'react-router-dom'
-import EditModal from './edit-modal'
 
-import { deleteFile } from '../actions/fileActions'
 import { getModifiedDate } from '../utils/get-modified-date'
 import { getTheme } from 'formula_one'
 import PopupView from './popup'
-import ConfirmModal from './confirmModal'
+
 import index from './css/index.css'
-import { deleteFolder } from '../actions/folderActions'
 import { setActiveItems } from '../actions/itemActions'
 import { FILE_TYPES, ITEM_TYPE } from '../constants'
 import { FileIcon } from 'react-file-icon'
-import { formatStorage } from '../helpers/helperfunctions'
-
-const options = [
-  { key: '1', label: 'Edit' },
-  { key: '2', label: 'Download' },
-  { key: '3', label: 'Delete' }
-]
+import {
+  createContextFromEvent,
+  formatStorage
+} from '../helpers/helperfunctions'
 
 class TabularView extends Component {
   constructor(props) {
     super(props)
+    this.contextRef = React.createRef()
+    this.headerRef = React.createRef()
     this.state = {
       isPopupOpen: false,
       showDeleteModal: false,
@@ -61,32 +57,46 @@ class TabularView extends Component {
       setActiveItems(newArr)
     }
   }
-  handleOptions = {
-    1: () => {
-      this.setState({ showEditModal: true })
-    },
-    2: () => {},
-    3: () => {
-      this.setState({ showDeleteModal: true })
-    }
+
+  handleFileContextSelect = file => e => {
+    const { activeItems, setActiveItems } = this.props
+    const newActiveItems = activeItems.some(
+      elem => elem.obj.id === file.id && elem.type == 'file'
+    )
+      ? activeItems
+      : [{ type: ITEM_TYPE.file, obj: file }]
+    setActiveItems(newActiveItems)
   }
-  handleDelete = () => {
-    const { deleteFolder, activeItems, deleteFile } = this.props
-    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.folder) {
-      deleteFolder(activeItems[0].obj.id)
-    }
-    if (activeItems.length === 1 && activeItems[0].type === ITEM_TYPE.file) {
-      deleteFile(activeItems[0].obj.id)
-    }
-    setActiveItems([])
-    this.setState({ showDeleteModal: false })
+
+  handleFolderContextSelect = folder => e => {
+    // e.stopPropagation()
+    const { activeItems, setActiveItems } = this.props
+    const newActiveItems = activeItems.some(
+      elem => elem.obj.id === folder.id && elem.type == 'folder'
+    )
+      ? activeItems
+      : [{ type: ITEM_TYPE.folder, obj: folder }]
+    setActiveItems(newActiveItems)
   }
+
   render() {
     const { currentFolder, activeItems } = this.props
-    const { showDeleteModal, showEditModal } = this.state
-
+    const { isPopupOpen } = this.state
     return (
-      <div>
+      <div
+        onContextMenu={e => {
+          e.preventDefault()
+          // if (e.target === this.headerRef.current) {
+          //   return
+          // }
+          this.contextRef = createContextFromEvent(e)
+          if (isPopupOpen) {
+            this.setState({ isPopupOpen: false })
+          } else {
+            this.setState({ isPopupOpen: true })
+          }
+        }}
+      >
         <Table singleLine styleName='index.table-main' selectable>
           <Table.Header>
             <Table.Row>
@@ -113,6 +123,7 @@ class TabularView extends Component {
                         : `${this.props.match.url}/${folder.id}`
                     this.props.history.push(url)
                   }}
+                  onContextMenu={this.handleFolderContextSelect(folder)}
                 >
                   <Table.Cell>
                     <Icon size='large' name='folder open' color='grey' />
@@ -140,6 +151,7 @@ class TabularView extends Component {
                   active={activeItems.some(elem => elem.obj.id == file.id)}
                   styleName='index.table-row'
                   onClick={this.handleFileClick(file)}
+                  onContextMenu={this.handleFileContextSelect(file)}
                 >
                   <Table.Cell>
                     <div styleName='index.table-cell-file-icon-name'>
@@ -169,22 +181,10 @@ class TabularView extends Component {
               ))}
           </Table.Body>
         </Table>
-        <ConfirmModal
-          show={showDeleteModal}
-          handleClose={() => {
-            this.setState({ showDeleteModal: false })
-          }}
-          handleSubmit={() => {
-            this.handleDelete()
-          }}
-          type='remove'
-          item='file'
-        />
-        <EditModal
-          showModal={showEditModal}
-          close={() => {
-            this.setState({ showEditModal: false })
-          }}
+        <PopupView
+          contextRef={this.contextRef}
+          isPopupOpen={isPopupOpen}
+          setPopupOpen={value => this.setState({ isPopupOpen: value })}
         />
       </div>
     )
@@ -201,12 +201,6 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    deleteFile: pk => {
-      dispatch(deleteFile(pk))
-    },
-    deleteFolder: id => {
-      dispatch(deleteFolder(id))
-    },
     setActiveItems: items => {
       dispatch(setActiveItems(items))
     }

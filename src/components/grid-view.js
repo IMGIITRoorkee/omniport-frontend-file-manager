@@ -11,25 +11,9 @@ import { ITEM_TYPE, IMAGE_EXTENSIONS } from '../constants'
 
 import MultipleImagesModal from './multipleImageModal'
 import PopupView from './popup'
+import { createContextFromEvent } from '../helpers/helperfunctions'
 
-function createContextFromEvent(e) {
-  const left = e.clientX
-  const top = e.clientY
-  const right = left + 1
-  const bottom = top + 1
 
-  return {
-    getBoundingClientRect: () => ({
-      left,
-      top,
-      right,
-      bottom,
-
-      height: 0,
-      width: 0
-    })
-  }
-}
 class GridView extends Component {
   constructor(props) {
     super(props)
@@ -47,28 +31,6 @@ class GridView extends Component {
     }
   }
 
-  handleFileDoubleClick = (file, index) => {
-    const { currentFolder, setActiveItems } = this.props
-    if (Boolean(window.opener)) {
-      window.opener.postMessage(
-        {
-          file: file.upload,
-          fileName: file.fileName,
-          path: file.path,
-          filemanager_name: currentFolder.filemanagername
-        },
-        '*'
-      )
-      window.close()
-    } else {
-      setActiveItems([{ type: ITEM_TYPE.file, obj: file }])
-      if (IMAGE_EXTENSIONS.includes(file.extension)) {
-        this.setState({ isDetailViewOpen: true })
-      } else {
-        this.handleDownload()
-      }
-    }
-  }
 
   render() {
     const { currentFolder } = this.props
