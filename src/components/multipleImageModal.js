@@ -51,7 +51,6 @@ class MultipleImageModal extends Component {
   handleDownload = () => {
     const { activeIndex, images } = this.state
     const item = images[activeIndex]
-    console.log(item)
     let link = document.createElement('a')
     link.download = item.fileName
     link.href = item.upload
