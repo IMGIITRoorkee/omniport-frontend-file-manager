@@ -59,14 +59,16 @@ class GridView extends Component {
   }
 
   getOptions = () => {
-    const { activeItems } = this.props
+    const { activeItems, viewingSharedItems } = this.props
     const options = [
       {
         key: '1',
         label: 'Edit',
         icon: 'edit',
         condition:
-          activeItems.length == 1 && activeItems[0].type === ITEM_TYPE.file
+          !viewingSharedItems &&
+          activeItems.length == 1 &&
+          activeItems[0].type === ITEM_TYPE.file
       },
       {
         key: '2',
@@ -74,19 +76,26 @@ class GridView extends Component {
         icon: 'download',
         condition: !activeItems.some(item => item.type === ITEM_TYPE.folder)
       },
-      { key: '3', label: 'Delete', icon: 'delete', condition: true },
+      {
+        key: '3',
+        label: 'Delete',
+        icon: 'delete',
+        condition: !viewingSharedItems
+      },
       {
         key: '4',
         label: 'Edit',
         icon: 'edit',
         condition:
-          activeItems.length == 1 && activeItems[0].type == ITEM_TYPE.folder
+          !viewingSharedItems &&
+          activeItems.length == 1 &&
+          activeItems[0].type == ITEM_TYPE.folder
       },
       {
         key: '5',
         label: 'Share',
         icon: 'share',
-        condition: activeItems.length == 1
+        condition: !viewingSharedItems && activeItems.length == 1
       },
       {
         key: '7',
@@ -102,7 +111,7 @@ class GridView extends Component {
           ? 'Remove from starred'
           : 'Add to starred',
         icon: activeItems[0].obj.starred ? 'star' : 'star outline',
-        condition: activeItems.length == 1
+        condition: !viewingSharedItems && activeItems.length == 1
       })
     }
     return options
@@ -257,6 +266,7 @@ class GridView extends Component {
       isDetailViewOpen,
       showDetailsModal
     } = this.state
+    const options = this.getOptions().filter(option => option.condition)
     return (
       <div
         ref={this.rootRef}
@@ -320,22 +330,20 @@ class GridView extends Component {
           basic
           context={this.contextRef}
           onClose={() => this.setState({ isPopupOpen: false })}
-          open={isPopupOpen}
+          open={isPopupOpen && Boolean(options.length)}
         >
           <Menu vertical>
-            {this.getOptions()
-              .filter(option => option.condition)
-              .map(option => (
-                <Menu.Item
-                  key={option.key}
-                  name={option.label}
-                  icon={option.icon ? option.icon : false}
-                  onClick={() => {
-                    this.setState({ isPopupOpen: false })
-                    this.handleOptions[option.key]()
-                  }}
-                />
-              ))}
+            {options.map(option => (
+              <Menu.Item
+                key={option.key}
+                name={option.label}
+                icon={option.icon ? option.icon : false}
+                onClick={() => {
+                  this.setState({ isPopupOpen: false })
+                  this.handleOptions[option.key]()
+                }}
+              />
+            ))}
           </Menu>
         </Popup>
         <ConfirmModal
