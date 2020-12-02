@@ -36,6 +36,7 @@ class ItemDetailsModal extends Component {
     const { active_item } = this.state
     return (
       <Modal
+        onClick={(e) => {e.stopPropagation()}}
         size='tiny'
         open={showModal}
         closeOnEscape={true}

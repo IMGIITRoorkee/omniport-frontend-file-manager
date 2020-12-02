@@ -63,6 +63,7 @@ class MultipleImageModal extends Component {
     const { images } = this.state
     return (
       <Modal
+        onClick={(e) => {e.stopPropagation()}}
         onClose={() => {
           onHide()
         }}

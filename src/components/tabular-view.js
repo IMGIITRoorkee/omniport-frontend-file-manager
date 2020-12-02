@@ -63,6 +63,7 @@ class TabularView extends Component {
     }
   }
   handleFolderClick = folder => event => {
+    event.stopPropagation()
     const { setActiveItems, activeItems } = this.props
     if (!event.ctrlKey) {
       setActiveItems([{ type: ITEM_TYPE.folder, obj: folder }])
@@ -78,6 +79,7 @@ class TabularView extends Component {
     }
   }
   handleFileClick = file => event => {
+    event.stopPropagation()
     const { setActiveItems, activeItems } = this.props
     if (!event.ctrlKey) {
       setActiveItems([{ type: ITEM_TYPE.file, obj: file }])
