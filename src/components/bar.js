@@ -24,6 +24,7 @@ import {
 import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
 import { ITEM_TYPE } from '../constants'
 import ItemDetailsModal from './item-detail-modal'
+import { handleDownload } from '../helpers/helperfunctions'
 
 class Bar extends Component {
   constructor (props) {
@@ -287,7 +288,7 @@ class Bar extends Component {
             !viewingSharedItems && (
               <div styleName='file.crud-icon'>
                 <Button
-                  onClick={this.handleDownload}
+                  onClick={handleDownload}
                   icon='download'
                   color='blue'
                   inverted

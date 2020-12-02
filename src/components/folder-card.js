@@ -41,13 +41,7 @@ class FolderCard extends Component {
   }
 
   handleDoubleClick = () => {
-    const {
-      index,
-      folder,
-      activeItems,
-      viewingSharedItems,
-      filemanager
-    } = this.props
+    const { folder, viewingSharedItems } = this.props
     const uuid = this.props.match.params.uuid
       ? this.props.match.params.uuid
       : folder.sharingId

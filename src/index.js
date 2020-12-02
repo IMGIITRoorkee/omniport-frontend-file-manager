@@ -1,22 +1,18 @@
 import React, { Component } from 'react'
 import { Route } from 'react-router-dom'
 import App from './components/app'
-import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
-import thunk from 'redux-thunk'
-import rootReducers from './reducers'
-import "pure-react-carousel/dist/react-carousel.es.css";
-
+import 'pure-react-carousel/dist/react-carousel.es.css'
+import store from '../src/store'
 export default class AppRouter extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
-    this.store = createStore(rootReducers, applyMiddleware(thunk))
   }
 
-  render () {
+  render() {
     const { match } = this.props
     return (
-      <Provider store={this.store}>
+      <Provider store={store}>
         <Route path={`${match.path}`} component={App} />
       </Provider>
     )
