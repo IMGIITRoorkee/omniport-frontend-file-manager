@@ -18,7 +18,7 @@ import UploadFilesModal from './uploadFileModal'
 import { formatStorage } from '../helpers/helperfunctions'
 
 class CreateInstance extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       formObj: {
@@ -84,18 +84,17 @@ class CreateInstance extends Component {
 
   handleExtraDataSubmit = e => {
     e.preventDefault()
-    if (
-      this.state.formObj.extraSpaceNumber &&
-      this.state.formObj.extraSpaceUnit
-    ) {
+    const { extraSpaceNumber, extraSpaceUnit } = this.state.formObj
+    if (Boolean(parseInt(extraSpaceNumber)) && extraSpaceUnit) {
       this.setState({
         formObj: {
           ...this.state.formObj,
           extraSpaceOptions: [
             ...this.state.formObj.extraSpaceOptions,
-            parseInt(this.state.formObj.extraSpaceNumber) *
-              this.state.formObj.extraSpaceUnit
-          ]
+            parseInt(extraSpaceNumber) * extraSpaceUnit
+          ],
+          extraSpaceNumber: '',
+          extraSpaceUnit: ''
         }
       })
     }
@@ -125,7 +124,15 @@ class CreateInstance extends Component {
       extraSpaceOptions
     } = this.state.formObj
     const { createFilemanager } = this.props
-    if (filemanagerName && filemanagerUrlPath && logo && rolesAllowed && extraSpaceOptions && maxSpace) {
+    if (
+      filemanagerName &&
+      filemanagerUrlPath &&
+      logo &&
+      rolesAllowed &&
+      extraSpaceOptions &&
+      extraSpaceOptions.length &&
+      maxSpace
+    ) {
       let formdata = new FormData()
       formdata.append(`logo`, logo)
       formdata.append('filemanager_name', filemanagerName)
@@ -156,7 +163,7 @@ class CreateInstance extends Component {
       formObj: this.getInitialObj()
     })
   }
-  render () {
+  render() {
     const {
       filemanagerName,
       rootFolderName,
@@ -230,7 +237,7 @@ class CreateInstance extends Component {
               <Form.Group widths='equal' styleName='css.extra-data-form-group'>
                 <Form.Input
                   placeholder='Int'
-                  type='Number'
+                  type='number'
                   name='extraSpaceNumber'
                   label='Extra Space Value'
                   value={extraSpaceNumber}
