@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { IMAGE_EXTENSIONS, ITEM_TYPE } from '../constants'
 import css from './css/carousel.css'
 import CustomCarousel from './customCarousel'
+import { handleDownload } from '../helpers/helperfunctions'
 
 class MultipleImageModal extends Component {
   constructor(props) {
@@ -48,16 +49,6 @@ class MultipleImageModal extends Component {
     }
   }
 
-  handleDownload = () => {
-    const { activeIndex, images } = this.state
-    const item = images[activeIndex]
-    let link = document.createElement('a')
-    link.download = item.fileName
-    link.href = item.upload
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
   render() {
     const { show, onHide, activeItems } = this.props
     const { images } = this.state
@@ -92,7 +83,7 @@ class MultipleImageModal extends Component {
             size='large'
             styleName='css.download-icon'
             onClick={() => {
-              this.handleDownload()
+              handleDownload()
             }}
           />
           <CarouselProvider
@@ -142,7 +133,3 @@ const mapDispatchToProps = dispatch => {
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(MultipleImageModal)
-
-// export default WithStore(MultipleImageModal, state => ({
-//   currentSlide: state.currentSlide
-// }))

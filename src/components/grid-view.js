@@ -11,10 +11,10 @@ import { ITEM_TYPE, IMAGE_EXTENSIONS } from '../constants'
 
 import MultipleImagesModal from './multipleImageModal'
 import PopupView from './popup'
-import { createContextFromEvent } from '../helpers/helperfunctions'
+import { createContextFromEvent,handleDownload } from '../helpers/helperfunctions'
 
 class GridView extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.folderContainerRef = React.createRef()
     this.contextRef = React.createRef()
@@ -30,7 +30,30 @@ class GridView extends Component {
     }
   }
 
-  render () {
+  handleFileDoubleClick = (file, index) => {
+    const { currentFolder, setActiveItems } = this.props
+    if (Boolean(window.opener)) {
+      window.opener.postMessage(
+        {
+          file: file.upload,
+          fileName: file.fileName,
+          path: file.path,
+          filemanager_name: currentFolder.filemanagername
+        },
+        '*'
+      )
+      window.close()
+    } else {
+      setActiveItems([{ type: ITEM_TYPE.file, obj: file }])
+      if (IMAGE_EXTENSIONS.includes(file.extension)) {
+        this.setState({ isDetailViewOpen: true })
+      } else {
+        handleDownload()
+      }
+    }
+  }
+
+  render() {
     const { currentFolder } = this.props
     const { isPopupOpen, isDetailViewOpen } = this.state
     return (

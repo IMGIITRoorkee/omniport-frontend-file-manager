@@ -21,6 +21,8 @@ import ItemDetailModal from './item-detail-modal'
 import ShareItemModal from './shareItemModal'
 import FolderFormModal from './folderFormModal'
 import { ITEM_TYPE } from '../constants'
+import { handleDownload } from '../helpers/helperfunctions'
+
 class PopupView extends Component {
   constructor(props, ref) {
     super(props)
@@ -98,7 +100,7 @@ class PopupView extends Component {
       this.setState({ showFileEditModal: true })
     },
     2: () => {
-      this.handleDownload()
+      handleDownload()
     },
     3: () => {
       this.setState({ showDeleteModal: true })
@@ -127,20 +129,6 @@ class PopupView extends Component {
     }
   }
 
-  handleDownload = () => {
-    const { activeItems } = this.props
-    for (const item of activeItems) {
-      if (item.type === ITEM_TYPE.file) {
-        let link = document.createElement('a')
-        link.setAttribute('target', '_blank')
-        // link.download = item.obj.fileName
-        link.href = item.obj.upload
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-      }
-    }
-  }
 
   handleStarSuccess = () => {
     const {
