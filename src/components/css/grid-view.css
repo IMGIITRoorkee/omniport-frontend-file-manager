@@ -17,6 +17,9 @@
   width: 80px;
   margin: auto;
   position: relative;
+  height: 123px;
+  display: flex;
+  flex-direction: column;
 }
 .file-star-icon{
   position: absolute;
@@ -40,7 +43,7 @@
   display: flex;
   justify-content: center;
   text-align: center;
-  /* margin-top: 0.5em; */
+  flex:1;
 }
 .file-inactive {
   opacity: 0.8;
@@ -88,4 +91,11 @@
   margin-left: auto;
   text-align: center;
   position: relative;
+}
+
+.image {
+  border-radius: 0.3125rem;
+  width: 100%;
+  display: block;
+  flex: 10;
 }

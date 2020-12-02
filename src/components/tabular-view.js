@@ -257,10 +257,18 @@ class TabularView extends Component {
                     <Table.Cell>
                       <div styleName='index.table-cell-file-icon-name'>
                         <div styleName='index.table-cell-file-icon'>
-                          <FileIcon
-                            {...FILE_TYPES[file.extension]}
-                            extension={file.extension}
-                          />
+                          {!IMAGE_EXTENSIONS.includes(file.extension) ? (
+                            <FileIcon
+                              {...FILE_TYPES[file.extension]}
+                              extension={file.extension}
+                            />
+                          ) : (
+                            <img
+                              src={file.upload}
+                              alt={file.name}
+                              styleName='index.image'
+                            />
+                          )}
                         </div>
                         <div styleName='index.table-cell-file-name'>
                           {file.fileName}

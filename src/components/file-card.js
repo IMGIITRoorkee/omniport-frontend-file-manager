@@ -5,10 +5,9 @@ import { Icon, Popup } from 'semantic-ui-react'
 
 import { deleteFile } from '../actions/fileActions'
 import { setActiveItems } from '../actions/itemActions'
-import { FILE_TYPES, ITEM_TYPE } from '../constants'
+import { FILE_TYPES, IMAGE_EXTENSIONS, ITEM_TYPE } from '../constants'
 
 import grid from './css/grid-view.css'
-
 class Filecard extends Component {
   constructor(props) {
     super(props)
@@ -78,14 +77,22 @@ class Filecard extends Component {
                   color='yellow'
                 />
               )}
-              <FileIcon {...FILE_TYPES[extension]} extension={extension} />
+              {!IMAGE_EXTENSIONS.includes(file.extension) ? (
+                <FileIcon {...FILE_TYPES[extension]} extension={extension} />
+              ) : (
+                  <img
+                    src={file.upload}
+                    alt={file.name}
+                    styleName='grid.image'
+                  />
+              )}
               <div styleName='grid.file-name'>{fileName}</div>
             </div>
           }
           content={file.fileName}
           basic
-          size="small"
-          position="bottom left"
+          size='small'
+          position='bottom left'
         />
       </div>
     )
