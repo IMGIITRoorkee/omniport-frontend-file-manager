@@ -11,7 +11,10 @@ import { ITEM_TYPE, IMAGE_EXTENSIONS } from '../constants'
 
 import MultipleImagesModal from './multipleImageModal'
 import PopupView from './popup'
-import { createContextFromEvent,handleDownload } from '../helpers/helperfunctions'
+import {
+  createContextFromEvent,
+  openInNewTab
+} from '../helpers/helperfunctions'
 
 class GridView extends Component {
   constructor(props) {
@@ -48,7 +51,7 @@ class GridView extends Component {
       if (IMAGE_EXTENSIONS.includes(file.extension)) {
         this.setState({ isDetailViewOpen: true })
       } else {
-        handleDownload()
+        openInNewTab()
       }
     }
   }
