@@ -1,5 +1,7 @@
-import { ONE_GB, ONE_KB, ONE_MB } from '../constants'
 const Big = require('big.js')
+
+import { ONE_GB, ONE_KB, ONE_MB ,ITEM_TYPE} from '../constants'
+import store from '../store'
 
 const removeTrailingZeros = str => {
   let numberStr = ''
@@ -56,5 +58,19 @@ export const createContextFromEvent = e => {
       height: 0,
       width: 0
     })
+  }
+}
+
+export const handleDownload = () => {
+  const activeItems = store.getState().items.activeItems
+  for (const item of activeItems) {
+    if (item.type === ITEM_TYPE.file) {
+      let link = document.createElement('a')
+      link.setAttribute('target', '_blank')
+      link.href = item.obj.upload
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+    }
   }
 }

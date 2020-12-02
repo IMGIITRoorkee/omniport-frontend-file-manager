@@ -13,13 +13,15 @@ import { FILE_TYPES, ITEM_TYPE } from '../constants'
 import { FileIcon } from 'react-file-icon'
 import {
   createContextFromEvent,
-  formatStorage
+  formatStorage,
+  handleDownload
 } from '../helpers/helperfunctions'
 import { editFile } from '../actions/fileActions'
 import { editFolder, getFolder } from '../actions/folderActions'
+import MultipleImageModal from './multipleImageModal'
 
 class TabularView extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.contextRef = React.createRef()
     this.column1Ref = React.createRef()
@@ -28,8 +30,7 @@ class TabularView extends Component {
     this.column4Ref = React.createRef()
     this.state = {
       isPopupOpen: false,
-      showDeleteModal: false,
-      showEditModal: false
+      isDetailViewOpen: false
     }
   }
   handleStarClick = (type, id, value) => {
@@ -112,9 +113,46 @@ class TabularView extends Component {
     setActiveItems(newActiveItems)
   }
 
-  render () {
+  handleFolderDoubleClick = folder => event => {
+    const { viewingSharedItems } = this.props
+    const uuid = this.props.match.params.uuid
+      ? this.props.match.params.uuid
+      : folder.sharingId
+    const type_shared = this.props.match.type_shared
+      ? this.props.match.type_shared
+      : 'folder'
+    const url = viewingSharedItems
+      ? `/file-manager/${this.props.match.params.filemanager}/${uuid}/${type_shared}/${folder.id}/folder/`
+      : `/file-manager/${this.props.match.params.filemanager}/${folder.id}/`
+    this.props.history.push(url)
+  }
+
+  handleFileDoubleClick = file => event => {
+    const { currentFolder, setActiveItems } = this.props
+    if (Boolean(window.opener)) {
+      window.opener.postMessage(
+        {
+          file: file.upload,
+          fileName: file.fileName,
+          path: file.path,
+          filemanager_name: currentFolder.filemanagername
+        },
+        '*'
+      )
+      window.close()
+    } else {
+      setActiveItems([{ type: ITEM_TYPE.file, obj: file }])
+      if (IMAGE_EXTENSIONS.includes(file.extension)) {
+        this.setState({ isDetailViewOpen: true })
+      } else {
+        handleDownload()
+      }
+    }
+  }
+
+  render() {
     const { currentFolder, activeItems } = this.props
-    const { isPopupOpen } = this.state
+    const { isPopupOpen, isDetailViewOpen } = this.state
     return (
       <div
         onContextMenu={e => {
@@ -167,13 +205,7 @@ class TabularView extends Component {
                     active={activeItems.some(elem => elem.obj.id == folder.id)}
                     styleName='index.table-row'
                     onClick={this.handleFolderClick(folder)}
-                    onDoubleClick={() => {
-                      const url =
-                        this.props.location.pathname.slice(-1) === '/'
-                          ? `${this.props.match.url}${folder.id}`
-                          : `${this.props.match.url}/${folder.id}`
-                      this.props.history.push(url)
-                    }}
+                    onDoubleClick={this.handleFolderDoubleClick(folder)}
                     onContextMenu={this.handleFolderContextSelect(folder)}
                   >
                     <Table.Cell>
@@ -220,6 +252,7 @@ class TabularView extends Component {
                     styleName='index.table-row'
                     onClick={this.handleFileClick(file)}
                     onContextMenu={this.handleFileContextSelect(file)}
+                    onDoubleClick={this.handleFileDoubleClick(file)}
                   >
                     <Table.Cell>
                       <div styleName='index.table-cell-file-icon-name'>
@@ -266,6 +299,12 @@ class TabularView extends Component {
           isPopupOpen={isPopupOpen}
           setPopupOpen={value => this.setState({ isPopupOpen: value })}
         />
+        <MultipleImageModal
+          show={isDetailViewOpen}
+          onHide={() => {
+            this.setState({ isDetailViewOpen: false })
+          }}
+        />
       </div>
     )
   }
@@ -275,7 +314,8 @@ const mapStateToProps = state => {
   return {
     tabular: state.files.tabular,
     currentFolder: state.folders.selectedFolder,
-    activeItems: state.items.activeItems
+    activeItems: state.items.activeItems,
+    viewingSharedItems: state.items.viewingSharedItems
   }
 }
 

@@ -17,12 +17,10 @@ class PrivateRoute extends React.Component {
   }
 
   getInfo() {
-    // store.subscribe(() =>
     this.setState({
       isAuthenticated: store.getState().user.isAuthenticated,
       isGuestAuthenticated: store.getState().user.isGuestAuthenticated
     })
-    // )
   }
 
   render() {
@@ -49,10 +47,8 @@ class PrivateRoute extends React.Component {
                 textAlign='center'
                 width='100%'
                 margin='auto'
-                // styleName='blocks.guestErrorContainer'
               >
                 <div
-                // styleName='blocks.guestErrorMessage'
                 >
                   <Icon name='frown outline' />
                   Guest users are not authorised to access this page. Kindly
