@@ -9,12 +9,12 @@ import PopupView from './popup'
 
 import index from './css/index.css'
 import { getStarredItems, setActiveItems } from '../actions/itemActions'
-import { FILE_TYPES, ITEM_TYPE } from '../constants'
+import { FILE_TYPES, IMAGE_EXTENSIONS, ITEM_TYPE } from '../constants'
 import { FileIcon } from 'react-file-icon'
 import {
   createContextFromEvent,
   formatStorage,
-  handleDownload
+  openInNewTab
 } from '../helpers/helperfunctions'
 import { editFile } from '../actions/fileActions'
 import { editFolder, getFolder } from '../actions/folderActions'
@@ -145,7 +145,7 @@ class TabularView extends Component {
       if (IMAGE_EXTENSIONS.includes(file.extension)) {
         this.setState({ isDetailViewOpen: true })
       } else {
-        handleDownload()
+        openInNewTab()
       }
     }
   }

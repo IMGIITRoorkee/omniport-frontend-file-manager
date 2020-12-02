@@ -67,19 +67,7 @@ class Bar extends Component {
       }
     }
   }
-  handleDownload = () => {
-    const { activeItems } = this.props
-    for (const item of activeItems) {
-      if (item.type === ITEM_TYPE.file) {
-        let link = document.createElement('a')
-        link.download = item.obj.fileName
-        link.href = item.obj.upload
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-      }
-    }
-  }
+
   handleBack = () => {
     this.props.history.goBack()
   }
