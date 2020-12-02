@@ -14,6 +14,7 @@ class Filecard extends Component {
   }
 
   handleSelect = e => {
+    e.stopPropagation()
     const { file, activeItems, setActiveItems } = this.props
     if (e.ctrlKey) {
       const newActiveItems = activeItems.some(
@@ -42,6 +43,7 @@ class Filecard extends Component {
       index,
       activeItems,
       file,
+      viewingSharedItems,
       handleDoubleClick = () => {}
     } = this.props
     const extension = file.extension
@@ -69,7 +71,7 @@ class Filecard extends Component {
                   : 'grid.file-inactive'
               }
             >
-              {file.starred && (
+              {file.starred && !viewingSharedItems && (
                 <Icon
                   corner='top right'
                   name='star'
@@ -102,7 +104,8 @@ class Filecard extends Component {
 const mapStateToProps = state => {
   return {
     activeItems: state.items.activeItems,
-    currentFolder: state.folders.selectedFolder
+    currentFolder: state.folders.selectedFolder,
+    viewingSharedItems: state.items.viewingSharedItems
   }
 }
 

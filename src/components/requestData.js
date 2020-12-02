@@ -68,6 +68,7 @@ class RequestData extends Component {
         />
         {showModal ? (
           <Modal
+            onClick={(e) => {e.stopPropagation()}}
             size='large'
             open={showModal}
             closeOnEscape={true}

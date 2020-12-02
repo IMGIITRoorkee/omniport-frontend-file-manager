@@ -38,7 +38,8 @@ class Bar extends Component {
       editFolder: {}
     }
   }
-  handleStarClick = () => {
+  handleStarClick = e => {
+    e.stopPropagation()
     const { activeItems, editFile, editFolder } = this.props
     var formdata = new FormData()
     formdata.append('starred', !activeItems[0].obj.starred)
@@ -75,7 +76,8 @@ class Bar extends Component {
     const { currentFolder, lastVisitedAct } = this.props
     lastVisitedAct(currentFolder)
   }
-  handleTabulation = () => {
+  handleTabulation = e => {
+    e.stopPropagation()
     const { tabulation, tabular, setActiveItems } = this.props
     tabulation(!tabular)
     setActiveItems([])
@@ -159,30 +161,33 @@ class Bar extends Component {
             </div>
           ) : (
             <div styleName='file.crud-icon'>
-            <Dropdown
-              text='New'
-              icon='add'
-              floating
-              labeled
-              button
-              className='icon'
-            >
-              <Dropdown.Menu>
-                <Dropdown.Item
-                  onClick={() => {
-                    this.setState({ editFolder: {}, showFolderFormModal: true })
-                  }}
-                  icon
-                  labelPosition='left'
-                  primary
-                  basic
-                >
-                  <Icon name='folder' />
-                  Create folder
-                </Dropdown.Item>
-                <Upload />
-              </Dropdown.Menu>
-            </Dropdown>
+              <Dropdown
+                text='New'
+                icon='add'
+                floating
+                labeled
+                button
+                className='icon'
+              >
+                <Dropdown.Menu>
+                  <Dropdown.Item
+                    onClick={() => {
+                      this.setState({
+                        editFolder: {},
+                        showFolderFormModal: true
+                      })
+                    }}
+                    icon
+                    labelPosition='left'
+                    primary
+                    basic
+                  >
+                    <Icon name='folder' />
+                    Create folder
+                  </Dropdown.Item>
+                  <Upload />
+                </Dropdown.Menu>
+              </Dropdown>
             </div>
           )}
           <div styleName='file.crud-icon'>
@@ -231,7 +236,10 @@ class Bar extends Component {
           {activeItems.length == 1 && (
             <div styleName='file.crud-icon'>
               <Button
-                onClick={() => this.setState({ showDetailsModal: true })}
+                onClick={e => {
+                  e.stopPropagation()
+                  this.setState({ showDetailsModal: true })
+                }}
                 title='View detials'
                 icon='info'
                 color='blue'
@@ -243,7 +251,10 @@ class Bar extends Component {
           {activeItems.length == 1 && !viewingSharedItems && (
             <div styleName='file.crud-icon'>
               <Button
-                onClick={() => this.setState({ showShareItemModal: true })}
+                onClick={e => {
+                  e.stopPropagation()
+                  this.setState({ showShareItemModal: true })
+                }}
                 icon='share'
                 color='blue'
                 inverted
@@ -254,7 +265,8 @@ class Bar extends Component {
           {activeItems.length == 1 && !viewingSharedItems && (
             <div styleName='file.crud-icon'>
               <Button
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation()
                   if (activeItems[0].type === ITEM_TYPE.file) {
                     this.setState({ showEditFileModal: true })
                   } else {
@@ -287,7 +299,8 @@ class Bar extends Component {
           {activeItems.length > 0 && !viewingSharedItems && (
             <div styleName='file.crud-icon'>
               <Button
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation()
                   this.setState({ isDelete: true })
                 }}
                 icon='delete'
