@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Icon, Popup, Button, Modal, Menu } from 'semantic-ui-react'
+import { Popup, Menu } from 'semantic-ui-react'
 import PropTypes from 'prop-types'
 
 import EditModal from './edit-modal'
@@ -24,7 +24,7 @@ import { ITEM_TYPE } from '../constants'
 import { handleDownload } from '../helpers/helperfunctions'
 
 class PopupView extends Component {
-  constructor(props, ref) {
+  constructor (props, ref) {
     super(props)
     this.state = {
       showFileEditModal: false,
@@ -129,7 +129,6 @@ class PopupView extends Component {
     }
   }
 
-
   handleStarSuccess = () => {
     const {
       activeItems,
@@ -196,7 +195,7 @@ class PopupView extends Component {
     this.setState({ showDeleteModal: false })
   }
 
-  render() {
+  render () {
     const {
       showDeleteModal,
       showFileEditModal,
@@ -221,7 +220,8 @@ class PopupView extends Component {
                 key={option.key}
                 name={option.label}
                 icon={option.icon ? option.icon : false}
-                onClick={() => {
+                onClick={e => {
+                  e.stopPropagation()
                   setPopupOpen(false)
                   this.handleOptions[option.key]()
                 }}

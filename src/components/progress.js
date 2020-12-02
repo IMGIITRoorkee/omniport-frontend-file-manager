@@ -32,7 +32,7 @@ class Progress extends Component {
   }
 
   render() {
-    const { parents, isParentsPending, folder } = this.props
+    const { parents, isParentsPending, folder, viewingSharedItems } = this.props
     const arr = parents.slice(1)
     return (
       <div styleName='index.progress-parent'>
@@ -60,6 +60,19 @@ class Progress extends Component {
               >
                 {folder.filemanagername}
               </Breadcrumb.Section>
+              {viewingSharedItems ? <React.Fragment>
+                <Breadcrumb.Divider icon='right chevron' />
+              </React.Fragment> : ''}
+              {viewingSharedItems ? <Breadcrumb.Section
+                onClick={() => {
+                  this.props.history.push(
+                    `/file-manager/shared_with_me/`
+                  )
+                }}
+                link
+              >
+                shared_with_me
+              </Breadcrumb.Section> : '' }
               {arr && arr.length
                 ? arr.map((data, index) => (
                     <React.Fragment>

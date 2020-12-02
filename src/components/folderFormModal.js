@@ -93,6 +93,7 @@ class FolderFormModal extends Component {
       <div>
         {showModal && (
           <Modal
+            onClick={(e) => {e.stopPropagation()}}
             closeIcon
             size='tiny'
             open={showModal}

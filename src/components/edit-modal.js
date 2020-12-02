@@ -65,6 +65,7 @@ class EditFileModal extends Component {
     const { updateFilePending, showModal, close } = this.props
     return (
       <Modal
+        onClick={(e) => {e.stopPropagation()}}
         size='large'
         open={showModal}
         closeOnEscape={true}

@@ -68,7 +68,7 @@ const ConfirmModal = ({
   item = itemList.length > 1 ? item + 's' : item
   const stateObject = modalTypes(item)[type]
   return (
-    <Modal open={show} onClose={handleClose}>
+    <Modal onClick={(e) => {e.stopPropagation()}} open={show} onClose={handleClose}>
       <Modal.Header>{stateObject.header}</Modal.Header>
       <Modal.Content>
         <Modal.Description>

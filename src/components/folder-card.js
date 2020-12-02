@@ -17,6 +17,7 @@ class FolderCard extends Component {
   }
 
   handleSelect = e => {
+    e.stopPropagation()
     const { folder, activeItems, setActiveItems } = this.props
     if (e.ctrlKey) {
       const newActiveItems = activeItems.some(
@@ -89,7 +90,7 @@ class FolderCard extends Component {
                   onDoubleClick={this.handleDoubleClick}
                 />
               </div>
-              {folder.starred && (
+              {folder.starred && !viewingSharedItems && (
                 <Icon
                   corner='top right'
                   name='star'

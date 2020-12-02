@@ -15,6 +15,7 @@ import Admin from './admin'
 import CreateInstance from './createInstance'
 import { whoami } from 'auth/src/actions/index'
 import { MAINTAINER_DESIGNATIONS, PERSON_ROLES } from '../constants'
+import { setActiveItems } from '../actions/itemActions'
 class App extends Component {
   componentDidMount() {
     store.dispatch(whoami())
@@ -46,7 +47,7 @@ class App extends Component {
       roles.find(elem => elem.role === PERSON_ROLES.MAINTAINER).data
         .designation == MAINTAINER_DESIGNATIONS.HUB_COORDINATOR
     return (
-      <div styleName='main.app'>
+      <div styleName='main.app' onClick={() => this.props.setActiveItems([])}>
         <AppHeader mode='site' userDropdown appName='file_manager' />
         <AppMain>
           <Scrollbars>
@@ -116,7 +117,8 @@ const mapStateToProps = () => {
 }
 const mapDisPatchToProps = dispatch => {
   return {
-    setUser: () => dispatch(setUser())
+    setUser: () => dispatch(setUser()),
+    setActiveItems: items => dispatch(setActiveItems(items))
   }
 }
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { editFileUsers } from '../actions/fileActions'
-import { editFolderUsers } from '../actions/folderActions'
+import { editFolderUsers, getFolder } from '../actions/folderActions'
 import axios from 'axios'
 import {
   Button,
@@ -24,6 +24,7 @@ import { setActiveItems } from '../actions/itemActions'
 import { USER_APIS } from '../urls'
 
 import file from './css/share-item.css'
+import { toast } from 'react-semantic-toasts'
 
 class ShareItemModal extends Component {
   constructor (props) {
@@ -133,6 +134,12 @@ class ShareItemModal extends Component {
     const { close, setActiveItems } = this.props
     this.setState({ isLoading: false, success: true })
     setActiveItems([])
+    const id = this.props.currentFolder.id
+    this.props.getFolder(id)
+    toast({
+      type: 'success',
+      description: 'Shared succesfully!'
+    })
     close()
   }
 
@@ -146,12 +153,14 @@ class ShareItemModal extends Component {
   render () {
     const { activeItems, showModal, close, filemanager } = this.props
     const { isLoading, options, selectedUsersFinally } = this.state
+    console.log(window.location.origin)
     const link =
       activeItems.length == 1
-        ? activeItems[0].type=="folder" ? `http://0.0.0.0:61000/file-manager/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
-        : `http://0.0.0.0:61000${activeItems[0].obj.upload}` : ''
+        ? activeItems[0].type=="folder" ? `${window.location.origin}/file-manager/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
+        : activeItems[0].obj.upload.includes(window.location.origin) ? `${activeItems[0].obj.upload}` : `${window.location.origin}${activeItems[0].obj.upload}` : ''
     return (
       <Modal
+        onClick={(e) => {e.stopPropagation()}}
         size='large'
         open={showModal}
         closeOnEscape={true}
@@ -282,7 +291,8 @@ class ShareItemModal extends Component {
 
 const mapStateToProps = state => {
   return {
-    activeItems: state.items.activeItems
+    activeItems: state.items.activeItems,
+    currentFolder: state.folders.selectedFolder
   }
 }
 
@@ -299,6 +309,9 @@ const mapDispatchToProps = dispatch => {
     },
     editFileUsers: (pk, data, callback) => {
       return dispatch(editFileUsers(pk, data, callback))
+    },
+    getFolder: id => {
+      return dispatch(getFolder(id))
     },
     setActiveItems: items => dispatch(setActiveItems(items))
   }
