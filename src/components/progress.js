@@ -50,15 +50,20 @@ class Progress extends Component {
               <React.Fragment>
                 <Breadcrumb.Divider icon='right chevron' />
               </React.Fragment>
+
               <Breadcrumb.Section
                 onClick={() => {
                   this.props.history.push(
-                    `/file-manager/${this.props.match.params.filemanager}/`
+                    viewingSharedItems
+                      ? `/file-manager/${this.props.match.params.filemanager}/shared_with_me/`
+                      : `/file-manager/${this.props.match.params.filemanager}/`
                   )
                 }}
                 link
               >
-                {folder.filemanagername}
+                {viewingSharedItems
+                  ? folder.filemanager
+                  : folder.filemanagername}
               </Breadcrumb.Section>
               {viewingSharedItems ? <React.Fragment>
                 <Breadcrumb.Divider icon='right chevron' />
