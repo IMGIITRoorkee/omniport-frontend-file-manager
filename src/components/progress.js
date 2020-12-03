@@ -54,30 +54,34 @@ class Progress extends Component {
               <Breadcrumb.Section
                 onClick={() => {
                   this.props.history.push(
-                    viewingSharedItems
-                      ? `/file-manager/${this.props.match.params.filemanager}/shared_with_me/`
-                      : `/file-manager/${this.props.match.params.filemanager}/`
+                    `/file-manager/${this.props.match.params.filemanager}/`
                   )
                 }}
                 link
               >
-                {viewingSharedItems
-                  ? folder.filemanager
-                  : folder.filemanagername}
+                {folder.filemanagername}
               </Breadcrumb.Section>
-              {viewingSharedItems ? <React.Fragment>
-                <Breadcrumb.Divider icon='right chevron' />
-              </React.Fragment> : ''}
-              {viewingSharedItems ? <Breadcrumb.Section
-                onClick={() => {
-                  this.props.history.push(
-                    `/file-manager/shared_with_me/`
-                  )
-                }}
-                link
-              >
-                shared_with_me
-              </Breadcrumb.Section> : '' }
+              {viewingSharedItems ? (
+                <React.Fragment>
+                  <Breadcrumb.Divider icon='right chevron' />
+                </React.Fragment>
+              ) : (
+                ''
+              )}
+              {viewingSharedItems ? (
+                <Breadcrumb.Section
+                  onClick={() => {
+                    this.props.history.push(
+                      `/file-manager/${this.props.match.params.filemanager}/shared_with_me`
+                    )
+                  }}
+                  link
+                >
+                  shared_with_me
+                </Breadcrumb.Section>
+              ) : (
+                ''
+              )}
               {arr && arr.length
                 ? arr.map((data, index) => (
                     <React.Fragment>
