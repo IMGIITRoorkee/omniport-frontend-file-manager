@@ -22,12 +22,12 @@ import {
   bulkDeleteFolders
 } from '../actions/folderActions'
 import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
-import { ITEM_TYPE } from '../constants'
+import { BASE_URL, ITEM_TYPE } from '../constants'
 import ItemDetailsModal from './item-detail-modal'
 import { handleDownload } from '../helpers/helperfunctions'
 
 class Bar extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isDelete: false,
@@ -128,7 +128,7 @@ class Bar extends Component {
       isDelete: false
     })
   }
-  render () {
+  render() {
     const {
       tabular,
       activeItems,
@@ -153,7 +153,7 @@ class Bar extends Component {
                 icon
                 labelPosition='left'
                 color='blue'
-                to={`/file-manager/${this.props.match.params.filemanager}/`}
+                to={`${BASE_URL}/${this.props.match.params.filemanager}/`}
               >
                 <Icon name='home' />
                 Home
@@ -196,7 +196,7 @@ class Bar extends Component {
               icon
               labelPosition='left'
               color='grey'
-              to={`/file-manager/${this.props.match.params.filemanager}/shared_with_me/`}
+              to={`${BASE_URL}/${this.props.match.params.filemanager}/shared_with_me/`}
             >
               <Icon name='share' />
               Shared With Me
@@ -208,7 +208,7 @@ class Bar extends Component {
               icon
               labelPosition='left'
               color='grey'
-              to={`/file-manager/${this.props.match.params.filemanager}/all_starred_items/`}
+              to={`${BASE_URL}/${this.props.match.params.filemanager}/all_starred_items/`}
             >
               <Icon name='star' />
               Starred

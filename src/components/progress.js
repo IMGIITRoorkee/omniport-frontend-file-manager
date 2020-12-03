@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Breadcrumb } from 'semantic-ui-react'
 import { getParentFolders } from '../actions/folderActions'
-
+import { BASE_URL } from '../constants'
 import index from './css/index.css'
 
 class Progress extends Component {
   handleClick = data => {
     const { viewingSharedItems } = this.props
     if (!viewingSharedItems && data.id) {
-      const url = `/file-manager/${this.props.match.params.filemanager}/${data.id}/`
+      const url = `${BASE_URL}/${this.props.match.params.filemanager}/${data.id}/`
       this.props.history.push(url)
     }
   }
@@ -41,7 +41,7 @@ class Progress extends Component {
             <>
               <Breadcrumb.Section
                 onClick={() => {
-                  this.props.history.push(`/file-manager/`)
+                  this.props.history.push(`${BASE_URL}/`)
                 }}
                 link
               >
@@ -54,7 +54,7 @@ class Progress extends Component {
               <Breadcrumb.Section
                 onClick={() => {
                   this.props.history.push(
-                    `/file-manager/${this.props.match.params.filemanager}/`
+                    `${BASE_URL}/${this.props.match.params.filemanager}/`
                   )
                 }}
                 link
@@ -72,7 +72,7 @@ class Progress extends Component {
                 <Breadcrumb.Section
                   onClick={() => {
                     this.props.history.push(
-                      `/file-manager/${this.props.match.params.filemanager}/shared_with_me`
+                      `${BASE_URL}/${this.props.match.params.filemanager}/shared_with_me`
                     )
                   }}
                   link
