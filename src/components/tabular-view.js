@@ -9,7 +9,7 @@ import PopupView from './popup'
 
 import index from './css/index.css'
 import { getStarredItems, setActiveItems } from '../actions/itemActions'
-import { FILE_TYPES, IMAGE_EXTENSIONS, ITEM_TYPE } from '../constants'
+import { BASE_URL, FILE_TYPES, IMAGE_EXTENSIONS, ITEM_TYPE } from '../constants'
 import { FileIcon } from 'react-file-icon'
 import {
   createContextFromEvent,
@@ -124,8 +124,8 @@ class TabularView extends Component {
       ? this.props.match.type_shared
       : 'folder'
     const url = viewingSharedItems
-      ? `/file-manager/${this.props.match.params.filemanager}/${uuid}/${type_shared}/${folder.id}/folder/`
-      : `/file-manager/${this.props.match.params.filemanager}/${folder.id}/`
+      ? `${BASE_URL}/${this.props.match.params.filemanager}/${uuid}/${type_shared}/${folder.id}/folder/`
+      : `${BASE_URL}/${this.props.match.params.filemanager}/${folder.id}/`
     this.props.history.push(url)
   }
 

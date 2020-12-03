@@ -19,7 +19,7 @@ import {
 } from 'semantic-ui-react'
 
 import { FileIcon } from 'react-file-icon'
-import { FILE_TYPES } from '../constants'
+import { BASE_URL, FILE_TYPES } from '../constants'
 import { setActiveItems } from '../actions/itemActions'
 import { USER_APIS } from '../urls'
 
@@ -27,7 +27,7 @@ import file from './css/share-item.css'
 import { toast } from 'react-semantic-toasts'
 
 class ShareItemModal extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isLoading: false,
@@ -150,17 +150,22 @@ class ShareItemModal extends Component {
     document.execCommand('copy')
   }
 
-  render () {
+  render() {
     const { activeItems, showModal, close, filemanager } = this.props
     const { isLoading, options, selectedUsersFinally } = this.state
-    console.log(window.location.origin)
     const link =
       activeItems.length == 1
-        ? activeItems[0].type=="folder" ? `${window.location.origin}/file-manager/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
-        : activeItems[0].obj.upload.includes(window.location.origin) ? `${activeItems[0].obj.upload}` : `${window.location.origin}${activeItems[0].obj.upload}` : ''
+        ? activeItems[0].type == 'folder'
+          ? `${window.location.origin}${BASE_URL}/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
+          : activeItems[0].obj.upload.includes(window.location.origin)
+          ? `${activeItems[0].obj.upload}`
+          : `${window.location.origin}${activeItems[0].obj.upload}`
+        : ''
     return (
       <Modal
-        onClick={(e) => {e.stopPropagation()}}
+        onClick={e => {
+          e.stopPropagation()
+        }}
         size='large'
         open={showModal}
         closeOnEscape={true}

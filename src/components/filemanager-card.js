@@ -28,7 +28,7 @@ class Filemanagercard extends Component {
       <Card
         styleName="filemanager-card"
         onDoubleClick={() => {
-          const url = `/file-manager/${folder.filemanager.filemanagerUrlPath}/`
+          const url = `${BASE_URL}/${folder.filemanager.filemanagerUrlPath}/`
           this.props.history.push(url)
         }}
         onClick={() => setActiveFolder(folder)}

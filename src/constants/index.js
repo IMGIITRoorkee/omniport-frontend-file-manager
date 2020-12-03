@@ -1,3 +1,5 @@
+const configJson = require('../../config.json')
+
 export const ITEM_TYPE = Object.freeze({
   folder: 'folder',
   file: 'file'
@@ -403,7 +405,7 @@ export const spaceOptions = [
 export const spaceOptionUnits = [
   { key: '1', text: 'GB', value: ONE_GB },
   { key: '2', text: 'MB', value: ONE_MB },
-  { key: '3', text: 'KB', value: ONE_KB },
+  { key: '3', text: 'KB', value: ONE_KB }
 ]
 
 export const roleOptions = [
@@ -440,3 +442,5 @@ export const PERSON_ROLES = Object.freeze({
   MAINTAINER: 'Maintainer',
   GUEST: 'Guest'
 })
+
+export const BASE_URL = configJson.baseUrl
