@@ -8,14 +8,14 @@ import RequestData from './requestData'
 import { setActiveFolder } from '../actions/folderActions'
 
 import main from './css/filemanager-card.css'
-import { ONE_GB, REQUEST_STATUS } from '../constants'
+import { ONE_GB, REQUEST_STATUS, BASE_URL } from '../constants'
 import { formatStorage } from '../helpers/helperfunctions'
 
 class Filemanagercard extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      showExtra: false,
+      showExtra: false
     }
   }
   render() {
@@ -26,7 +26,7 @@ class Filemanagercard extends Component {
     let maxSpace = (folder.maxSpace / ONE_GB).toFixed(2)
     return (
       <Card
-        styleName="filemanager-card"
+        styleName='filemanager-card'
         onDoubleClick={() => {
           const url = `${BASE_URL}/${folder.filemanager.filemanagerUrlPath}/`
           this.props.history.push(url)
@@ -35,30 +35,34 @@ class Filemanagercard extends Component {
       >
         <Card.Content>
           <Image
-            floated="right"
-            size="mini"
-            src={folder.filemanager.logo ? folder.filemanager.logo : require('../media/default_filemanager_logo.png')}
+            floated='right'
+            size='mini'
+            src={
+              folder.filemanager.logo
+                ? folder.filemanager.logo
+                : require('../media/default_filemanager_logo.png')
+            }
           />
           <Card.Header>{folder.filemanager.filemanagerName}</Card.Header>
           <Card.Meta>filemanager</Card.Meta>
           <Card.Description>
-            <Progress percent={percentage} color="red" size="tiny">
+            <Progress percent={percentage} color='red' size='tiny'>
               {percentage}%
             </Progress>
           </Card.Description>
         </Card.Content>
-        <Card.Content extra color="black">
+        <Card.Content extra color='black'>
           {content} /{maxSpace} GB used
           {currentFolder && currentFolder.id === folder.id ? (
-            <span className="right floated">
+            <span className='right floated'>
               {/* <Icon name="setting" title="Storage" color="black" size="large" /> */}
               {folder.dataRequestStatus === REQUEST_STATUS.PENDING ? (
                 <Label
-                  color="red"
+                  color='red'
                   title={`Extra ${formatStorage(folder.additionalSpace)}`}
-                  size="large"
+                  size='large'
                 >
-                  <Icon name="database" />
+                  <Icon name='database' />
                   Space requested
                 </Label>
               ) : (
@@ -76,7 +80,7 @@ class Filemanagercard extends Component {
 
 const mapStateToProps = state => {
   return {
-    currentFolder: state.folders.activeFolder,
+    currentFolder: state.folders.activeFolder
   }
 }
 
@@ -84,7 +88,7 @@ const mapDispatchToProps = dispatch => {
   return {
     setActiveFolder: folder => {
       return dispatch(setActiveFolder(folder))
-    },
+    }
   }
 }
 
