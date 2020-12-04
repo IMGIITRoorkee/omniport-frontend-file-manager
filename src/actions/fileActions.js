@@ -180,7 +180,7 @@ export const uploadFile = (data, callback) => {
         dispatch(apiError(error))
         toast({
           type: 'error',
-          description: 'error occured in uploading the file '
+          description: error.response.data
         })
       })
   }
