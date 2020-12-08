@@ -28,6 +28,7 @@ class CreateInstance extends Component {
         extraSpaceOptions: [],
         extraSpaceNumber: null,
         extraSpaceUnit: null,
+        isPublic: false,
         logo: null,
         maxSpace: null,
         success: false
@@ -52,6 +53,7 @@ class CreateInstance extends Component {
       extraSpaceOptions: [],
       extraSpaceNumber: null,
       extraSpaceUnit: null,
+      isPublic: false,
       logo: null,
       maxSpace: null,
       success: false
@@ -121,7 +123,7 @@ class CreateInstance extends Component {
       logo,
       rolesAllowed,
       maxSpace,
-      extraSpaceOptions
+      extraSpaceOptions,isPublic
     } = this.state.formObj
     const { createFilemanager } = this.props
     if (
@@ -145,6 +147,7 @@ class CreateInstance extends Component {
         formdata.append('filemanager_extra_space_options', extraSpaceOptions[i])
       }
       formdata.append('max_space', parseInt(maxSpace))
+      formdata.append('is_public', Boolean(isPublic))
       createFilemanager(formdata, this.handleSuccess)
     }
   }
@@ -174,7 +177,8 @@ class CreateInstance extends Component {
       logo,
       maxSpace,
       extraSpaceUnit,
-      success
+      success,
+      isPublic
     } = this.state.formObj
     const { showModal, files } = this.state
     const { createFilemanagerPending, uploadFilePending } = this.props
@@ -268,6 +272,16 @@ class CreateInstance extends Component {
                 ))}
             </Form>
 
+            <Form.Checkbox
+              checked={isPublic}
+              onChange={(e, { name, checked }) =>
+                this.setState({
+                  formObj: { ...this.state.formObj, [name]: checked }
+                })
+              }
+              name={'isPublic'}
+              label='Public Filemanager'
+            />
             <Button
               onClick={() => {
                 this.setState({ showModal: true })
