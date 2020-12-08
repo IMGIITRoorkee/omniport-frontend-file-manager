@@ -24,7 +24,7 @@ import { ITEM_TYPE } from '../constants'
 import { handleDownload } from '../helpers/helperfunctions'
 
 class PopupView extends Component {
-  constructor (props, ref) {
+  constructor(props, ref) {
     super(props)
     this.state = {
       showFileEditModal: false,
@@ -38,7 +38,7 @@ class PopupView extends Component {
   }
 
   getOptions = () => {
-    const { activeItems, viewingSharedItems } = this.props
+    const { activeItems, viewingSharedItems, isFilemanagerPublic } = this.props
     const options = [
       {
         key: '1',
@@ -74,7 +74,10 @@ class PopupView extends Component {
         key: '5',
         label: 'Share',
         icon: 'share',
-        condition: !viewingSharedItems && activeItems.length == 1
+        condition:
+          !viewingSharedItems &&
+          activeItems.length == 1 &&
+          (!isFilemanagerPublic || activeItems[0].type === ITEM_TYPE.file)
       },
       {
         key: '7',
@@ -195,7 +198,7 @@ class PopupView extends Component {
     this.setState({ showDeleteModal: false })
   }
 
-  render () {
+  render() {
     const {
       showDeleteModal,
       showFileEditModal,
@@ -289,7 +292,8 @@ const mapStateToProps = state => {
   return {
     currentFolder: state.folders.selectedFolder,
     activeItems: state.items.activeItems,
-    viewingSharedItems: state.items.viewingSharedItems
+    viewingSharedItems: state.items.viewingSharedItems,
+    isFilemanagerPublic: state.filemanagers.isFilemanagerPublic
   }
 }
 
