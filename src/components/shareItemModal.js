@@ -151,7 +151,13 @@ class ShareItemModal extends Component {
   }
 
   render() {
-    const { activeItems, showModal, close, filemanager } = this.props
+    const {
+      activeItems,
+      showModal,
+      close,
+      filemanager,
+      isFilemanagerPublic
+    } = this.props
     const { isLoading, options, selectedUsersFinally } = this.state
     const link =
       activeItems.length == 1
@@ -173,82 +179,86 @@ class ShareItemModal extends Component {
         onClose={close}
         closeIcon
       >
-        <Modal.Header>
-          <div styleName='file.share-div'>
-            <div styleName='file.share-icon'>
-              <Button
-                circular
-                icon='user plus'
-                color='blue'
-                styleName='file.share-icon'
-              />
+        {!isFilemanagerPublic && (
+          <Modal.Header>
+            <div styleName='file.share-div'>
+              <div styleName='file.share-icon'>
+                <Button
+                  circular
+                  icon='user plus'
+                  color='blue'
+                  styleName='file.share-icon'
+                />
+              </div>
+              <div>Share With People</div>
             </div>
-            <div>Share With People</div>
-          </div>
-        </Modal.Header>
-        <Modal.Content>
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Select
-              search
-              multiple
-              placeholder='Type user name to search'
-              name='selectedUsers'
-              options={options}
-              value={selectedUsersFinally ? selectedUsersFinally : []}
-              onSearchChange={(e, data) => this.handleSearchChange(e, data)}
-              onChange={(e, data) => this.handleChange(e, data)}
-              minCharacters={1}
-            />
-            <div styleName='file.share-description-div'>
-              <div styleName='file.share-div'>
-                {activeItems.length == 1 ? (
-                  activeItems[0].type == 'file' ? (
-                    <div styleName='file.sharing-file-icon'>
-                      <FileIcon
-                        {...FILE_TYPES[activeItems[0].obj.extension]}
-                        extension={activeItems[0].obj.extension}
-                      />
-                    </div>
+          </Modal.Header>
+        )}
+        {!isFilemanagerPublic && (
+          <Modal.Content>
+            <Form onSubmit={this.handleSubmit}>
+              <Form.Select
+                search
+                multiple
+                placeholder='Type user name to search'
+                name='selectedUsers'
+                options={options}
+                value={selectedUsersFinally ? selectedUsersFinally : []}
+                onSearchChange={(e, data) => this.handleSearchChange(e, data)}
+                onChange={(e, data) => this.handleChange(e, data)}
+                minCharacters={1}
+              />
+              <div styleName='file.share-description-div'>
+                <div styleName='file.share-div'>
+                  {activeItems.length == 1 ? (
+                    activeItems[0].type == 'file' ? (
+                      <div styleName='file.sharing-file-icon'>
+                        <FileIcon
+                          {...FILE_TYPES[activeItems[0].obj.extension]}
+                          extension={activeItems[0].obj.extension}
+                        />
+                      </div>
+                    ) : (
+                      <Icon name='folder open' size='large' color='grey' />
+                    )
                   ) : (
-                    <Icon name='folder open' size='large' color='grey' />
-                  )
-                ) : (
-                  ''
-                )}
-                {activeItems.length == 1 ? (
-                  activeItems[0].type == 'file' ? (
-                    <p>{activeItems[0].obj.fileName}</p>
+                    ''
+                  )}
+                  {activeItems.length == 1 ? (
+                    activeItems[0].type == 'file' ? (
+                      <p>{activeItems[0].obj.fileName}</p>
+                    ) : (
+                      <p>{activeItems[0].obj.folderName}</p>
+                    )
                   ) : (
-                    <p>{activeItems[0].obj.folderName}</p>
-                  )
+                    ''
+                  )}
+                </div>
+                {!this.state.success ? (
+                  <div styleName='file.share-div'>
+                    <Button
+                      color='blue'
+                      loading={isLoading}
+                      className='right floated'
+                      type='submit'
+                    >
+                      Submit
+                    </Button>
+                  </div>
                 ) : (
-                  ''
+                  <div styleName='file.share-div'>
+                    <Icon
+                      color='green'
+                      className='center'
+                      size='large'
+                      name='check circle'
+                    />
+                  </div>
                 )}
               </div>
-              {!this.state.success ? (
-                <div styleName='file.share-div'>
-                  <Button
-                    color='blue'
-                    loading={isLoading}
-                    className='right floated'
-                    type='submit'
-                  >
-                    Submit
-                  </Button>
-                </div>
-              ) : (
-                <div styleName='file.share-div'>
-                  <Icon
-                    color='green'
-                    className='center'
-                    size='large'
-                    name='check circle'
-                  />
-                </div>
-              )}
-            </div>
-          </Form>
-        </Modal.Content>
+            </Form>
+          </Modal.Content>
+        )}
         <Modal.Header>
           <div styleName='file.share-div'>
             <div styleName='file.share-icon'>
@@ -297,7 +307,8 @@ class ShareItemModal extends Component {
 const mapStateToProps = state => {
   return {
     activeItems: state.items.activeItems,
-    currentFolder: state.folders.selectedFolder
+    currentFolder: state.folders.selectedFolder,
+    isFilemanagerPublic: state.filemanagers.isFilemanagerPublic
   }
 }
 
