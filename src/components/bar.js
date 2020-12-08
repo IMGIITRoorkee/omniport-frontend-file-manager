@@ -133,7 +133,8 @@ class Bar extends Component {
       tabular,
       activeItems,
       currentFolder,
-      viewingSharedItems
+      viewingSharedItems,
+      isFilemanagerPublic
     } = this.props
     const {
       isDelete,
@@ -191,16 +192,18 @@ class Bar extends Component {
             </div>
           )}
           <div styleName='file.crud-icon'>
-            <Button
-              as={Link}
-              icon
-              labelPosition='left'
-              color='grey'
-              to={`${BASE_URL}/${this.props.match.params.filemanager}/shared_with_me/`}
-            >
-              <Icon name='share' />
-              Shared With Me
-            </Button>
+            {!isFilemanagerPublic && (
+              <Button
+                as={Link}
+                icon
+                labelPosition='left'
+                color='grey'
+                to={`${BASE_URL}/${this.props.match.params.filemanager}/shared_with_me/`}
+              >
+                <Icon name='share' />
+                Shared With Me
+              </Button>
+            )}
           </div>
           <div styleName='file.crud-icon'>
             <Button
@@ -373,7 +376,8 @@ const mapStateToProps = state => {
     tabular: state.items.tabular,
     currentFolder: state.folders.selectedFolder,
     activeItems: state.items.activeItems,
-    viewingSharedItems: state.items.viewingSharedItems
+    viewingSharedItems: state.items.viewingSharedItems,
+    isFilemanagerPublic: state.filemanagers.isFilemanagerPublic
   }
 }
 

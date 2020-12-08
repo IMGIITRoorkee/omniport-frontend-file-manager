@@ -2,6 +2,7 @@ import { toast } from 'react-semantic-toasts'
 
 import apiClient from '../helpers/apiClient'
 import { FOLDER_APIS } from '../urls'
+import { IS_FILEMANAGER_PUBLIC } from './filemanagerActionTypes'
 import {
   DELETE_FOLDER_PENDING,
   GET_ALL_FOLDERS,
@@ -89,6 +90,9 @@ export const getFolder = (id, params) => {
         dispatch(apiDispatch(GET_FOLDER_PENDING, false))
         dispatch(apiDispatch(GET_FOLDER, res.data))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
+        dispatch(
+          apiDispatch(IS_FILEMANAGER_PUBLIC, res.data.isFilemanagerPublic)
+        )
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -226,6 +230,9 @@ export const getRootFolder = filemanager => {
         dispatch(apiDispatch(GET_FOLDER_PENDING, false))
         dispatch(apiDispatch(GET_FOLDER, res.data))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
+        dispatch(
+          apiDispatch(IS_FILEMANAGER_PUBLIC, res.data.isFilemanagerPublic)
+        )
       })
       .catch(error => {
         dispatch(apiError(error))
