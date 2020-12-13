@@ -52,7 +52,7 @@ class MultipleImageModal extends Component {
     const item = images[activeIndex]
     let link = document.createElement('a')
     link.download = item.fileName
-    link.href = item.upload
+    link.href = item.fileUrl
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
