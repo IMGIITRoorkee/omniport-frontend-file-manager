@@ -38,7 +38,7 @@ class CustomCarousel extends Component {
         <Slider>
           {images.map((file, index) => (
             <Slide tag='a' index={index}>
-              <ImageWithZoom src={file.upload} />
+              <ImageWithZoom src={file.fileUrl} />
             </Slide>
           ))}
         </Slider>

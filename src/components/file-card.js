@@ -83,7 +83,7 @@ class Filecard extends Component {
                 <FileIcon {...FILE_TYPES[extension]} extension={extension} />
               ) : (
                   <img
-                    src={file.upload}
+                    src={file.fileUrl}
                     alt={file.name}
                     styleName='grid.image'
                   />

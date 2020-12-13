@@ -134,7 +134,7 @@ class TabularView extends Component {
     if (Boolean(window.opener)) {
       window.opener.postMessage(
         {
-          file: file.upload,
+          file: file.fileUrl,
           fileName: file.fileName,
           path: file.path,
           filemanager_name: currentFolder.filemanagername
@@ -266,7 +266,7 @@ class TabularView extends Component {
                             />
                           ) : (
                             <img
-                              src={file.upload}
+                              src={file.fileUrl}
                               alt={file.name}
                               styleName='index.image'
                             />
