@@ -24,7 +24,7 @@ class CreateInstance extends Component {
       formObj: {
         filemanagerName: '',
         rootFolderName: '',
-        rolesAllowed: [],
+        accessPermissions: '',
         extraSpaceOptions: [],
         extraSpaceNumber: null,
         extraSpaceUnit: null,
@@ -49,7 +49,7 @@ class CreateInstance extends Component {
       filemanagerName: '',
       rootFolderName: '',
       filemanagerUrlPath: '',
-      rolesAllowed: [],
+      accessPermissions: '',
       extraSpaceOptions: [],
       extraSpaceNumber: null,
       extraSpaceUnit: null,
@@ -121,7 +121,7 @@ class CreateInstance extends Component {
       filemanagerUrlPath,
       rootFolderName,
       logo,
-      rolesAllowed,
+      accessPermissions,
       maxSpace,
       extraSpaceOptions,isPublic
     } = this.state.formObj
@@ -130,7 +130,7 @@ class CreateInstance extends Component {
       filemanagerName &&
       filemanagerUrlPath &&
       logo &&
-      rolesAllowed &&
+      accessPermissions &&
       extraSpaceOptions &&
       extraSpaceOptions.length &&
       maxSpace
@@ -140,9 +140,7 @@ class CreateInstance extends Component {
       formdata.append('filemanager_name', filemanagerName)
       formdata.append('filemanager_url_path', filemanagerUrlPath)
       formdata.append('folder_name_template', rootFolderName)
-      for (let i = 0; i < rolesAllowed.length; i++) {
-        formdata.append('filemanager_access_roles', rolesAllowed[i].toString())
-      }
+      formdata.append('filemanager_access_permissions', accessPermissions)
       for (let i = 0; i < extraSpaceOptions.length; i++) {
         formdata.append('filemanager_extra_space_options', extraSpaceOptions[i])
       }
@@ -171,7 +169,7 @@ class CreateInstance extends Component {
       filemanagerName,
       rootFolderName,
       filemanagerUrlPath,
-      rolesAllowed,
+      accessPermissions,
       extraSpaceNumber,
       extraSpaceOptions,
       logo,
@@ -223,7 +221,7 @@ class CreateInstance extends Component {
               value={maxSpace}
               onChange={this.handleChangeSelect}
             />
-            <Form.Select
+            {/* <Form.Select
               search
               multiple
               placeholder='Roles Allowed'
@@ -232,6 +230,14 @@ class CreateInstance extends Component {
               label='Roles Allowed : '
               value={rolesAllowed}
               onChange={this.handleChangeSelect}
+            /> */}
+            <Form.Input
+              placeholder='Access Permission'
+              type='TextArea'
+              name='accessPermissions'
+              label='Access Permission'
+              value={accessPermissions}
+              onChange={this.handleChange}
             />
 
             <Form
