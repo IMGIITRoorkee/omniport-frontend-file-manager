@@ -221,16 +221,6 @@ class CreateInstance extends Component {
               value={maxSpace}
               onChange={this.handleChangeSelect}
             />
-            {/* <Form.Select
-              search
-              multiple
-              placeholder='Roles Allowed'
-              name='rolesAllowed'
-              options={roleOptions}
-              label='Roles Allowed : '
-              value={rolesAllowed}
-              onChange={this.handleChangeSelect}
-            /> */}
             <Form.Input
               placeholder='Access Permission'
               type='TextArea'
