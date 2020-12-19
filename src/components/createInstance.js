@@ -8,7 +8,7 @@ import {
   Button,
   Icon,
   Divider,
-  Label
+  Label,
 } from 'semantic-ui-react'
 import css from './css/approveRequest.css'
 import ErrorBoundary from './error-boundary'
@@ -16,6 +16,7 @@ import { createFilemanager } from '../actions/filemanagerActions'
 import { spaceOptions, roleOptions, spaceOptionUnits } from '../constants'
 import UploadFilesModal from './uploadFileModal'
 import { formatStorage } from '../helpers/helperfunctions'
+import { string } from 'prop-types'
 
 class CreateInstance extends Component {
   constructor(props) {
@@ -24,7 +25,7 @@ class CreateInstance extends Component {
       formObj: {
         filemanagerName: '',
         rootFolderName: '',
-        accessPermissions: '',
+        accessPermissions: "'Student' in get_all_roles(person).keys()",
         extraSpaceOptions: [],
         extraSpaceNumber: null,
         extraSpaceUnit: null,
@@ -49,7 +50,7 @@ class CreateInstance extends Component {
       filemanagerName: '',
       rootFolderName: '',
       filemanagerUrlPath: '',
-      accessPermissions: '',
+      accessPermissions: "'Student' in get_all_roles(person).keys()",
       extraSpaceOptions: [],
       extraSpaceNumber: null,
       extraSpaceUnit: null,
@@ -221,7 +222,7 @@ class CreateInstance extends Component {
               value={maxSpace}
               onChange={this.handleChangeSelect}
             />
-            <Form.Input
+            <Form.TextArea
               placeholder='Access Permission'
               type='TextArea'
               name='accessPermissions'
