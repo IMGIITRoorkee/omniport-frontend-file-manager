@@ -46,6 +46,7 @@ export const getAllFoldersRequest = (pk, data) => {
         dispatch(apiDispatch(GET_ALL_FOLDERS, res.data))
         dispatch(apiDispatch(GET_FOLDERS_PENDING, false))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
+        dispatch(apiError({}))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -68,6 +69,7 @@ export const getAllRootFoldersRequest = (pk, data) => {
         dispatch(apiDispatch(GET_ALL_ROOT_FOLDERS, res.data))
         dispatch(apiDispatch(GET_FOLDERS_PENDING, false))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
+        dispatch(apiError({}))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -93,6 +95,7 @@ export const getFolder = (id, params) => {
         dispatch(
           apiDispatch(IS_FILEMANAGER_PUBLIC, res.data.isFilemanagerPublic)
         )
+        dispatch(apiError({}))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -233,6 +236,7 @@ export const getRootFolder = filemanager => {
         dispatch(
           apiDispatch(IS_FILEMANAGER_PUBLIC, res.data.isFilemanagerPublic)
         )
+        dispatch(apiError({}))
       })
       .catch(error => {
         dispatch(apiError(error))

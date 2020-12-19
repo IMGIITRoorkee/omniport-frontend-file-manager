@@ -27,11 +27,11 @@ const GridView = React.lazy(() => import('./grid-view'))
 const TabularView = React.lazy(() => import('./tabular-view'))
 
 class Root extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.ref = React.createRef()
   }
-  componentDidMount () {
+  componentDidMount() {
     const {
       uuid,
       id,
@@ -56,7 +56,7 @@ class Root extends Component {
       ? getFolderDetails(id)
       : getRoot(filemanager)
   }
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     const {
       uuid,
       id,
@@ -89,23 +89,32 @@ class Root extends Component {
     }
   }
 
-  render () {
+  render() {
     const {
       tabular,
       getFilePending,
       getFilesPending,
       getFolderPending,
       getFoldersPending,
-      folder
+      folder,
+      error
     } = this.props
+
     const isLoading =
       getFilePending || getFilesPending || getFolderPending || getFoldersPending
-
     Object.keys(folder) === 0
+
+    console.log(Object.values(error))
     return isLoading ? (
       <Dimmer active inverted>
         <Loader inverted content='Loading' />
       </Dimmer>
+    ) : error &&
+      Object.keys(error).length > 0 &&
+      error.response.status === 403 ? (
+      <Segment basic padded textAlign='center'>
+        You are not allowed to access this filemanager
+      </Segment>
     ) : Object.keys(folder).length === 0 ? (
       <Segment basic padded textAlign='center'>
         This url is Invalid. Please check your url again.
@@ -141,7 +150,8 @@ const mapStateToProps = state => {
     getFolderPending: state.folders.getFolderPending,
     getFoldersPending: state.folders.getFoldersPending,
     getFilePending: state.files.getFilePending,
-    getFilesPending: state.files.getFilesPending
+    getFilesPending: state.files.getFilesPending,
+    error: state.folders.error
   }
 }
 
