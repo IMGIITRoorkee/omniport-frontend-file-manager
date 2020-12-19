@@ -104,7 +104,6 @@ class Root extends Component {
       getFilePending || getFilesPending || getFolderPending || getFoldersPending
     Object.keys(folder) === 0
 
-    console.log(Object.values(error))
     return isLoading ? (
       <Dimmer active inverted>
         <Loader inverted content='Loading' />
