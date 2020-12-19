@@ -33,7 +33,8 @@ const initialState = {
   Folders: [],
   activeFolder: {},
   dataRequests: [],
-  parents: []
+  parents: [],
+  error:{}
 }
 const folderReducer = (state = initialState, action) => {
   const { type, payload, error } = action
