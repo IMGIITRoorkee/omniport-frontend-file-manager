@@ -4,6 +4,7 @@ import {
 } from './filemanagerActionTypes'
 import { FILEMANAGER_APIS } from '../urls'
 import apiClient from '../helpers/apiClient'
+import { toast } from 'react-semantic-toasts'
 
 const apiDispatch = (actionType = '', data) => {
   return {
@@ -32,6 +33,12 @@ export const createFilemanager = (data, callback) => {
       .catch(error => {
         dispatch(apiDispatch(CREATE_FILEMANAGER_PENDING, false))
         dispatch(apiError(error))
+        console.log(error.response)
+        toast({
+          type: 'error',
+          description: error.response.data
+        })
+        return error
       })
   }
 }
