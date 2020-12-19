@@ -33,7 +33,6 @@ export const createFilemanager = (data, callback) => {
       .catch(error => {
         dispatch(apiDispatch(CREATE_FILEMANAGER_PENDING, false))
         dispatch(apiError(error))
-        console.log(error.response)
         toast({
           type: 'error',
           description: error.response.data
