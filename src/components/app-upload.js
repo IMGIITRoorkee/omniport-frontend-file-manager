@@ -63,7 +63,7 @@ class AppUpload extends Component {
           basic
         >
           <Icon name='upload' />
-          Upload file
+          Upload files
         </Dropdown.Item>
         {showModal && (
           <UploadFilesModal
