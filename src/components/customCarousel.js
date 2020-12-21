@@ -4,6 +4,7 @@ import {
   ButtonNext,
   DotGroup,
   ImageWithZoom,
+  Image,
   Slide,
   Slider,
   WithStore
@@ -38,7 +39,15 @@ class CustomCarousel extends Component {
         <Slider>
           {images.map((file, index) => (
             <Slide tag='a' index={index}>
-              <ImageWithZoom src={file.fileUrl} />
+              <Image
+                src={file.fileUrl}
+                style={{
+                  margin: 'auto',
+                  maxWidth: '75vw',
+                  maxHeight: '85vh',
+                  width: 'unset'
+                }}
+              />
             </Slide>
           ))}
         </Slider>
