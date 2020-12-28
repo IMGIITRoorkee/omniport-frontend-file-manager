@@ -9,6 +9,7 @@ import { setActiveFolder } from '../actions/folderActions'
 
 import main from './css/filemanager-card.css'
 import { ONE_GB, REQUEST_STATUS, BASE_URL } from '../constants'
+import default_filemanager_logo from '../media/default_filemanager_logo.png';
 import { formatStorage } from '../helpers/helperfunctions'
 
 class Filemanagercard extends Component {
@@ -40,7 +41,7 @@ class Filemanagercard extends Component {
             src={
               folder.filemanager.logo
                 ? folder.filemanager.logo
-                : require('../media/default_filemanager_logo.png')
+                : default_filemanager_logo
             }
           />
           <Card.Header>{folder.filemanager.filemanagerName}</Card.Header>
@@ -55,7 +56,6 @@ class Filemanagercard extends Component {
           {content} /{maxSpace} GB used
           {currentFolder && currentFolder.id === folder.id ? (
             <span className='right floated'>
-              {/* <Icon name="setting" title="Storage" color="black" size="large" /> */}
               {folder.dataRequestStatus === REQUEST_STATUS.PENDING ? (
                 <Label
                   color='red'
