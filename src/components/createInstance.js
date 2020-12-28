@@ -30,8 +30,9 @@ class CreateInstance extends Component {
         extraSpaceNumber: null,
         extraSpaceUnit: null,
         isPublic: false,
+        maxSpaceNumber: null,
+        maxSpaceUnit: null,
         logo: null,
-        maxSpace: null,
         success: false
       },
       showModal: false,
@@ -56,7 +57,8 @@ class CreateInstance extends Component {
       extraSpaceUnit: null,
       isPublic: false,
       logo: null,
-      maxSpace: null,
+      maxSpaceUnit: '',
+      maxSpaceNumber: '',
       success: false
     }
   }
@@ -123,7 +125,8 @@ class CreateInstance extends Component {
       rootFolderName,
       logo,
       accessPermissions,
-      maxSpace,
+      maxSpaceNumber,
+      maxSpaceUnit,
       extraSpaceOptions,isPublic
     } = this.state.formObj
     const { createFilemanager } = this.props
@@ -134,9 +137,11 @@ class CreateInstance extends Component {
       accessPermissions &&
       extraSpaceOptions &&
       extraSpaceOptions.length &&
-      maxSpace
+      maxSpaceUnit &&
+      maxSpaceNumber
     ) {
       let formdata = new FormData()
+      let max_space = maxSpaceNumber*maxSpaceUnit
       formdata.append(`logo`, logo)
       formdata.append('filemanager_name', filemanagerName)
       formdata.append('filemanager_url_path', filemanagerUrlPath)
@@ -145,7 +150,7 @@ class CreateInstance extends Component {
       for (let i = 0; i < extraSpaceOptions.length; i++) {
         formdata.append('filemanager_extra_space_options', extraSpaceOptions[i])
       }
-      formdata.append('max_space', parseInt(maxSpace))
+      formdata.append('max_space', parseInt(max_space))
       formdata.append('is_public', Boolean(isPublic))
       createFilemanager(formdata, this.handleSuccess)
     }
@@ -174,7 +179,8 @@ class CreateInstance extends Component {
       extraSpaceNumber,
       extraSpaceOptions,
       logo,
-      maxSpace,
+      maxSpaceNumber,
+      maxSpaceUnit,
       extraSpaceUnit,
       success,
       isPublic
@@ -213,15 +219,25 @@ class CreateInstance extends Component {
               value={rootFolderName}
               onChange={this.handleChange}
             />
-            <Form.Select
-              search
-              placeholder='Max Space'
-              name='maxSpace'
-              options={spaceOptions}
-              label='Max Space : '
-              value={maxSpace}
-              onChange={this.handleChangeSelect}
-            />
+            <Form.Group widths='equal' styleName='css.extra-data-form-group'>
+                <Form.Input
+                  placeholder='Int'
+                  type='number'
+                  name='maxSpaceNumber'
+                  label='Max Space Value'
+                  value={maxSpaceNumber}
+                  onChange={this.handleChange}
+                />
+                <Form.Select
+                  search
+                  placeholder='Max Space Unit'
+                  name='maxSpaceUnit'
+                  options={spaceOptionUnits}
+                  label='Max Space Unit : '
+                  value={maxSpaceUnit}
+                  onChange={this.handleChangeSelect}
+                />
+              </Form.Group>
             <Form.TextArea
               placeholder='Access Permission'
               type='TextArea'
