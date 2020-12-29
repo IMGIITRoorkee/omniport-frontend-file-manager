@@ -309,7 +309,7 @@ class Bar extends Component {
                   e.stopPropagation()
                   this.setState({ isDelete: true })
                 }}
-                icon='delete'
+                icon='trash'
                 color='red'
                 inverted
                 circular

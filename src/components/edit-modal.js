@@ -1,14 +1,16 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { toast } from 'react-semantic-toasts'
 import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
 import { editFile } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
+import { checkFilesIfAlreadyExists } from '../helpers/helperfunctions'
 
 class EditFileModal extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      fileName: ''
+      fileName: props.activeItems[0] ? props.activeItems[0].obj.fileName : ''
     }
   }
   componentDidUpdate(prevProps) {
@@ -18,7 +20,7 @@ class EditFileModal extends Component {
     activeItems[0].obj &&
     JSON.stringify(prevProps.activeItems) !== JSON.stringify(activeItems)
       ? this.setState({
-          fileName: activeItems[0].obj.fileName
+          fileName: activeItems.length ? activeItems[0].obj.fileName : ''
         })
       : ''
   }
@@ -30,20 +32,24 @@ class EditFileModal extends Component {
   handleSubmit = e => {
     e.preventDefault()
     let { fileName } = this.state
-    const { editFile, activeItems } = this.props
-
-    if (fileName) {
-      var formdata = new FormData()
-      formdata.append('file_name', fileName)
-      editFile(activeItems[0].obj.id, formdata, this.handleSuccess)
+    const { currentFolder } = this.props
+    if(!checkFilesIfAlreadyExists(fileName, currentFolder, false)){
+      const { editFile, activeItems } = this.props
+  
+      if (fileName) {
+        var formdata = new FormData()
+        formdata.append('file_name', fileName)
+        editFile(activeItems[0].obj.id, formdata, this.handleSuccess)
+      }
+    }
+    else{
+      toast({
+        type: 'error',
+        description: 'A file already exists with that name'
+      })
     }
   }
 
-  handleCheckStar = () => {
-    this.setState({
-      starred: !this.state.starred
-    })
-  }
   handleSuccess = () => {
     const id = this.props.currentFolder.id
     this.props.getFolder(id)
@@ -53,7 +59,7 @@ class EditFileModal extends Component {
     })
   }
   render() {
-    const { fileName, starred } = this.state
+    const { fileName } = this.state
     const { updateFilePending, showModal, close } = this.props
     return (
       <Modal
@@ -77,13 +83,6 @@ class EditFileModal extends Component {
                 value={fileName}
                 onChange={this.handleChange}
                 placeholder='File Name'
-              />
-            </Form.Field>
-            <Form.Field>
-              <Checkbox
-                checked={starred}
-                onChange={this.handleCheckStar}
-                label='Star this file'
               />
             </Form.Field>
             <Button loading={updateFilePending} type='submit'>

@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { toast } from 'react-semantic-toasts'
 import { Dropdown, Icon } from 'semantic-ui-react'
 import { uploadFile } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
+import { checkFilesIfAlreadyExists } from '../helpers/helperfunctions'
 import UploadFilesModal from './uploadFileModal'
 
 const initialObj = {
@@ -13,7 +15,7 @@ const initialObj = {
   showModal: false
 }
 class AppUpload extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       showModal: false,
@@ -26,17 +28,25 @@ class AppUpload extends Component {
     e.preventDefault()
     let { files } = this.state
     const { uploadFile, currentFolder } = this.props
-    if (files.length) {
-      let formdata = new FormData()
-      for (const i in files) {
-        formdata.append(`upload`, files[i])
-        formdata.append('file_name', files[i].name)
-        formdata.append('extension', files[i].name.split('.').pop())
-        formdata.append('starred', false)
-        formdata.append('size', parseInt(files[i].size))
-        formdata.append('folder', parseInt(currentFolder.id))
+    if (!checkFilesIfAlreadyExists(files, currentFolder, true)) {
+      if (files.length) {
+        let formdata = new FormData()
+        for (const i in files) {
+          formdata.append(`upload`, files[i])
+          formdata.append('file_name', files[i].name)
+          formdata.append('extension', files[i].name.split('.').pop())
+          formdata.append('starred', false)
+          formdata.append('size', parseInt(files[i].size))
+          formdata.append('folder', parseInt(currentFolder.id))
+        }
+        uploadFile(formdata, this.handleSuccess)
       }
-      uploadFile(formdata, this.handleSuccess)
+    }
+    else{
+      toast({
+        type: 'error',
+        description: 'A file already exists with that name'
+      })
     }
   }
 
@@ -46,7 +56,7 @@ class AppUpload extends Component {
     this.setState({ files: [], showModal: false })
   }
 
-  render() {
+  render () {
     const { showModal, files } = this.state
     const { uploadFilePending } = this.props
     return (

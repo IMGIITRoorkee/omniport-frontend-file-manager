@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { toast } from 'react-semantic-toasts'
 import { Button, Form, Icon, Modal } from 'semantic-ui-react'
 import { createFolder, editFolder } from '../actions/folderActions'
+import { checkFolderIfAlreadyExists } from '../helpers/helperfunctions'
 import file from './css/file.css'
 
 class FolderFormModal extends Component {
@@ -75,14 +77,23 @@ class FolderFormModal extends Component {
   }
   handleSubmit() {
     const { formObj } = this.state
-    if (formObj.id) {
-      this.props.editFolder(formObj.id, formObj)
-      this.setState({ formObj: this.getInitialObj() })
-      this.props.setShowModal(false)
-    } else {
-      this.props.createFolder(formObj)
-      this.setState({ formObj: this.getInitialObj() })
-      this.props.setShowModal(false)
+    const { parentFolder } = this.props
+    if(!checkFolderIfAlreadyExists(formObj.folderName, parentFolder)){
+      if (formObj.id) {
+        this.props.editFolder(formObj.id, formObj)
+        this.setState({ formObj: this.getInitialObj() })
+        this.props.setShowModal(false)
+      } else {
+        this.props.createFolder(formObj)
+        this.setState({ formObj: this.getInitialObj() })
+        this.props.setShowModal(false)
+      }
+    }
+    else{
+      toast({
+        type: 'error',
+        description: 'A folder already exists with that name'
+      })
     }
   }
 
@@ -131,7 +142,7 @@ class FolderFormModal extends Component {
 
 const mapStateToProps = state => {
   return {
-    parentFolder: state.folders.selectedFolder
+    parentFolder: state.folders.selectedFolder,
   }
 }
 
