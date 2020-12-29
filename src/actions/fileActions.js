@@ -85,7 +85,7 @@ export const editFile = (
       .patch(url, data)
       .then(res => {
         dispatch(apiDispatch(UPDATE_FILE_PENDING, false))
-        callback()
+        callback(res.data)
       })
       .catch(error => {
         dispatch(apiError(error))
