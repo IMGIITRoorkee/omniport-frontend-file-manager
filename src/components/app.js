@@ -1,80 +1,57 @@
 import React, { Component } from 'react'
 import { AppFooter, AppMain, AppHeader } from 'formula_one'
-import { Route, Switch } from 'react-router-dom'
+import { Switch } from 'react-router-dom'
 import { Scrollbars } from 'react-custom-scrollbars'
 import { connect } from 'react-redux'
+
+import { store } from 'core'
+import main from 'formula_one/src/css/app.css'
+import { Loading } from 'formula_one'
+
+import { creators } from '../constants'
+
 import PrivateRoute from './privateRoute'
 import Root from './root'
 import Instances from './instances'
-import { store } from 'core'
-
-import main from 'formula_one/src/css/app.css'
-import blocks from './css/app.css'
+import CreateInstance from './createInstance'
 import ApproveRequest from './approveRequest'
 import Admin from './admin'
-import CreateInstance from './createInstance'
+
+import blocks from './css/app.css'
+
 import { whoami } from 'auth/src/actions/index'
-import { MAINTAINER_DESIGNATIONS, PERSON_ROLES } from '../constants'
 import { setActiveItems } from '../actions/itemActions'
+import { getIsUserAdmin } from '../actions/userActions'
+import AdminRoute from './adminRoute'
 
 class App extends Component {
   componentDidMount() {
     store.dispatch(whoami())
+    this.props.getIsUserAdmin()
   }
   render() {
-    const creators = [
-      {
-        name: 'Tushar Varshney',
-        role: 'Frontend Developer',
-        link: 'https://github.com/Tushar19varshney'
-      },
-      {
-        name: 'Gauransh Dingwani',
-        role: 'Frontend & Backend Developer',
-        link: 'https://github.com/gauransh7'
-      },
-      {
-        name: 'Ayush Bansal',
-        role: 'Frontend & Backend Developer',
-        link: 'https://github.com/ayu023ban'
-      }
-    ]
-    const { match, user } = this.props
-    const roles =
-      (user.details && user.details.profile && user.details.profile.roles) || []
-    const isAdmin =
-      roles.some(elem => elem.role === PERSON_ROLES.MAINTAINER) &&
-      roles.find(elem => elem.role === PERSON_ROLES.MAINTAINER).data
-        .designation == MAINTAINER_DESIGNATIONS.HUB_COORDINATOR
+    const { match } = this.props
     return (
       <div styleName='main.app' onClick={() => this.props.setActiveItems([])}>
         <AppHeader mode='site' userDropdown appName='file_manager' />
         <AppMain>
           <Scrollbars>
             <Switch>
-              {isAdmin && (
-                <Route
-                  exact
-                  path={`${match.path}/admin`}
-                  component={Admin}
-                  guestAllowed={false}
-                />
-              )}
-              {isAdmin && (
-                <Route
-                  exact
-                  path={`${match.path}/admin/create`}
-                  component={CreateInstance}
-                  guestAllowed={false}
-                />
-              )}
-              {isAdmin && (
-                <Route
-                  exact
-                  path={`${match.path}/admin/approve`}
-                  component={ApproveRequest}
-                />
-              )}
+              <AdminRoute
+                path={`${match.path}/admin`}
+                exact
+                component={Admin}
+              />
+              <AdminRoute
+                path={`${match.path}/admin/create`}
+                exact
+                component={CreateInstance}
+              />
+              <AdminRoute
+                path={`${match.path}/admin/approve`}
+                exact
+                component={ApproveRequest}
+              />
               <PrivateRoute
                 exact
                 path={`${match.path}/`}
@@ -110,16 +87,13 @@ class App extends Component {
     )
   }
 }
-const mapStateToProps = () => {
-  return {
-    user: store.getState().user
-  }
-}
+
 const mapDisPatchToProps = dispatch => {
   return {
     setUser: () => dispatch(setUser()),
-    setActiveItems: items => dispatch(setActiveItems(items))
+    setActiveItems: items => dispatch(setActiveItems(items)),
+    getIsUserAdmin: () => dispatch(getIsUserAdmin())
   }
 }
 
-export default connect(mapStateToProps, mapDisPatchToProps)(App)
+export default connect(() => {}, mapDisPatchToProps)(App)

@@ -25,7 +25,7 @@ export const SHARED_ITEMS_APIS = {
 
 export const USER_APIS = {
   getUserOptions: '/api/yellow_pages/person/',
-  isAdmin: '/isAdmin/'
+  isAdmin: '/is_admin_rights/'
 }
 
 export const FILEMANAGER_APIS = {
