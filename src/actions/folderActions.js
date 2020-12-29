@@ -107,6 +107,13 @@ export const getFolder = (id, params) => {
       })
   }
 }
+
+export const setCurrentFolder = data => {
+  return dispatch => {
+    dispatch(apiDispatch(GET_FOLDER, data))
+  }
+}
+
 export const createFolder = data => {
   const url = `${FOLDER_APIS.folderItem}/`
   return (dispatch, getState) => {
@@ -143,8 +150,8 @@ export const editFolder = (
       .patch(url, data)
       .then(res => {
         dispatch(apiDispatch(UPDATE_FOLDER_PENDING, false))
-        data.parent ? dispatch(getFolder(data.parent)) : ''
-        callback()
+        // data.parent ? dispatch(getFolder(data.parent)) : ''
+        callback(res.data)
       })
       .catch(error => {
         dispatch(apiError(error))

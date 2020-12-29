@@ -12,10 +12,11 @@ import {
   deleteFolder,
   editFolder,
   getFolder,
-  bulkDeleteFolders
+  bulkDeleteFolders,
+  setCurrentFolder
 } from '../actions/folderActions'
 import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
-import { setActiveItems } from '../actions/itemActions'
+import { setActiveItems, getStarredItems } from '../actions/itemActions'
 import ConfirmModal from './confirmModal'
 import ItemDetailModal from './item-detail-modal'
 import ShareItemModal from './shareItemModal'
@@ -132,22 +133,32 @@ class PopupView extends Component {
     }
   }
 
-  handleStarSuccess = () => {
+  handleStarSuccess = newOjb => {
     const {
       activeItems,
       setActiveItems,
       getStarredItems,
       currentFolder
     } = this.props
+    const oldCurrentFolder = Object.assign({}, currentFolder)
+    const oldfiles = oldCurrentFolder.files
+    const oldFolders = oldCurrentFolder.folders
+
     if (currentFolder.type && currentFolder.type == 'starred') {
       getStarredItems(currentFolder.filemanager)
     } else {
       if (activeItems[0].type == 'file') {
-        this.props.getFolder(activeItems[0].obj.folder.id)
-        setActiveItems([])
+        const ind = oldfiles.findIndex(ele => ele.id === newOjb.id)
+        oldfiles[ind].starred = newOjb.starred
+        oldCurrentFolder.files = oldfiles
+        setCurrentFolder(oldCurrentFolder)
+        setActiveItems([{ type: ITEM_TYPE.file, obj: newOjb }])
       } else {
-        this.props.getFolder(activeItems[0].obj.parent)
-        setActiveItems([])
+        const ind = oldFolders.findIndex(ele => ele.id === newOjb.id)
+        oldFolders[ind].starred = newOjb.starred
+        oldCurrentFolder.folders = oldFolders
+        setCurrentFolder(oldCurrentFolder)
+        setActiveItems([{ type: ITEM_TYPE.folder, obj: newOjb }])
       }
     }
   }
@@ -315,6 +326,7 @@ const mapDispatchToProps = dispatch => {
     getFolder: id => {
       dispatch(getFolder(id))
     },
+    setCurrentFolder: data => dispatch(setCurrentFolder(data)),
     getStarredItems: filemanager => {
       dispatch(getStarredItems(filemanager))
     },
