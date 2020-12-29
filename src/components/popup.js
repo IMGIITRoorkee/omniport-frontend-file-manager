@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Popup, Menu } from 'semantic-ui-react'
-import PropTypes from 'prop-types'
 
 import EditModal from './edit-modal'
 
@@ -11,7 +10,6 @@ import popup from './css/popup.css'
 import {
   deleteFolder,
   editFolder,
-  getFolder,
   bulkDeleteFolders,
   setCurrentFolder
 } from '../actions/folderActions'
@@ -322,9 +320,6 @@ const mapDispatchToProps = dispatch => {
     },
     editFolder: (id, formdata, callback) => {
       dispatch(editFolder(id, formdata, callback))
-    },
-    getFolder: id => {
-      dispatch(getFolder(id))
     },
     setCurrentFolder: data => dispatch(setCurrentFolder(data)),
     getStarredItems: filemanager => {
