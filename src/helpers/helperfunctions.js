@@ -67,7 +67,7 @@ export const openInNewTab = () => {
     if (item.type === ITEM_TYPE.file) {
       let link = document.createElement('a')
       link.setAttribute('target', '_blank')
-      link.href = item.obj.fileUrl
+      link.href = item.obj.upload
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -80,7 +80,7 @@ export const handleDownload = (e) => {
     if (item.type === ITEM_TYPE.file) {
       let link = document.createElement('a')
       link.download = item.obj.fileName
-      link.href = item.obj.fileUrl
+      link.href = item.obj.upload
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)

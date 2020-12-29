@@ -445,6 +445,8 @@ export const PERSON_ROLES = Object.freeze({
 
 export const BASE_URL = configJson.baseUrl
 
+export const BASE_PROTECTED_URL = '/api/django_filemanager/media_files/'
+
 export const creators = [
   {
     name: 'Tushar Varshney',

@@ -40,7 +40,7 @@ class CustomCarousel extends Component {
           {images.map((file, index) => (
             <Slide tag='a' index={index}>
               <Image
-                src={file.fileUrl}
+                src={file.upload}
                 style={{
                   margin: 'auto',
                   maxWidth: '75vw',

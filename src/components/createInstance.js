@@ -20,7 +20,7 @@ import { formatStorage } from '../helpers/helperfunctions'
 const getInitialObj = () => {
   return {
     filemanagerName: '',
-    rootFolderName: '',
+    rootFolderName: 'person.user.username',
     filemanagerUrlPath: '',
     accessPermissions: "'Student' in get_all_roles(person).keys()",
     extraSpaceOptions: [],
@@ -123,7 +123,6 @@ class CreateInstance extends Component {
     if (
       filemanagerName &&
       filemanagerUrlPath &&
-      logo &&
       accessPermissions &&
       extraSpaceOptions &&
       extraSpaceOptions.length &&
