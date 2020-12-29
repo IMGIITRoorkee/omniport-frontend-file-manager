@@ -96,4 +96,4 @@ const mapDisPatchToProps = dispatch => {
   }
 }
 
-export default connect(() => {}, mapDisPatchToProps)(App)
+export default connect(() => ({}), mapDisPatchToProps)(App)
