@@ -5,22 +5,20 @@ import { editFile } from '../actions/fileActions'
 import { getFolder } from '../actions/folderActions'
 
 class EditFileModal extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
-      fileName: '',
-      isPublic: false
+      fileName: ''
     }
   }
-  componentDidUpdate (prevProps) {
+  componentDidUpdate(prevProps) {
     const { activeItems } = this.props
     activeItems &&
     activeItems[0] &&
     activeItems[0].obj &&
     JSON.stringify(prevProps.activeItems) !== JSON.stringify(activeItems)
       ? this.setState({
-          fileName: activeItems[0].obj.fileName,
-          isPublic: activeItems[0].obj.isPublic
+          fileName: activeItems[0].obj.fileName
         })
       : ''
   }
@@ -31,21 +29,16 @@ class EditFileModal extends Component {
   }
   handleSubmit = e => {
     e.preventDefault()
-    let { fileName, isPublic } = this.state
+    let { fileName } = this.state
     const { editFile, activeItems } = this.props
 
     if (fileName) {
       var formdata = new FormData()
       formdata.append('file_name', fileName)
-      formdata.append('is_public', isPublic)
       editFile(activeItems[0].obj.id, formdata, this.handleSuccess)
     }
   }
-  handleCheckPublic = () => {
-    this.setState({
-      isPublic: !this.state.isPublic
-    })
-  }
+
   handleCheckStar = () => {
     this.setState({
       starred: !this.state.starred
@@ -56,16 +49,17 @@ class EditFileModal extends Component {
     this.props.getFolder(id)
     this.props.close()
     this.setState({
-      fileName: '',
-      isPublic: false
+      fileName: ''
     })
   }
-  render () {
-    const { fileName, isPublic, starred } = this.state
+  render() {
+    const { fileName, starred } = this.state
     const { updateFilePending, showModal, close } = this.props
     return (
       <Modal
-        onClick={(e) => {e.stopPropagation()}}
+        onClick={e => {
+          e.stopPropagation()
+        }}
         size='large'
         open={showModal}
         closeOnEscape={true}
@@ -83,13 +77,6 @@ class EditFileModal extends Component {
                 value={fileName}
                 onChange={this.handleChange}
                 placeholder='File Name'
-              />
-            </Form.Field>
-            <Form.Field>
-              <Checkbox
-                checked={isPublic}
-                onChange={this.handleCheckPublic}
-                label='Public'
               />
             </Form.Field>
             <Form.Field>
