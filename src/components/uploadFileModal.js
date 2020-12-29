@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { Modal, Icon, Button } from 'semantic-ui-react'
 
@@ -16,12 +16,18 @@ function MyDropzone(props) {
     isUploading,
     label
   } = props
+  const [tempFiles, setTempFiles] = useState([])
 
   useEffect(() => {
     return () => {
       setFiles([])
     }
   }, [])
+
+  useEffect(() => {
+    const newArr = [...files, ...tempFiles]
+    setFiles(newArr)
+  }, [tempFiles])
 
   const thumbs = files
     .filter(file => file.type.match('image/'))
@@ -83,7 +89,7 @@ function MyDropzone(props) {
     })
 
   const onDrop = useCallback(acceptedFiles => {
-    setFiles(
+    setTempFiles(
       acceptedFiles.map(file => {
         return Object.assign(file, {
           preview: URL.createObjectURL(file)
