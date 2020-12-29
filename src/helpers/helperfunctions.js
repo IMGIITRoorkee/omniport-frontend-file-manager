@@ -1,6 +1,5 @@
 const Big = require('big.js')
 
-import { object } from 'prop-types'
 import { ONE_GB, ONE_KB, ONE_MB, ITEM_TYPE } from '../constants'
 import store from '../store'
 
