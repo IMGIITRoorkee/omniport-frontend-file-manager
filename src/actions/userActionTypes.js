@@ -1,0 +1,7 @@
+export const SET_IS_ADMIN = 'SET_IS_ADMIN'
+
+export const SET_IS_ADMIN_PENDING = 'GET_IS_ADMIN_PENDING'
+
+export const USER_API_ERROR = 'USER_API_ERROR'
+
+

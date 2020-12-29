@@ -16,12 +16,12 @@ import CreateInstance from './createInstance'
 import { whoami } from 'auth/src/actions/index'
 import { MAINTAINER_DESIGNATIONS, PERSON_ROLES } from '../constants'
 import { setActiveItems } from '../actions/itemActions'
+
 class App extends Component {
   componentDidMount() {
     store.dispatch(whoami())
   }
   render() {
-    console.log('rendering app')
     const creators = [
       {
         name: 'Tushar Varshney',
