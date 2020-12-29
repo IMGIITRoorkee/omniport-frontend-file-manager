@@ -1,5 +1,6 @@
 const Big = require('big.js')
 
+import { object } from 'prop-types'
 import { ONE_GB, ONE_KB, ONE_MB, ITEM_TYPE } from '../constants'
 import store from '../store'
 
@@ -74,7 +75,7 @@ export const openInNewTab = () => {
     }
   }
 }
-export const handleDownload = (e) => {
+export const handleDownload = e => {
   const activeItems = store.getState().items.activeItems
   for (const item of activeItems) {
     if (item.type === ITEM_TYPE.file) {
@@ -86,4 +87,37 @@ export const handleDownload = (e) => {
       document.body.removeChild(link)
     }
   }
+}
+
+export const checkFilesIfAlreadyExists = (item, currentFolder, upload) => {
+  if (upload) {
+    for (const object of item) {
+      const reducedItems = item.filter(obj => obj.name == object.name)
+      if (reducedItems.length > 1) {
+        return true
+      }
+      if (checkFilesIfAlreadyExists(object.name, currentFolder, false)) {
+        return true
+      }
+    }
+    return false
+  } else {
+    for (const file of currentFolder.files) {
+      const filename = file.fileName
+      if (item == filename) {
+        return true
+      }
+    }
+    return false
+  }
+}
+
+export const checkFolderIfAlreadyExists = (item, currentFolder) => {
+  for (const file of currentFolder.folders) {
+    const foldername = file.folderName
+    if (item == foldername) {
+      return true
+    }
+  }
+  return false
 }
