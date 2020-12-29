@@ -8,33 +8,38 @@ import {
   Button,
   Icon,
   Divider,
-  Label,
+  Label
 } from 'semantic-ui-react'
 import css from './css/approveRequest.css'
 import ErrorBoundary from './error-boundary'
 import { createFilemanager } from '../actions/filemanagerActions'
-import { spaceOptions, roleOptions, spaceOptionUnits } from '../constants'
+import { spaceOptionUnits } from '../constants'
 import UploadFilesModal from './uploadFileModal'
 import { formatStorage } from '../helpers/helperfunctions'
-import { string } from 'prop-types'
+
+const getInitialObj = () => {
+  return {
+    filemanagerName: '',
+    rootFolderName: '',
+    filemanagerUrlPath: '',
+    accessPermissions: "'Student' in get_all_roles(person).keys()",
+    extraSpaceOptions: [],
+    extraSpaceNumber: null,
+    extraSpaceUnit: null,
+    isPublic: false,
+    logo: null,
+    maxSpaceUnit: '',
+    maxSpaceNumber: '',
+    success: false,
+    basePublicUrl: ''
+  }
+}
 
 class CreateInstance extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      formObj: {
-        filemanagerName: '',
-        rootFolderName: '',
-        accessPermissions: "'Student' in get_all_roles(person).keys()",
-        extraSpaceOptions: [],
-        extraSpaceNumber: null,
-        extraSpaceUnit: null,
-        isPublic: false,
-        maxSpaceNumber: null,
-        maxSpaceUnit: null,
-        logo: null,
-        success: false
-      },
+      formObj: getInitialObj(),
       showModal: false,
       files: []
     }
@@ -42,24 +47,7 @@ class CreateInstance extends Component {
 
   componentDidMount = () => {
     this.state = {
-      formObj: this.getInitialObj()
-    }
-  }
-
-  getInitialObj = () => {
-    return {
-      filemanagerName: '',
-      rootFolderName: '',
-      filemanagerUrlPath: '',
-      accessPermissions: "'Student' in get_all_roles(person).keys()",
-      extraSpaceOptions: [],
-      extraSpaceNumber: null,
-      extraSpaceUnit: null,
-      isPublic: false,
-      logo: null,
-      maxSpaceUnit: '',
-      maxSpaceNumber: '',
-      success: false
+      formObj: getInitialObj()
     }
   }
 
@@ -127,7 +115,9 @@ class CreateInstance extends Component {
       accessPermissions,
       maxSpaceNumber,
       maxSpaceUnit,
-      extraSpaceOptions,isPublic
+      extraSpaceOptions,
+      isPublic,
+      basePublicUrl
     } = this.state.formObj
     const { createFilemanager } = this.props
     if (
@@ -138,10 +128,11 @@ class CreateInstance extends Component {
       extraSpaceOptions &&
       extraSpaceOptions.length &&
       maxSpaceUnit &&
-      maxSpaceNumber
+      maxSpaceNumber &&
+      (!isPublic || basePublicUrl.length > 0)
     ) {
       let formdata = new FormData()
-      let max_space = maxSpaceNumber*maxSpaceUnit
+      let max_space = maxSpaceNumber * maxSpaceUnit
       formdata.append(`logo`, logo)
       formdata.append('filemanager_name', filemanagerName)
       formdata.append('filemanager_url_path', filemanagerUrlPath)
@@ -152,6 +143,7 @@ class CreateInstance extends Component {
       }
       formdata.append('max_space', parseInt(max_space))
       formdata.append('is_public', Boolean(isPublic))
+      formdata.append('base_public_url', basePublicUrl)
       createFilemanager(formdata, this.handleSuccess)
     }
   }
@@ -167,7 +159,7 @@ class CreateInstance extends Component {
 
   handleCreateAnother = () => {
     this.setState({
-      formObj: this.getInitialObj()
+      formObj: getInitialObj()
     })
   }
   render() {
@@ -183,7 +175,8 @@ class CreateInstance extends Component {
       maxSpaceUnit,
       extraSpaceUnit,
       success,
-      isPublic
+      isPublic,
+      basePublicUrl
     } = this.state.formObj
     const { showModal, files } = this.state
     const { createFilemanagerPending, uploadFilePending } = this.props
@@ -220,24 +213,24 @@ class CreateInstance extends Component {
               onChange={this.handleChange}
             />
             <Form.Group widths='equal' styleName='css.extra-data-form-group'>
-                <Form.Input
-                  placeholder='Int'
-                  type='number'
-                  name='maxSpaceNumber'
-                  label='Max Space Value'
-                  value={maxSpaceNumber}
-                  onChange={this.handleChange}
-                />
-                <Form.Select
-                  search
-                  placeholder='Max Space Unit'
-                  name='maxSpaceUnit'
-                  options={spaceOptionUnits}
-                  label='Max Space Unit : '
-                  value={maxSpaceUnit}
-                  onChange={this.handleChangeSelect}
-                />
-              </Form.Group>
+              <Form.Input
+                placeholder='Int'
+                type='number'
+                name='maxSpaceNumber'
+                label='Max Space Value'
+                value={maxSpaceNumber}
+                onChange={this.handleChange}
+              />
+              <Form.Select
+                search
+                placeholder='Max Space Unit'
+                name='maxSpaceUnit'
+                options={spaceOptionUnits}
+                label='Max Space Unit : '
+                value={maxSpaceUnit}
+                onChange={this.handleChangeSelect}
+              />
+            </Form.Group>
             <Form.TextArea
               placeholder='Access Permission'
               type='TextArea'
@@ -295,6 +288,14 @@ class CreateInstance extends Component {
               name={'isPublic'}
               label='Public Filemanager'
             />
+            {isPublic && (
+              <Form.Input
+                label='Base Public Url'
+                name='basePublicUrl'
+                value={basePublicUrl}
+                onChange={this.handleChange}
+              />
+            )}
             <Button
               onClick={() => {
                 this.setState({ showModal: true })
