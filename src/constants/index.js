@@ -444,3 +444,21 @@ export const PERSON_ROLES = Object.freeze({
 })
 
 export const BASE_URL = configJson.baseUrl
+
+export const creators = [
+  {
+    name: 'Tushar Varshney',
+    role: 'Frontend Developer',
+    link: 'https://github.com/Tushar19varshney'
+  },
+  {
+    name: 'Gauransh Dingwani',
+    role: 'Frontend & Backend Developer',
+    link: 'https://github.com/gauransh7'
+  },
+  {
+    name: 'Ayush Bansal',
+    role: 'Frontend & Backend Developer',
+    link: 'https://github.com/ayu023ban'
+  }
+]

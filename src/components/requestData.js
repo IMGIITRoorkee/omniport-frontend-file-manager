@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import {
-  Form,
-  Checkbox,
   Button,
   Modal,
   Icon,
@@ -14,12 +12,10 @@ import {
   getAllRootFoldersRequest,
   generateDataRequest
 } from '../actions/folderActions'
-import setActiveItems from '../actions/itemActions'
-import { ONE_GB } from '../constants'
 import { formatStorage } from '../helpers/helperfunctions'
 
 class RequestData extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       add_data: null,
@@ -54,7 +50,7 @@ class RequestData extends Component {
       showModal: false
     })
   }
-  render () {
+  render() {
     const { add_data, showModal, labelColor } = this.state
     const { currentFolder } = this.props
     return (
@@ -68,7 +64,9 @@ class RequestData extends Component {
         />
         {showModal ? (
           <Modal
-            onClick={(e) => {e.stopPropagation()}}
+            onClick={e => {
+              e.stopPropagation()
+            }}
             size='large'
             open={showModal}
             closeOnEscape={true}
@@ -129,9 +127,7 @@ const mapDispatchToProps = dispatch => {
     getRootFolders: () => {
       dispatch(getAllRootFoldersRequest())
     },
-    setActiveItems: items => {
-      dispatch(setActiveItems(items))
-    },
+
     generateDataRequest: (id, data, callback) => {
       dispatch(generateDataRequest(id, data, callback))
     }
