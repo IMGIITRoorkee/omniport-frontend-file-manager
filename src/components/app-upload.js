@@ -7,7 +7,6 @@ import UploadFilesModal from './uploadFileModal'
 
 const initialObj = {
   fileName: '',
-  isPublic: true,
   size: 0,
   starred: false,
   extension: '',
@@ -32,7 +31,6 @@ class AppUpload extends Component {
       for (const i in files) {
         formdata.append(`upload`, files[i])
         formdata.append('file_name', files[i].name)
-        formdata.append('is_public', false)
         formdata.append('extension', files[i].name.split('.').pop())
         formdata.append('starred', false)
         formdata.append('size', parseInt(files[i].size))
