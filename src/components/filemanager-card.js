@@ -8,8 +8,13 @@ import RequestData from './requestData'
 import { setActiveFolder } from '../actions/folderActions'
 
 import main from './css/filemanager-card.css'
-import { ONE_GB, REQUEST_STATUS, BASE_URL } from '../constants'
-import default_filemanager_logo from '../media/default_filemanager_logo.png';
+import {
+  ONE_GB,
+  REQUEST_STATUS,
+  BASE_URL,
+  BASE_PROTECTED_URL
+} from '../constants'
+import default_filemanager_logo from '../media/default_filemanager_logo.png'
 import { formatStorage } from '../helpers/helperfunctions'
 
 class Filemanagercard extends Component {
@@ -39,13 +44,12 @@ class Filemanagercard extends Component {
             floated='right'
             size='mini'
             src={
-              folder.filemanager.logo
+              folder.filemanager.logo != BASE_PROTECTED_URL + 'null'
                 ? folder.filemanager.logo
                 : default_filemanager_logo
             }
           />
           <Card.Header>{folder.filemanager.filemanagerName}</Card.Header>
-          <Card.Meta>filemanager</Card.Meta>
           <Card.Description>
             <Progress percent={percentage} color='red' size='tiny'>
               {percentage}%

@@ -38,7 +38,7 @@ class GridView extends Component {
     if (Boolean(window.opener)) {
       window.opener.postMessage(
         {
-          file: file.fileUrl,
+          file: file.upload,
           fileName: file.fileName,
           path: file.path,
           filemanager_name: currentFolder.filemanagername
