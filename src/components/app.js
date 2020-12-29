@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 
 import { store } from 'core'
 import main from 'formula_one/src/css/app.css'
-import { Loading } from 'formula_one'
 
 import { creators } from '../constants'
 

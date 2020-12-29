@@ -163,9 +163,11 @@ class ShareItemModal extends Component {
       activeItems.length == 1
         ? activeItems[0].type == 'folder'
           ? `${window.location.origin}${BASE_URL}/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
-          : activeItems[0].obj.fileUrl.includes(window.location.origin)
-          ? `${activeItems[0].obj.fileUrl}`
-          : `${window.location.origin}${activeItems[0].obj.fileUrl}`
+          : activeItems[0].obj.isPublic
+          ? activeItems[0].obj.fileUrl
+          : activeItems[0].obj.upload.includes(window.location.origin)
+          ? `${activeItems[0].obj.upload}`
+          : `${window.location.origin}${activeItems[0].obj.upload}`
         : ''
     return (
       <Modal
