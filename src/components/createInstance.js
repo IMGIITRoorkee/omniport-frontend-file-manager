@@ -124,8 +124,6 @@ class CreateInstance extends Component {
       filemanagerName &&
       filemanagerUrlPath &&
       accessPermissions &&
-      extraSpaceOptions &&
-      extraSpaceOptions.length &&
       maxSpaceUnit &&
       maxSpaceNumber &&
       (!isPublic || basePublicUrl.length > 0)
