@@ -5,7 +5,7 @@ import {
   GET_SHARED_ITEMS_PENDING,
   ITEM_API_ERROR,
   VIEWING_SHARED_ITEMS,
-  GET_STARRED_ITEMS_PENDING
+  GET_STARRED_ITEMS_PENDING,
 } from './itemActionType'
 import { GET_FOLDER } from './folderActionType'
 import { SHARED_ITEMS_APIS, FOLDER_APIS } from '../urls'

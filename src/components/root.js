@@ -7,7 +7,7 @@ import { getFolder, getRootFolder } from '../actions/folderActions'
 import {
   getSharedItems,
   getSharedItem,
-  getStarredItems
+  getStarredItems,
 } from '../actions/itemActions'
 import { setActiveItems } from '../actions/itemActions'
 

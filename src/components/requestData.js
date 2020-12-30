@@ -15,7 +15,7 @@ import {
 import { formatStorage } from '../helpers/helperfunctions'
 
 class RequestData extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       add_data: null,
@@ -50,14 +50,17 @@ class RequestData extends Component {
       showModal: false
     })
   }
-  render() {
+  render () {
     const { add_data, showModal, labelColor } = this.state
     const { currentFolder } = this.props
     return (
       <React.Fragment>
         <Icon
           name='add'
-          onClick={() => this.setState({ showModal: true })}
+          onClick={e => {
+            e.stopPropagation()
+            this.setState({ showModal: true })
+          }}
           title='Request more space'
           color='yellow'
           size='large'
@@ -75,39 +78,49 @@ class RequestData extends Component {
             closeIcon
           >
             <Modal.Header>Request More Space</Modal.Header>
-            <Modal.Content>
-              <h4>Extra Data needed</h4>
-              <LabelGroup>
-                {currentFolder.filemanager.filemanagerExtraSpaceOptions.map(
-                  opt => (
-                    <Label
-                      as='a'
-                      title={`add ${opt.label} extra`}
-                      onClick={() => this.handleChange(opt)}
-                      horizontal
-                      size='large'
-                    >
-                      {formatStorage(opt)}
+            {currentFolder.filemanager.filemanagerExtraSpaceOptions.length ? (
+              <Modal.Content>
+                <h4>Extra Data needed</h4>
+                <LabelGroup>
+                  {currentFolder.filemanager.filemanagerExtraSpaceOptions.map(
+                    opt => (
+                      <Label
+                        as='a'
+                        title={`add ${opt.label} extra`}
+                        onClick={() => this.handleChange(opt)}
+                        horizontal
+                        size='large'
+                      >
+                        {formatStorage(opt)}
+                      </Label>
+                    )
+                  )}
+                </LabelGroup>
+                <Divider />
+                {add_data ? (
+                  <div>
+                    <Label color={labelColor} horizontal size='large'>
+                      {`Request for ${formatStorage(add_data)} extra data on 
+                  ${
+                    currentFolder.filemanager.filemanagerName
+                  } will be initiated.`}
                     </Label>
-                  )
+                  </div>
+                ) : (
+                  ''
                 )}
-              </LabelGroup>
-              <Divider />
-              {add_data ? (
-                <div>
-                  <Label color={labelColor} horizontal size='large'>
-                    {`Request for ${formatStorage(add_data)} extra data on 
-                  ${currentFolder.filemanagername} will be initiated.`}
-                  </Label>
-                </div>
-              ) : (
-                ''
-              )}
-              <Divider />
-              <Button primary onClick={() => this.handleSubmit()}>
-                Submit
-              </Button>
-            </Modal.Content>
+                <Divider />
+                <Button primary onClick={() => this.handleSubmit()}>
+                  Submit
+                </Button>
+              </Modal.Content>
+            ) : (
+              <Modal.Content>
+                <Modal.Header>
+                  Contact Administrator directly for more cloud space.
+                </Modal.Header>
+              </Modal.Content>
+            )}
           </Modal>
         ) : null}
       </React.Fragment>
@@ -117,8 +130,7 @@ class RequestData extends Component {
 
 const mapStateToProps = state => {
   return {
-    activeItems: state.items.activeItems,
-    currentFolder: state.folders.activeFolder
+    activeItems: state.items.activeItems
   }
 }
 

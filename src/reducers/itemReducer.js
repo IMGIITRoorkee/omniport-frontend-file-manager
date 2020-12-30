@@ -6,7 +6,7 @@ import {
   ITEM_API_ERROR,
   VIEWING_SHARED_ITEMS,
   GET_STARRED_ITEMS_PENDING,
-  CREATE_FILEMANAGER_PENDING
+  CREATE_FILEMANAGER_PENDING,
 } from '../actions/itemActionType'
 
 const initialPendingState = {
