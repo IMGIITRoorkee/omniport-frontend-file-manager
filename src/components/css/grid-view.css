@@ -98,4 +98,5 @@
   width: 100%;
   display: block;
   flex: 10;
+  height: inherit;
 }
