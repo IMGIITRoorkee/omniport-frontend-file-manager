@@ -77,7 +77,7 @@ class Progress extends Component {
                   }}
                   link
                 >
-                  shared_with_me
+                  shared with me
                 </Breadcrumb.Section>
               ) : (
                 ''
