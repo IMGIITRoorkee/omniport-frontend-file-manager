@@ -39,6 +39,7 @@ class FolderCard extends Component {
       ? activeItems
       : [{ type: ITEM_TYPE.folder, obj: folder }]
     setActiveItems(newActiveItems)
+    e.detail = 'folder-card'
   }
 
   handleDoubleClick = () => {
@@ -62,7 +63,12 @@ class FolderCard extends Component {
         ? folder.folderName.slice(0, 10) + '..'
         : folder.folderName
     return (
-      <div id={`grid-card-${index}`} styleName='grid.file-card' secondary>
+      <div
+        id={`grid-card-${index}`}
+        styleName='grid.file-card'
+        secondary
+        onContextMenu={this.handleContextSelect}
+      >
         <Popup
           content={folder.folderName}
           basic
@@ -81,7 +87,6 @@ class FolderCard extends Component {
               <div
                 styleName='grid.folder-icon'
                 onClick={e => this.handleSelect(e)}
-                onContextMenu={this.handleContextSelect}
               >
                 <Icon
                   size='huge'

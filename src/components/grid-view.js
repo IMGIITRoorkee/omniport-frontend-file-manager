@@ -19,9 +19,7 @@ import {
 class GridView extends Component {
   constructor(props) {
     super(props)
-    this.folderContainerRef = React.createRef()
     this.contextRef = React.createRef()
-    this.fileContainerRef = React.createRef()
     this.state = {
       isPopupOpen: false,
       showFileEditModal: false,
@@ -63,25 +61,17 @@ class GridView extends Component {
       <div
         onContextMenu={e => {
           e.preventDefault()
-          if (
-            e.target === this.folderContainerRef.current ||
-            e.target === this.fileContainerRef.current
-          ) {
-            return
-          }
           this.contextRef = createContextFromEvent(e)
-          if (isPopupOpen) {
-            this.setState({ isPopupOpen: false })
-          } else {
-            this.setState({ isPopupOpen: true })
+          if (e.detail === 'folder-card' || e.detail === 'file-card') {
+            if (isPopupOpen) {
+              this.setState({ isPopupOpen: false })
+            } else {
+              this.setState({ isPopupOpen: true })
+            }
           }
         }}
       >
-        <div
-          styleName='grid.view-parent'
-          ref={this.folderContainerRef}
-          onClick={this.handleReset}
-        >
+        <div styleName='grid.view-parent' onClick={this.handleReset}>
           {currentFolder &&
             currentFolder.folders &&
             currentFolder.folders
@@ -106,11 +96,7 @@ class GridView extends Component {
         ) : (
           <Divider />
         )}
-        <div
-          styleName='grid.view-parent'
-          ref={this.fileContainerRef}
-          onClick={this.handleReset}
-        >
+        <div styleName='grid.view-parent' onClick={this.handleReset}>
           {currentFolder &&
             currentFolder.files &&
             currentFolder.files
