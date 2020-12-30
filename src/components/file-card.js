@@ -36,6 +36,7 @@ class Filecard extends Component {
       ? activeItems
       : [{ type: ITEM_TYPE.file, obj: file }]
     setActiveItems(newActiveItems)
+    e.detail = 'file-card'
   }
 
   render() {
@@ -82,11 +83,7 @@ class Filecard extends Component {
               {!IMAGE_EXTENSIONS.includes(file.extension) ? (
                 <FileIcon {...FILE_TYPES[extension]} extension={extension} />
               ) : (
-                  <img
-                    src={file.upload}
-                    alt={file.name}
-                    styleName='grid.image'
-                  />
+                <img src={file.upload} alt={file.name} styleName='grid.image' />
               )}
               <div styleName='grid.file-name'>{fileName}</div>
             </div>
