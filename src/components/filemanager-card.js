@@ -25,7 +25,7 @@ class Filemanagercard extends Component {
     }
   }
   render() {
-    const { folder, setActiveFolder, currentFolder } = this.props
+    const { folder } = this.props
     let percentage = (folder.contentSize * 100) / folder.maxSpace
     percentage = percentage.toFixed(2)
     let content = formatStorage(folder.contentSize)
@@ -33,11 +33,10 @@ class Filemanagercard extends Component {
     return (
       <Card
         styleName='filemanager-card'
-        onDoubleClick={() => {
+        onClick={() => {
           const url = `${BASE_URL}/${folder.filemanager.filemanagerUrlPath}/`
           this.props.history.push(url)
         }}
-        onClick={() => setActiveFolder(folder)}
       >
         <Card.Content>
           <Image
@@ -58,7 +57,6 @@ class Filemanagercard extends Component {
         </Card.Content>
         <Card.Content extra color='black'>
           {content} /{maxSpace} GB used
-          {currentFolder && currentFolder.id === folder.id ? (
             <span className='right floated'>
               {folder.dataRequestStatus === REQUEST_STATUS.PENDING ? (
                 <Label
@@ -70,12 +68,9 @@ class Filemanagercard extends Component {
                   Space requested
                 </Label>
               ) : (
-                <RequestData />
+                <RequestData currentFolder={folder} />
               )}
             </span>
-          ) : (
-            ''
-          )}
         </Card.Content>
       </Card>
     )

@@ -11,7 +11,7 @@ import { deleteFolder } from '../actions/folderActions'
 import { BASE_URL, ITEM_TYPE } from '../constants'
 
 class FolderCard extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.ref = React.createRef()
   }
@@ -56,7 +56,7 @@ class FolderCard extends Component {
     this.props.history.push(url)
   }
 
-  render() {
+  render () {
     const { index, folder, activeItems, viewingSharedItems } = this.props
     const folderName =
       folder.folderName.length > 12
