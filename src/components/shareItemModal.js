@@ -19,7 +19,7 @@ import {
 } from 'semantic-ui-react'
 
 import { FileIcon } from 'react-file-icon'
-import { BASE_URL, FILE_TYPES } from '../constants'
+import { BASE_URL, FILE_TYPES, ITEM_TYPE } from '../constants'
 import { setActiveItems } from '../actions/itemActions'
 import { USER_APIS } from '../urls'
 
@@ -159,16 +159,23 @@ class ShareItemModal extends Component {
       isFilemanagerPublic
     } = this.props
     const { isLoading, options, selectedUsersFinally } = this.state
-    const link =
-      activeItems.length == 1
-        ? activeItems[0].type == 'folder'
-          ? `${window.location.origin}${BASE_URL}/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
-          : activeItems[0].obj.isFilemanagerPublic
-          ? activeItems[0].obj.fileUrl
-          : activeItems[0].obj.upload.includes(window.location.origin)
-          ? `${activeItems[0].obj.upload}`
-          : `${window.location.origin}${activeItems[0].obj.upload}`
-        : ''
+    let link = ''
+    if (activeItems.length) {
+      link = `${window.location.origin}${BASE_URL}/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
+      let protected_link
+      let public_link
+      if (activeItems[0].type === ITEM_TYPE.file) {
+        const base_url = window.location.origin
+        protected_link = new URL(activeItems[0].obj.upload, base_url)
+        public_link = new URL(activeItems[0].obj.fileUrl, base_url)
+      }
+      if (activeItems[0].obj.isFilemanagerPublic) {
+        link = public_link
+      } else {
+        link = protected_link
+      }
+    }
+
     return (
       <Modal
         onClick={e => {
