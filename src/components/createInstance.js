@@ -187,7 +187,7 @@ class CreateInstance extends Component {
             </Breadcrumb.Section>
           </Breadcrumb>
           <Header dividing />
-          <Form center ui onSubmit={this.handleSubmit}>
+          <Form center ui >
             <Form.Input
               placeholder='Filemanager Name'
               name='filemanagerName'
@@ -196,7 +196,7 @@ class CreateInstance extends Component {
               onChange={this.handleChange}
             />
             <Form.Input
-              placeholder='Root Folder url path'
+              placeholder='Ex: facspace'
               name='filemanagerUrlPath'
               label='Root Folder Url Path :'
               value={filemanagerUrlPath}
@@ -238,7 +238,6 @@ class CreateInstance extends Component {
             />
 
             <Form
-              onSubmit={this.handleExtraDataSubmit}
               styleName='css.extra-data-form'
             >
               <Form.Group widths='equal' styleName='css.extra-data-form-group'>
@@ -259,7 +258,7 @@ class CreateInstance extends Component {
                   value={extraSpaceUnit}
                   onChange={this.handleChangeSelect}
                 />
-                <Form.Button success content='Submit' />
+                <Form.Button success content='Submit' onClick={this.handleExtraDataSubmit} />
               </Form.Group>
               {extraSpaceOptions &&
                 extraSpaceOptions.map(opt => (
@@ -322,6 +321,7 @@ class CreateInstance extends Component {
               <Form.Button
                 success
                 content='Submit'
+                onClick={this.handleSubmit}
                 loading={createFilemanagerPending}
               />
             )}
