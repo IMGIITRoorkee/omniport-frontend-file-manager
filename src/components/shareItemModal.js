@@ -168,11 +168,12 @@ class ShareItemModal extends Component {
         const base_url = window.location.origin
         protected_link = new URL(activeItems[0].obj.upload, base_url)
         public_link = new URL(activeItems[0].obj.fileUrl, base_url)
-      }
-      if (activeItems[0].obj.isFilemanagerPublic) {
-        link = public_link
-      } else {
-        link = protected_link
+
+        if (activeItems[0].obj.isFilemanagerPublic) {
+          link = public_link
+        } else {
+          link = protected_link
+        }
       }
     }
 
