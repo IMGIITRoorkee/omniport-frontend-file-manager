@@ -45,12 +45,15 @@ function MyDropzone(props) {
                 circular
                 color='grey'
                 bordered={false}
+                disabled={isUploading}
                 onClick={() => {
-                  const index = files.indexOf(file)
-                  const newFiles = files.slice(0)
-                  newFiles.splice(index, 1)
-                  URL.revokeObjectURL(file.preview)
-                  setFiles(newFiles)
+                  if (!isUploading) {
+                    const index = files.indexOf(file)
+                    const newFiles = files.slice(0)
+                    newFiles.splice(index, 1)
+                    URL.revokeObjectURL(file.preview)
+                    setFiles(newFiles)
+                  }
                 }}
               />
             </div>
@@ -75,12 +78,15 @@ function MyDropzone(props) {
               styleName='css.thumb-cross'
               circular
               color='grey'
+              disabled={isUploading}
               onClick={() => {
-                const index = files.indexOf(file)
-                const newFiles = files.slice(0)
-                newFiles.splice(index, 1)
-                URL.revokeObjectURL(file.preview)
-                setFiles(newFiles)
+                if (!isUploading) {
+                  const index = files.indexOf(file)
+                  const newFiles = files.slice(0)
+                  newFiles.splice(index, 1)
+                  URL.revokeObjectURL(file.preview)
+                  setFiles(newFiles)
+                }
               }}
             />
           </div>
