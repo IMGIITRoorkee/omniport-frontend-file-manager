@@ -15,7 +15,7 @@ const initialObj = {
   showModal: false
 }
 class AppUpload extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       showModal: false,
@@ -41,8 +41,7 @@ class AppUpload extends Component {
         }
         uploadFile(formdata, this.handleSuccess)
       }
-    }
-    else{
+    } else {
       toast({
         type: 'error',
         description: 'A file already exists with that name'
@@ -56,7 +55,7 @@ class AppUpload extends Component {
     this.setState({ files: [], showModal: false })
   }
 
-  render () {
+  render() {
     const { showModal, files } = this.state
     const { uploadFilePending } = this.props
     return (
@@ -65,14 +64,9 @@ class AppUpload extends Component {
           onClick={() => {
             this.setState({ showModal: true })
           }}
-          icon
-          labelPosition='left'
-          primary
-          basic
-        >
-          <Icon name='upload' />
-          Upload files
-        </Dropdown.Item>
+          icon='upload'
+          text='Upload files'
+        />
         {showModal && (
           <UploadFilesModal
             isMultiple={true}

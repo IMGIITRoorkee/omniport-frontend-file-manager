@@ -66,7 +66,6 @@ class FolderCard extends Component {
       <div
         id={`grid-card-${index}`}
         styleName='grid.file-card'
-        secondary
         onContextMenu={this.handleContextSelect}
       >
         <Popup
