@@ -18,7 +18,6 @@ import { setActiveItems, getStarredItems } from '../actions/itemActions'
 import ConfirmModal from './confirmModal'
 import ItemDetailModal from './item-detail-modal'
 import ShareItemModal from './shareItemModal'
-import FolderFormModal from './folderFormModal'
 import { ITEM_TYPE } from '../constants'
 import { handleDownload } from '../helpers/helperfunctions'
 
@@ -28,9 +27,7 @@ class PopupView extends Component {
     this.state = {
       showFileEditModal: false,
       showDeleteModal: false,
-      showFolderFormModal: false,
       showShareItemModal: false,
-      editFolder: {},
       isDetailViewOpen: false,
       showDetailsModal: false
     }
@@ -59,15 +56,6 @@ class PopupView extends Component {
         label: 'Delete',
         icon: 'delete',
         condition: !viewingSharedItems
-      },
-      {
-        key: '4',
-        label: 'Edit',
-        icon: 'edit',
-        condition:
-          !viewingSharedItems &&
-          activeItems.length == 1 &&
-          activeItems[0].type == ITEM_TYPE.folder
       },
       {
         key: '5',
@@ -106,12 +94,6 @@ class PopupView extends Component {
     },
     3: () => {
       this.setState({ showDeleteModal: true })
-    },
-    4: () => {
-      this.setState({
-        editFolder: this.props.activeItems[0].obj,
-        showFolderFormModal: true
-      })
     },
     5: () => {
       this.setState({ showShareItemModal: true })
@@ -211,8 +193,6 @@ class PopupView extends Component {
     const {
       showDeleteModal,
       showFileEditModal,
-      showFolderFormModal,
-      editFolder,
       showShareItemModal,
       showDetailsModal
     } = this.state
@@ -284,13 +264,6 @@ class PopupView extends Component {
               ? this.props.currentFolder.filemanagername
               : ''
           }
-        />
-        <FolderFormModal
-          showModal={showFolderFormModal}
-          editFormObj={editFolder}
-          setShowModal={value => {
-            this.setState({ showFolderFormModal: value })
-          }}
         />
       </React.Fragment>
     )
