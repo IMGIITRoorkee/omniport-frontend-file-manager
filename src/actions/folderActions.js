@@ -186,7 +186,7 @@ export const editFolderUsers = (id, data, callback) => {
   }
 }
 
-export const deleteFolder = id => {
+export const deleteFolder = (id, callback = () => {}) => {
   const url = `${FOLDER_APIS.folderItem}/${id}`
   return (dispatch, getState) => {
     const parentFolder = getState().folders.selectedFolder
@@ -195,7 +195,13 @@ export const deleteFolder = id => {
       .delete(url)
       .then(() => {
         dispatch(apiDispatch(DELETE_FOLDER_PENDING, false))
-        dispatch(getFolder(parentFolder.id))
+        const oldCurrentFolder = Object.assign({}, parentFolder)
+        const oldFolders = oldCurrentFolder.folders
+        const newFolders = oldFolders.filter(folder => id !== folder.id)
+        oldCurrentFolder.folders = newFolders
+        dispatch(setCurrentFolder(oldCurrentFolder))
+
+        callback(id)
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -208,7 +214,7 @@ export const deleteFolder = id => {
   }
 }
 
-export const bulkDeleteFolders = data => {
+export const bulkDeleteFolders = (data, callback = () => {}) => {
   const url = `${FOLDER_APIS.folderItem}/${FOLDER_APIS.bulkDelete}`
   return (dispatch, getState) => {
     const parentFolder = getState().folders.selectedFolder
@@ -217,7 +223,15 @@ export const bulkDeleteFolders = data => {
       .post(url, data)
       .then(() => {
         dispatch(apiDispatch(DELETE_FOLDER_PENDING, false))
-        dispatch(getFolder(parentFolder.id))
+        callback(data)
+
+        const oldCurrentFolder = Object.assign({}, parentFolder)
+        const oldFolders = oldCurrentFolder.folders
+        const newFolders = oldFolders.filter(
+          folder => !data.folder_id_arr.includes(folder.id)
+        )
+        oldCurrentFolder.folders = newFolders
+        dispatch(setCurrentFolder(oldCurrentFolder))
       })
       .catch(error => {
         dispatch(apiError(error))
