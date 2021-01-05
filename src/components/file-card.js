@@ -54,7 +54,7 @@ class Filecard extends Component {
         : file.fileName
 
     return (
-      <div id={`grid-card-${index}`} styleName='grid.file-card' secondary>
+      <div id={`grid-card-${index}`} styleName='grid.file-card'>
         <Popup
           trigger={
             <div

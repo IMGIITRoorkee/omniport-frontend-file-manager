@@ -188,15 +188,12 @@ class Bar extends Component {
                         showFolderFormModal: true
                       })
                     }}
-                    icon
-                    labelPosition='left'
-                    primary
-                    basic
-                  >
-                    <Icon name='folder' />
-                    Create folder
+                    icon='folder'
+                    text='Create folder'
+                  />
+                  <Dropdown.Item>
+                    <Upload />
                   </Dropdown.Item>
-                  <Upload />
                 </Dropdown.Menu>
               </Dropdown>
             </div>
