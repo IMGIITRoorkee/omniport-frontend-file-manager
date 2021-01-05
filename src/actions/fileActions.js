@@ -2,7 +2,7 @@ import { toast } from 'react-semantic-toasts'
 
 import apiClient from '../helpers/apiClient'
 import { FILE_APIS, FOLDER_APIS } from '../urls'
-import { getFolder } from './folderActions'
+import { getFolder, setCurrentFolder } from './folderActions'
 import {
   GET_ALL_FILES,
   FILE_API_ERROR,
@@ -120,7 +120,7 @@ export const editFileUsers = (id, data, callback) => {
   }
 }
 
-export const deleteFile = id => {
+export const deleteFile = (id, callback = () => {}) => {
   const url = `${FILE_APIS.fileItem}/${id}/`
   return (dispatch, getState) => {
     const parentFolder = getState().folders.selectedFolder
@@ -130,6 +130,12 @@ export const deleteFile = id => {
       .then(() => {
         dispatch(apiDispatch(DELETE_FILE_PENDING, false))
         dispatch(getFolder(parentFolder.id))
+        const oldCurrentFolder = Object.assign({}, parentFolder)
+        const oldfiles = oldCurrentFolder.files
+        const newfiles = oldfiles.filter(file => id !== file.id)
+        oldCurrentFolder.files = newfiles
+        dispatch(setCurrentFolder(oldCurrentFolder))
+        callback(id)
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -142,7 +148,7 @@ export const deleteFile = id => {
   }
 }
 
-export const bulkDeleteFiles = obj => {
+export const bulkDeleteFiles = (obj, callback = () => {}) => {
   const url = `${FILE_APIS.fileItem}/${FILE_APIS.bulkDelete}`
   return (dispatch, getState) => {
     const parentFolder = getState().folders.selectedFolder
@@ -151,7 +157,14 @@ export const bulkDeleteFiles = obj => {
       .post(url, obj)
       .then(() => {
         dispatch(apiDispatch(DELETE_FILE_PENDING, false))
-        dispatch(getFolder(parentFolder.id))
+        const oldCurrentFolder = Object.assign({}, parentFolder)
+        const oldfiles = oldCurrentFolder.files
+        const newfiles = oldfiles.filter(
+          file => !obj.fileIdArr.includes(file.id)
+        )
+        oldCurrentFolder.files = newfiles
+        dispatch(setCurrentFolder(oldCurrentFolder))
+        callback(obj)
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -160,6 +173,7 @@ export const bulkDeleteFiles = obj => {
           type: 'error',
           description: 'error occured in deleting the selected files '
         })
+        return error
       })
   }
 }
