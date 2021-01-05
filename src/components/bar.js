@@ -278,27 +278,22 @@ class Bar extends Component {
                 />
               </div>
             )}
-          {activeItems.length == 1 && !viewingSharedItems && (
-            <div styleName='file.crud-icon'>
-              <Button
-                onClick={e => {
-                  e.stopPropagation()
-                  if (activeItems[0].type === ITEM_TYPE.file) {
+          {activeItems.length == 1 &&
+            activeItems[0].type === ITEM_TYPE.file &&
+            !viewingSharedItems && (
+              <div styleName='file.crud-icon'>
+                <Button
+                  onClick={e => {
+                    e.stopPropagation()
                     this.setState({ showEditFileModal: true })
-                  } else {
-                    this.setState({
-                      editFolder: activeItems[0].obj,
-                      showFolderFormModal: true
-                    })
-                  }
-                }}
-                icon='edit'
-                color='blue'
-                inverted
-                circular
-              />
-            </div>
-          )}
+                  }}
+                  icon='edit'
+                  color='blue'
+                  inverted
+                  circular
+                />
+              </div>
+            )}
           {activeItems.length > 0 &&
             !activeItems.some(item => item.type === ITEM_TYPE.folder) &&
             !viewingSharedItems && (
