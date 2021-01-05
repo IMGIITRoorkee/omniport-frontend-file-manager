@@ -3,7 +3,9 @@ import { connect } from 'react-redux'
 import { toast } from 'react-semantic-toasts'
 import { Form, Checkbox, Button, Modal, Icon } from 'semantic-ui-react'
 import { editFile } from '../actions/fileActions'
-import { getFolder } from '../actions/folderActions'
+import { getFolder, setCurrentFolder } from '../actions/folderActions'
+import { setActiveItems } from '../actions/itemActions'
+import { ITEM_TYPE } from '../constants'
 import { checkFilesIfAlreadyExists } from '../helpers/helperfunctions'
 
 class EditFileModal extends Component {
@@ -12,6 +14,13 @@ class EditFileModal extends Component {
     this.state = {
       fileName: props.activeItems[0] ? props.activeItems[0].obj.fileName : ''
     }
+  }
+  componentDidMount() {
+    this.setState({
+      fileName: this.props.activeItems[0]
+        ? this.props.activeItems[0].obj.fileName
+        : ''
+    })
   }
   componentDidUpdate(prevProps) {
     const { activeItems } = this.props
@@ -33,16 +42,15 @@ class EditFileModal extends Component {
     e.preventDefault()
     let { fileName } = this.state
     const { currentFolder } = this.props
-    if(!checkFilesIfAlreadyExists(fileName, currentFolder, false)){
+    if (!checkFilesIfAlreadyExists(fileName, currentFolder, false)) {
       const { editFile, activeItems } = this.props
-  
+
       if (fileName) {
         var formdata = new FormData()
         formdata.append('file_name', fileName)
         editFile(activeItems[0].obj.id, formdata, this.handleSuccess)
       }
-    }
-    else{
+    } else {
       toast({
         type: 'error',
         description: 'A file already exists with that name'
@@ -50,13 +58,26 @@ class EditFileModal extends Component {
     }
   }
 
-  handleSuccess = () => {
-    const id = this.props.currentFolder.id
-    this.props.getFolder(id)
-    this.props.close()
+  handleSuccess = newFile => {
+    const {
+      currentFolder,
+      close,
+      setCurrentFolder,
+      setActiveItems
+    } = this.props
+    const oldCurrentFolder = Object.assign({}, currentFolder)
+    const oldfiles = oldCurrentFolder.files
+
+    const ind = oldfiles.findIndex(ele => ele.id === newFile.id)
+    oldfiles[ind] = newFile
+    oldCurrentFolder.files = oldfiles
+    setCurrentFolder(oldCurrentFolder)
+    setActiveItems([{ type: ITEM_TYPE.file, obj: newFile }])
+
     this.setState({
       fileName: ''
     })
+    close()
   }
   render() {
     const { fileName } = this.state
@@ -69,8 +90,9 @@ class EditFileModal extends Component {
         size='large'
         open={showModal}
         closeOnEscape={true}
-        closeOnDimmerClick={true}
+        closeOnDimmerClick={false}
         onClose={close}
+        onMount={() => this.componentDidMount()}
         closeIcon
       >
         <Modal.Header>Editing file</Modal.Header>
@@ -111,7 +133,9 @@ const mapDispatchToProps = dispatch => {
     },
     getFolder: id => {
       return dispatch(getFolder(id))
-    }
+    },
+    setCurrentFolder: data => dispatch(setCurrentFolder(data)),
+    setActiveItems: items => dispatch(setActiveItems(items))
   }
 }
 
