@@ -20,7 +20,7 @@ import {
   GET_PARENT_FOLDERS,
   GET_PARENT_FOLDERS_PENDING
 } from './folderActionType'
-import { VIEWING_SHARED_ITEMS } from './itemActionType'
+import { VIEWING_SHARED_ITEMS, VIEWING_STARRED_ITEMS } from './itemActionType'
 
 const apiDispatch = (actionType = '', data) => {
   return {
@@ -46,6 +46,7 @@ export const getAllFoldersRequest = (pk, data) => {
         dispatch(apiDispatch(GET_ALL_FOLDERS, res.data))
         dispatch(apiDispatch(GET_FOLDERS_PENDING, false))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
+        dispatch(apiDispatch(VIEWING_STARRED_ITEMS, false))
         dispatch(apiError({}))
       })
       .catch(error => {
@@ -69,6 +70,7 @@ export const getAllRootFoldersRequest = (pk, data) => {
         dispatch(apiDispatch(GET_ALL_ROOT_FOLDERS, res.data))
         dispatch(apiDispatch(GET_FOLDERS_PENDING, false))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
+        dispatch(apiDispatch(VIEWING_STARRED_ITEMS, false))
         dispatch(apiError({}))
       })
       .catch(error => {
@@ -92,6 +94,7 @@ export const getFolder = (id, params) => {
         dispatch(apiDispatch(GET_FOLDER_PENDING, false))
         dispatch(apiDispatch(GET_FOLDER, res.data))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
+        dispatch(apiDispatch(VIEWING_STARRED_ITEMS, false))
         dispatch(
           apiDispatch(IS_FILEMANAGER_PUBLIC, res.data.isFilemanagerPublic)
         )
@@ -254,6 +257,7 @@ export const getRootFolder = filemanager => {
         dispatch(apiDispatch(GET_FOLDER_PENDING, false))
         dispatch(apiDispatch(GET_FOLDER, res.data))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
+        dispatch(apiDispatch(VIEWING_STARRED_ITEMS, false))
         dispatch(
           apiDispatch(IS_FILEMANAGER_PUBLIC, res.data.isFilemanagerPublic)
         )

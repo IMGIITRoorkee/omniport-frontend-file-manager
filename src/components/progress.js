@@ -32,7 +32,13 @@ class Progress extends Component {
   }
 
   render() {
-    const { parents, isParentsPending, folder, viewingSharedItems } = this.props
+    const {
+      parents,
+      isParentsPending,
+      folder,
+      viewingSharedItems,
+      viewingStarredItems
+    } = this.props
     const arr = parents.slice(1)
     return (
       <div styleName='index.progress-parent'>
@@ -61,7 +67,7 @@ class Progress extends Component {
               >
                 {folder.filemanagername}
               </Breadcrumb.Section>
-              {viewingSharedItems ? (
+              {viewingSharedItems || viewingStarredItems ? (
                 <React.Fragment>
                   <Breadcrumb.Divider icon='right chevron' />
                 </React.Fragment>
@@ -79,13 +85,24 @@ class Progress extends Component {
                 >
                   shared with me
                 </Breadcrumb.Section>
+              ) : viewingStarredItems ? (
+                <Breadcrumb.Section
+                  onClick={() => {
+                    this.props.history.push(
+                      `${BASE_URL}/${this.props.match.params.filemanager}/all_starred_items/`
+                    )
+                  }}
+                  link
+                >
+                  shared with me
+                </Breadcrumb.Section>
               ) : (
                 ''
               )}
               {arr && arr.length
                 ? arr.map((data, index) => (
                     <React.Fragment>
-                      <React.Fragment>
+                      <React.Fragment key={index}>
                         {index >= 0 ? (
                           <Breadcrumb.Divider icon='right chevron' />
                         ) : null}
@@ -112,6 +129,7 @@ const mapStateToProps = state => {
     folder: state.folders.selectedFolder,
     parents: state.folders.parents,
     viewingSharedItems: state.items.viewingSharedItems,
+    viewingStarredItems: state.items.viewingStarredItems,
     isParentsPending: state.folders.getParentsPending
   }
 }
