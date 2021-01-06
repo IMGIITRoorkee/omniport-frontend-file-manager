@@ -6,6 +6,7 @@ import {
   ITEM_API_ERROR,
   VIEWING_SHARED_ITEMS,
   GET_STARRED_ITEMS_PENDING,
+  VIEWING_STARRED_ITEMS
 } from './itemActionType'
 import { GET_FOLDER } from './folderActionType'
 import { SHARED_ITEMS_APIS, FOLDER_APIS } from '../urls'
@@ -54,6 +55,7 @@ export const getSharedItems = filemanager => {
         dispatch(apiDispatch(GET_FOLDER, res.data))
         dispatch(apiDispatch(GET_SHARED_ITEMS_PENDING, false))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, true))
+        dispatch(apiDispatch(VIEWING_STARRED_ITEMS, false))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -71,6 +73,7 @@ export const getSharedItem = (uuid, id, type_shared, type_access) => {
         dispatch(apiDispatch(GET_FOLDER, res.data))
         dispatch(apiDispatch(GET_SHARED_ITEMS_PENDING, false))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, true))
+        dispatch(apiDispatch(VIEWING_STARRED_ITEMS, false))
       })
       .catch(error => {
         dispatch(apiError(error))
@@ -88,6 +91,7 @@ export const getStarredItems = filemanager => {
         dispatch(apiDispatch(GET_FOLDER, res.data))
         dispatch(apiDispatch(GET_STARRED_ITEMS_PENDING, false))
         dispatch(apiDispatch(VIEWING_SHARED_ITEMS, false))
+        dispatch(apiDispatch(VIEWING_STARRED_ITEMS, true))
       })
       .catch(error => {
         dispatch(apiError(error))
