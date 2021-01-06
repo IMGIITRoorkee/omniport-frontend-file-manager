@@ -7,17 +7,19 @@ import {
   VIEWING_SHARED_ITEMS,
   GET_STARRED_ITEMS_PENDING,
   CREATE_FILEMANAGER_PENDING,
+  VIEWING_STARRED_ITEMS
 } from '../actions/itemActionType'
 
 const initialPendingState = {
   getallshareditems: false,
   getStarredItemsPending: false,
-  createFilemanagerPending: false,
+  createFilemanagerPending: false
 }
 
 const initialState = {
   ...initialPendingState,
   viewingSharedItems: false,
+  viewingStarredItems: false,
   activeItem: {},
   activeItems: [],
   tabular: false
@@ -36,13 +38,15 @@ const itemReducer = (state = initialState, action) => {
         tabular: action.payload
       }
     case CREATE_FILEMANAGER_PENDING:
-      return { ...state, CREATE_FILEMANAGER_PENDING: payload}
+      return { ...state, CREATE_FILEMANAGER_PENDING: payload }
     case GET_SHARED_ITEMS_PENDING:
       return { ...state, getallshareditems: payload }
     case VIEWING_SHARED_ITEMS:
       return { ...state, viewingSharedItems: payload }
+    case VIEWING_STARRED_ITEMS:
+      return { ...state, viewingStarredItems: payload }
     case GET_STARRED_ITEMS_PENDING:
-      return { ...state, getStarredItemsPending: payload}
+      return { ...state, getStarredItemsPending: payload }
     case ITEM_API_ERROR:
       return { ...state, error: error }
     default:
