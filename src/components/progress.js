@@ -94,7 +94,7 @@ class Progress extends Component {
                   }}
                   link
                 >
-                  shared with me
+                  Starred
                 </Breadcrumb.Section>
               ) : (
                 ''
