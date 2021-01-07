@@ -11,7 +11,7 @@ import { deleteFolder } from '../actions/folderActions'
 import { BASE_URL, ITEM_TYPE } from '../constants'
 
 class FolderCard extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.ref = React.createRef()
   }
@@ -43,7 +43,7 @@ class FolderCard extends Component {
   }
 
   handleDoubleClick = () => {
-    const { folder, viewingSharedItems } = this.props
+    const { folder, viewingSharedItems, setActiveItems } = this.props
     const uuid = this.props.match.params.uuid
       ? this.props.match.params.uuid
       : folder.sharingId
@@ -53,10 +53,11 @@ class FolderCard extends Component {
     const url = viewingSharedItems
       ? `${BASE_URL}/${this.props.match.params.filemanager}/${uuid}/${type_shared}/${folder.id}/folder/`
       : `${BASE_URL}/${this.props.match.params.filemanager}/${folder.id}/`
+    setActiveItems([])
     this.props.history.push(url)
   }
 
-  render () {
+  render() {
     const { index, folder, activeItems, viewingSharedItems } = this.props
     const folderName =
       folder.folderName.length > 12
