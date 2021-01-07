@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Segment, Button, Icon, Modal, Dropdown } from 'semantic-ui-react'
+import {
+  Segment,
+  Button,
+  Icon,
+  Modal,
+  Dropdown,
+  TabPane
+} from 'semantic-ui-react'
 
 import {
   getStarredItems,
@@ -144,6 +151,7 @@ class Bar extends Component {
       activeItems,
       currentFolder,
       viewingSharedItems,
+      viewingStarredItems,
       isFilemanagerPublic
     } = this.props
     const {
@@ -198,32 +206,27 @@ class Bar extends Component {
               </Dropdown>
             </div>
           )}
-          <div styleName='file.crud-icon'>
+          <Button.Group>
             {!isFilemanagerPublic && (
               <Button
                 as={Link}
-                icon
+                icon='share'
                 labelPosition='left'
-                color='grey'
                 to={`${BASE_URL}/${this.props.match.params.filemanager}/shared_with_me/`}
-              >
-                <Icon name='share' />
-                Shared With Me
-              </Button>
+                content='Shared With me'
+                active={viewingSharedItems}
+              />
             )}
-          </div>
-          <div styleName='file.crud-icon'>
+
             <Button
               as={Link}
-              icon
+              icon='star'
               labelPosition='left'
-              color='grey'
               to={`${BASE_URL}/${this.props.match.params.filemanager}/all_starred_items/`}
-            >
-              <Icon name='star' />
-              Starred
-            </Button>
-          </div>
+              content='Starred'
+              active={viewingStarredItems}
+            />
+          </Button.Group>
         </div>
 
         <div styleName='file.navbar-first'>
@@ -382,6 +385,7 @@ const mapStateToProps = state => {
     currentFolder: state.folders.selectedFolder,
     activeItems: state.items.activeItems,
     viewingSharedItems: state.items.viewingSharedItems,
+    viewingStarredItems: state.items.viewingStarredItems,
     isFilemanagerPublic: state.filemanagers.isFilemanagerPublic
   }
 }
