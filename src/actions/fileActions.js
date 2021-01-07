@@ -129,7 +129,6 @@ export const deleteFile = (id, callback = () => {}) => {
       .delete(url)
       .then(() => {
         dispatch(apiDispatch(DELETE_FILE_PENDING, false))
-        dispatch(getFolder(parentFolder.id))
         const oldCurrentFolder = Object.assign({}, parentFolder)
         const oldfiles = oldCurrentFolder.files
         const newfiles = oldfiles.filter(file => id !== file.id)
