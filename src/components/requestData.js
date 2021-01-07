@@ -55,16 +55,17 @@ class RequestData extends Component {
     const { currentFolder } = this.props
     return (
       <React.Fragment>
-        <Icon
-          name='add'
+        <Label
           onClick={e => {
             e.stopPropagation()
             this.setState({ showModal: true })
           }}
           title='Request more space'
-          color='yellow'
-          size='large'
-        />
+          color='blue'
+        >
+          <Icon name='database' />
+          Request Space
+        </Label>
         {showModal ? (
           <Modal
             onClick={e => {
