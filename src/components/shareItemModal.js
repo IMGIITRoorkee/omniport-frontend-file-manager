@@ -180,6 +180,7 @@ class ShareItemModal extends Component {
       isFilemanagerPublic
     } = this.props
     const { isLoading, options, selectedUsersFinally } = this.state
+    console.log(filemanager)
     let link = ''
     if (activeItems.length) {
       link = `${window.location.origin}${BASE_URL}/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`

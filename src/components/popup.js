@@ -20,6 +20,7 @@ import ItemDetailModal from './item-detail-modal'
 import ShareItemModal from './shareItemModal'
 import { ITEM_TYPE } from '../constants'
 import { handleDownload } from '../helpers/helperfunctions'
+import { withRouter } from 'react-router-dom'
 
 class PopupView extends Component {
   constructor(props, ref) {
@@ -259,11 +260,7 @@ class PopupView extends Component {
           close={() => {
             this.setState({ showShareItemModal: false })
           }}
-          filemanager={
-            this.props.currentFolder
-              ? this.props.currentFolder.filemanagername
-              : ''
-          }
+          filemanager={this.props.match.params.filemanager}
         />
       </React.Fragment>
     )
@@ -308,4 +305,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PopupView)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(PopupView))
