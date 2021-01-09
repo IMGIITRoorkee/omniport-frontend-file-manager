@@ -16,8 +16,8 @@ class Progress extends Component {
   }
 
   componentDidMount = () => {
-    const { match ,getParentFolders} = this.props
-    if (match.params.id) {
+    const { match, getParentFolders } = this.props
+    if (match.params.id && /^\d+$/.test(match.params.id)) {
       getParentFolders(match.params.id)
     }
   }

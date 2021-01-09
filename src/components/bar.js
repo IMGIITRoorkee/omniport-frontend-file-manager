@@ -251,7 +251,7 @@ class Bar extends Component {
                   e.stopPropagation()
                   this.setState({ showDetailsModal: true })
                 }}
-                title='View detials'
+                title='View details'
                 icon='info'
                 color='blue'
                 inverted
