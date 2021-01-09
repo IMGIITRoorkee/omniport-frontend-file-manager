@@ -6,10 +6,16 @@ import { getAllRootFoldersRequest } from '../actions/folderActions'
 import Filemanagercard from '../components/filemanager-card'
 import ErrorBoundary from './error-boundary'
 import main from './css/instances.css'
+import { withRouter } from 'react-router-dom'
+import { setIntegrationMode } from '../actions/filemanagerActions'
 
 class Instances extends Component {
   componentDidMount() {
-    this.props.getRootFolders()
+    const { getRootFolders, location, setIntegrationMode } = this.props
+    getRootFolders()
+    if (location.search.includes('mode=integration')) {
+      setIntegrationMode(true)
+    }
   }
   render() {
     const { Folders, getFoldersPending } = this.props
@@ -46,8 +52,13 @@ const mapDispatchToProps = dispatch => {
   return {
     getRootFolders: () => {
       dispatch(getAllRootFoldersRequest())
-    }
+    },
+    setIntegrationMode: isIntegrationMode =>
+      dispatch(setIntegrationMode(isIntegrationMode))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Instances)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(Instances))
