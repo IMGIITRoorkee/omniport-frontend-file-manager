@@ -23,10 +23,41 @@ import { setActiveItems } from '../actions/itemActions'
 import { getIsUserAdmin } from '../actions/userActions'
 import AdminRoute from './adminRoute'
 
+const EASTEREGG = 'baadal'
+
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      easterEgg: false,
+      index: 0
+    }
+  }
   componentDidMount() {
     store.dispatch(whoami())
     this.props.getIsUserAdmin()
+    window.addEventListener('keypress', (event) => {
+      if (event.key === EASTEREGG[this.state.index]) {
+        this.setState({
+          index: this.state.index + 1
+        })
+      }
+      else {
+        this.setState({
+          index: 0
+        })
+      }
+      if (this.state.index === EASTEREGG.length) {
+        this.setState({
+          easterEgg: true
+        })
+      }
+      else if (this.state.easterEgg) {
+        this.setState({
+          easterEgg: false
+        })
+      }
+    })
   }
   render() {
     const { match } = this.props
@@ -35,6 +66,16 @@ class App extends Component {
         <AppHeader mode='site' userDropdown appName='file_manager' />
         <AppMain>
           <Scrollbars>
+          {this.state.easterEgg ? (
+            <div styleName="blocks.easter-egg">
+              <iframe
+                src="https://www.youtube.com/embed/AnxrJiS5uKU?start=134&autoplay=1"
+                frameborder="0"
+                allow="autoplay"
+              >
+              </iframe>
+            </div>
+          ): (
             <Switch>
               <AdminRoute
                 path={`${match.path}/admin`}
@@ -79,6 +120,7 @@ class App extends Component {
                 guestAllowed={false}
               />
             </Switch>
+          )}
           </Scrollbars>
         </AppMain>
         <AppFooter creators={creators} />
