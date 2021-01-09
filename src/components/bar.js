@@ -199,9 +199,7 @@ class Bar extends Component {
                     icon='folder'
                     text='Create folder'
                   />
-                  <Dropdown.Item>
-                    <Upload />
-                  </Dropdown.Item>
+                  <Upload />
                 </Dropdown.Menu>
               </Dropdown>
             </div>
