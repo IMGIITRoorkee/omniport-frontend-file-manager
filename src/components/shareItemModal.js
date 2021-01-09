@@ -235,7 +235,7 @@ class ShareItemModal extends Component {
                 search
                 multiple
                 placeholder='Type user name to search'
-                name="selectedUsers"
+                name='selectedUsers'
                 options={options}
                 value={selectedUsersFinally ? selectedUsersFinally : []}
                 onSearchChange={(e, data) => this.handleSearchChange(e, data)}
