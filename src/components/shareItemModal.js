@@ -120,7 +120,7 @@ class ShareItemModal extends Component {
                 : ``
               return {
                 key: parseInt(`${user.id}`),
-                text: `${user.fullName} (${extra_text})`,
+                text: `${user.fullName} ${extra_text ? '('+ extra_text + ')' : ''}`,
                 value: parseInt(`${user.id}`)
               }
             })
