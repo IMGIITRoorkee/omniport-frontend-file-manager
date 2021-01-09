@@ -1,6 +1,7 @@
 import {
   CREATE_FILEMANAGER_PENDING,
-  FILEMANAGER_API_ERROR
+  FILEMANAGER_API_ERROR,
+  FILEMANAGER_INTEGRATION_MODE
 } from './filemanagerActionTypes'
 import { FILEMANAGER_APIS } from '../urls'
 import apiClient from '../helpers/apiClient'
@@ -39,5 +40,11 @@ export const createFilemanager = (data, callback) => {
         })
         return error
       })
+  }
+}
+
+export const setIntegrationMode = isIntegrationMode => {
+  return dispatch => {
+    dispatch(apiDispatch(FILEMANAGER_INTEGRATION_MODE, isIntegrationMode))
   }
 }

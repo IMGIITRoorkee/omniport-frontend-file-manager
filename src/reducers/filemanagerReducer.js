@@ -1,7 +1,8 @@
 import {
   CREATE_FILEMANAGER_PENDING,
   FILEMANAGER_API_ERROR,
-  IS_FILEMANAGER_PUBLIC
+  IS_FILEMANAGER_PUBLIC,
+  FILEMANAGER_INTEGRATION_MODE
 } from '../actions/filemanagerActionTypes'
 
 const initialPendingState = {
@@ -10,7 +11,8 @@ const initialPendingState = {
 
 const initialState = {
   ...initialPendingState,
-  isFilemanagerPublic:false
+  isFilemanagerPublic: false,
+  filemanagerIntegrationMode: false
 }
 
 const filemanagerReducer = (state = initialState, action) => {
@@ -22,6 +24,8 @@ const filemanagerReducer = (state = initialState, action) => {
       return { ...state, error: error }
     case IS_FILEMANAGER_PUBLIC:
       return { ...state, isFilemanagerPublic: payload }
+    case FILEMANAGER_INTEGRATION_MODE:
+      return { ...state, filemanagerIntegrationMode: payload }
     default:
       return state
   }

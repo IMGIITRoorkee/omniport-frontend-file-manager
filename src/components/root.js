@@ -7,12 +7,14 @@ import { getFolder, getRootFolder } from '../actions/folderActions'
 import {
   getSharedItems,
   getSharedItem,
-  getStarredItems,
+  getStarredItems
 } from '../actions/itemActions'
 import { setActiveItems } from '../actions/itemActions'
 
 import index from './css/index.css'
 import manager from './css/manager.css'
+import { withRouter } from 'react-router-dom'
+import { setIntegrationMode } from '../actions/filemanagerActions'
 
 const Loading = () => {
   return <p>Loading ...</p>
@@ -44,8 +46,11 @@ class Root extends Component {
       getSharedItem,
       getFolderDetails,
       getRoot,
-      getStarredItems
+      getStarredItems,
+      location,
+      setIntegrationMode
     } = this.props
+
     uuid && id && type_shared && type_access
       ? getSharedItem(uuid, id, type_shared, type_access)
       : id == 'all_starred_items'
@@ -55,6 +60,10 @@ class Root extends Component {
       : id
       ? getFolderDetails(id)
       : getRoot(filemanager)
+
+    if (location.search.includes('mode=integration')) {
+      setIntegrationMode(true)
+    }
   }
   componentDidUpdate(prevProps) {
     const {
@@ -171,8 +180,10 @@ const mapDispatchToProps = dispatch => {
     getStarredItems: filemanager => {
       dispatch(getStarredItems(filemanager))
     },
-    setActiveItems: items => dispatch(setActiveItems(items))
+    setActiveItems: items => dispatch(setActiveItems(items)),
+    setIntegrationMode: isIntegrationMode =>
+    dispatch(setIntegrationMode(isIntegrationMode))
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Root)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Root))

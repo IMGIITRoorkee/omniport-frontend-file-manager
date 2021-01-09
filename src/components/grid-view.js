@@ -32,8 +32,12 @@ class GridView extends Component {
   }
 
   handleFileDoubleClick = (file, index) => {
-    const { currentFolder, setActiveItems } = this.props
-    if (Boolean(window.opener)) {
+    const {
+      currentFolder,
+      setActiveItems,
+      filemanagerIntegrationMode
+    } = this.props
+    if (filemanagerIntegrationMode) {
       window.opener.postMessage(
         {
           file: file.upload,
@@ -132,7 +136,8 @@ class GridView extends Component {
 const mapStateToProps = state => {
   return {
     currentFolder: state.folders.selectedFolder,
-    activeItems: state.items.activeItems
+    activeItems: state.items.activeItems,
+    filemanagerIntegrationMode: state.filemanagers.filemanagerIntegrationMode
   }
 }
 

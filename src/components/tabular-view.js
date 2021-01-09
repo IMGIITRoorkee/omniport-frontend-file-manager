@@ -137,8 +137,12 @@ class TabularView extends Component {
   }
 
   handleFileDoubleClick = file => event => {
-    const { currentFolder, setActiveItems } = this.props
-    if (Boolean(window.opener)) {
+    const {
+      currentFolder,
+      setActiveItems,
+      filemanagerIntegrationMode
+    } = this.props
+    if (filemanagerIntegrationMode) {
       window.opener.postMessage(
         {
           file: file.upload,
@@ -317,7 +321,8 @@ const mapStateToProps = state => {
     tabular: state.files.tabular,
     currentFolder: state.folders.selectedFolder,
     activeItems: state.items.activeItems,
-    viewingSharedItems: state.items.viewingSharedItems
+    viewingSharedItems: state.items.viewingSharedItems,
+    filemanagerIntegrationMode: state.filemanagers.filemanagerIntegrationMode
   }
 }
 
