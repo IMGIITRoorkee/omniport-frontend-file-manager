@@ -164,7 +164,12 @@ class TabularView extends Component {
   }
 
   render() {
-    const { currentFolder, activeItems } = this.props
+    const {
+      currentFolder,
+      activeItems,
+      viewingSharedItems,
+      viewingStarredItems
+    } = this.props
     const { isPopupOpen, isDetailViewOpen } = this.state
     return (
       <div
@@ -185,7 +190,10 @@ class TabularView extends Component {
               <Table.HeaderCell>Title</Table.HeaderCell>
               <Table.HeaderCell>Last Modified</Table.HeaderCell>
               <Table.HeaderCell>Space Used</Table.HeaderCell>
-              <Table.HeaderCell>Starred</Table.HeaderCell>
+              {!viewingSharedItems && (
+                <Table.HeaderCell>Starred</Table.HeaderCell>
+              )}
+              {viewingSharedItems && <Table.HeaderCell>Owner</Table.HeaderCell>}
             </Table.Row>
           </Table.Header>
 
@@ -214,25 +222,30 @@ class TabularView extends Component {
                       {getModifiedDate(folder.datetimeModified)}
                     </Table.Cell>
                     <Table.Cell>{formatStorage(folder.contentSize)}</Table.Cell>
-                    <Table.Cell>
-                      {folder.starred ? (
-                        <Icon
-                          name='star'
-                          title='Remove from starred'
-                          onClick={() =>
-                            this.handleStarClick('folder', folder.id, true)
-                          }
-                        />
-                      ) : (
-                        <Icon
-                          name='star outline'
-                          title='Add to starred'
-                          onClick={() =>
-                            this.handleStarClick('folder', folder.id, false)
-                          }
-                        />
-                      )}
-                    </Table.Cell>
+                    {!viewingSharedItems && (
+                      <Table.Cell>
+                        {folder.starred ? (
+                          <Icon
+                            name='star'
+                            title='Remove from starred'
+                            onClick={() =>
+                              this.handleStarClick('folder', folder.id, true)
+                            }
+                          />
+                        ) : (
+                          <Icon
+                            name='star outline'
+                            title='Add to starred'
+                            onClick={() =>
+                              this.handleStarClick('folder', folder.id, false)
+                            }
+                          />
+                        )}
+                      </Table.Cell>
+                    )}
+                    {viewingSharedItems && (
+                      <Table.Cell>{folder.person.fullName}</Table.Cell>
+                    )}
                   </Table.Row>
                 ))}
 
@@ -277,25 +290,30 @@ class TabularView extends Component {
                       {getModifiedDate(file.datetimeModified)}
                     </Table.Cell>
                     <Table.Cell>{formatStorage(file.size)}</Table.Cell>
-                    <Table.Cell>
-                      {file.starred ? (
-                        <Icon
-                          name='star'
-                          title='Remove from starred'
-                          onClick={() =>
-                            this.handleStarClick('file', file.id, true)
-                          }
-                        />
-                      ) : (
-                        <Icon
-                          name='star outline'
-                          title='Add to starred'
-                          onClick={() =>
-                            this.handleStarClick('file', file.id, false)
-                          }
-                        />
-                      )}
-                    </Table.Cell>
+                    {!viewingSharedItems && (
+                      <Table.Cell>
+                        {file.starred ? (
+                          <Icon
+                            name='star'
+                            title='Remove from starred'
+                            onClick={() =>
+                              this.handleStarClick('file', file.id, true)
+                            }
+                          />
+                        ) : (
+                          <Icon
+                            name='star outline'
+                            title='Add to starred'
+                            onClick={() =>
+                              this.handleStarClick('file', file.id, false)
+                            }
+                          />
+                        )}
+                      </Table.Cell>
+                    )}
+                    {viewingSharedItems && (
+                      <Table.Cell>{file.folder.person.fullName}</Table.Cell>
+                    )}
                   </Table.Row>
                 ))}
           </Table.Body>
@@ -322,6 +340,7 @@ const mapStateToProps = state => {
     currentFolder: state.folders.selectedFolder,
     activeItems: state.items.activeItems,
     viewingSharedItems: state.items.viewingSharedItems,
+    viewingStarredItems: state.items.viewingStarredItems,
     filemanagerIntegrationMode: state.filemanagers.filemanagerIntegrationMode
   }
 }
