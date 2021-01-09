@@ -5,17 +5,12 @@ import { editFolderUsers, getFolder } from '../actions/folderActions'
 import axios from 'axios'
 import {
   Button,
-  Divider,
-  Dropdown,
   Form,
   Icon,
   Input,
-  Label,
   Modal,
   Popup,
   Segment,
-  Table,
-  TableCell
 } from 'semantic-ui-react'
 
 import { FileIcon } from 'react-file-icon'
@@ -86,7 +81,7 @@ class ShareItemModal extends Component {
       this.setState({
         ...this.state,
         options: [
-          ...this.state.initialOptions,
+          ...this.state.options,
           ...res.data
             .filter(user => {
               if (
@@ -95,7 +90,7 @@ class ShareItemModal extends Component {
                   ? activeItems[0].type == 'file'
                     ? activeItems[0].obj.folder.person.id
                     : activeItems[0].obj.person.id
-                  : '')
+                  : '') || this.state.options.some(usr => usr.key === user.id)
               ) {
                 return false // skip
               }
@@ -240,7 +235,7 @@ class ShareItemModal extends Component {
                 search
                 multiple
                 placeholder='Type user name to search'
-                name='selectedUsers'
+                name="selectedUsers"
                 options={options}
                 value={selectedUsersFinally ? selectedUsersFinally : []}
                 onSearchChange={(e, data) => this.handleSearchChange(e, data)}
