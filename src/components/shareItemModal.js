@@ -19,7 +19,12 @@ import {
 } from 'semantic-ui-react'
 
 import { FileIcon } from 'react-file-icon'
-import { BASE_URL, FILE_TYPES, ITEM_TYPE } from '../constants'
+import {
+  BASE_PROTECTED_URL,
+  BASE_URL,
+  FILE_TYPES,
+  ITEM_TYPE
+} from '../constants'
 import { setActiveItems } from '../actions/itemActions'
 import { USER_APIS } from '../urls'
 
@@ -188,7 +193,10 @@ class ShareItemModal extends Component {
       let public_link
       if (activeItems[0].type === ITEM_TYPE.file) {
         const base_url = window.location.origin
-        protected_link = new URL(activeItems[0].obj.upload, base_url)
+        protected_link = new URL(
+          `${BASE_PROTECTED_URL}${activeItems[0].obj.id}/`,
+          base_url
+        )
         public_link = new URL(activeItems[0].obj.fileUrl, base_url)
 
         if (activeItems[0].obj.isFilemanagerPublic) {
