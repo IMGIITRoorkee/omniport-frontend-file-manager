@@ -167,13 +167,7 @@ export const editFolder = (
   }
 }
 
-export const editFolderUsers = (
-  id,
-  data,
-  callback = () => {
-    return
-  }
-) => {
+export const editFolderUsers = (id, data, callback) => {
   const url = `${FOLDER_APIS.folderItem}/${id}/update_shared_users/`
   return dispatch => {
     dispatch(apiDispatch(UPDATE_FOLDER_PENDING, true))

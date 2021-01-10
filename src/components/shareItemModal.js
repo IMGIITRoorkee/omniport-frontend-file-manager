@@ -52,32 +52,9 @@ class ShareItemModal extends Component {
           return user.id
         })
         const init_options = shared_users.map(user => {
-          const isStudent = user.roles ? user.roles.some(role => role.role === 'Student') : false
-          const isFaculty = user.roles ? user.roles.some(
-            role => role.role === 'FacultyMember'
-          ) : false
-          const extra_text = isStudent
-            ? `${
-                user.roles.find(role => role.role === 'Student').data
-                  .enrolmentNumber
-              } - ${
-                user.roles.find(role => role.role === 'Student').data.branch
-                  .name
-              }`
-            : isFaculty
-            ? `${
-                user.roles.find(role => role.role === 'FacultyMember').data
-                  .employeeId
-              } - ${
-                user.roles.find(role => role.role === 'FacultyMember').data
-                  .department.name
-              }`
-            : ``
           return {
             key: parseInt(`${user.id}`),
-            text: `${user.fullName} ${
-              extra_text ? '(' + extra_text + ')' : ''
-            }`,
+            text: `${user.fullName}`,
             value: parseInt(`${user.id}`)
           }
         })
