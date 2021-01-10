@@ -259,23 +259,20 @@ class Bar extends Component {
               />
             </div>
           )}
-          {activeItems.length == 1 &&
-            !viewingSharedItems &&
-            (!isFilemanagerPublic ||
-              activeItems[0].type === ITEM_TYPE.file) && (
-              <div styleName='file.crud-icon'>
-                <Button
-                  onClick={e => {
-                    e.stopPropagation()
-                    this.setState({ showShareItemModal: true })
-                  }}
-                  icon='share'
-                  color='blue'
-                  inverted
-                  circular
-                />
-              </div>
-            )}
+          {activeItems.length == 1 && !viewingSharedItems && (
+            <div styleName='file.crud-icon'>
+              <Button
+                onClick={e => {
+                  e.stopPropagation()
+                  this.setState({ showShareItemModal: true })
+                }}
+                icon='share'
+                color='blue'
+                inverted
+                circular
+              />
+            </div>
+          )}
           {activeItems.length == 1 &&
             activeItems[0].type === ITEM_TYPE.file &&
             !viewingSharedItems && (
