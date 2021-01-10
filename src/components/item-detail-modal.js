@@ -100,9 +100,7 @@ class ItemDetailsModal extends Component {
                     ? currentFolder.type == 'shared'
                       ? 'shared_items'
                       : currentFolder.type == 'starred'
-                      ? active_item ? active_item.type === 'file'
-                        ? active_item.obj.folder.folderName
-                        : active_item.obj.parent.folderName : ''
+                      ? 'starred_items'
                       : currentFolder.folderName
                     : ''}
                 </Table.Cell>
