@@ -64,8 +64,7 @@ class PopupView extends Component {
         icon: 'share',
         condition:
           !viewingSharedItems &&
-          activeItems.length == 1 &&
-          (!isFilemanagerPublic || activeItems[0].type === ITEM_TYPE.file)
+          activeItems.length == 1 
       },
       {
         key: '7',

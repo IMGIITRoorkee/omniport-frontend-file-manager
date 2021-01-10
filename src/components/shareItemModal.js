@@ -31,7 +31,7 @@ import file from './css/share-item.css'
 import { toast } from 'react-semantic-toasts'
 
 class ShareItemModal extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       isLoading: false,
@@ -191,7 +191,7 @@ class ShareItemModal extends Component {
     document.execCommand('copy')
   }
 
-  render () {
+  render() {
     const {
       activeItems,
       showModal,
@@ -201,12 +201,11 @@ class ShareItemModal extends Component {
     } = this.props
     const { isLoading, options, selectedUsersFinally } = this.state
     let link = ''
+    const base_url = window.location.origin
     if (activeItems.length) {
-      link = `${window.location.origin}${BASE_URL}/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
       let protected_link
       let public_link
       if (activeItems[0].type === ITEM_TYPE.file) {
-        const base_url = window.location.origin
         protected_link = new URL(
           `${BASE_PROTECTED_URL}${activeItems[0].obj.id}/`,
           base_url
@@ -217,6 +216,16 @@ class ShareItemModal extends Component {
           link = public_link
         } else {
           link = protected_link
+        }
+      } else {
+        if (isFilemanagerPublic) {
+          try {
+            link = new URL(activeItems[0].obj.publicFolderUrl)
+          } catch {
+            link = `${window.location.origin}${BASE_URL}/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
+          }
+        } else {
+          link = `${window.location.origin}${BASE_URL}/${filemanager}/${activeItems[0].obj.sharingId}/${activeItems[0].type}/${activeItems[0].obj.id}/${activeItems[0].type}`
         }
       }
     }
