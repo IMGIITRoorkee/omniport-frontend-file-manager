@@ -167,7 +167,13 @@ export const editFolder = (
   }
 }
 
-export const editFolderUsers = (id, data, callback) => {
+export const editFolderUsers = (
+  id,
+  data,
+  callback = () => {
+    return
+  }
+) => {
   const url = `${FOLDER_APIS.folderItem}/${id}/update_shared_users/`
   return dispatch => {
     dispatch(apiDispatch(UPDATE_FOLDER_PENDING, true))
@@ -175,7 +181,7 @@ export const editFolderUsers = (id, data, callback) => {
       .patch(url, data)
       .then(res => {
         dispatch(apiDispatch(UPDATE_FOLDER_PENDING, false))
-        callback()
+        callback(res.data)
       })
       .catch(error => {
         dispatch(apiError(error))

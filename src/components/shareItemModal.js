@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { editFileUsers } from '../actions/fileActions'
-import { editFolderUsers, getFolder } from '../actions/folderActions'
+import {
+  editFolderUsers,
+  getFolder,
+  setCurrentFolder
+} from '../actions/folderActions'
 import axios from 'axios'
 import {
   Button,
@@ -10,7 +14,7 @@ import {
   Input,
   Modal,
   Popup,
-  Segment,
+  Segment
 } from 'semantic-ui-react'
 
 import { FileIcon } from 'react-file-icon'
@@ -27,7 +31,7 @@ import file from './css/share-item.css'
 import { toast } from 'react-semantic-toasts'
 
 class ShareItemModal extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       isLoading: false,
@@ -48,9 +52,32 @@ class ShareItemModal extends Component {
           return user.id
         })
         const init_options = shared_users.map(user => {
+          const isStudent = user.roles ? user.roles.some(role => role.role === 'Student') : false
+          const isFaculty = user.roles ? user.roles.some(
+            role => role.role === 'FacultyMember'
+          ) : false
+          const extra_text = isStudent
+            ? `${
+                user.roles.find(role => role.role === 'Student').data
+                  .enrolmentNumber
+              } - ${
+                user.roles.find(role => role.role === 'Student').data.branch
+                  .name
+              }`
+            : isFaculty
+            ? `${
+                user.roles.find(role => role.role === 'FacultyMember').data
+                  .employeeId
+              } - ${
+                user.roles.find(role => role.role === 'FacultyMember').data
+                  .department.name
+              }`
+            : ``
           return {
             key: parseInt(`${user.id}`),
-            text: `${user.fullName}`,
+            text: `${user.fullName} ${
+              extra_text ? '(' + extra_text + ')' : ''
+            }`,
             value: parseInt(`${user.id}`)
           }
         })
@@ -86,11 +113,12 @@ class ShareItemModal extends Component {
             .filter(user => {
               if (
                 user.id ==
-                (activeItems[0]
-                  ? activeItems[0].type == 'file'
-                    ? activeItems[0].obj.folder.person.id
-                    : activeItems[0].obj.person.id
-                  : '') || this.state.options.some(usr => usr.key === user.id)
+                  (activeItems[0]
+                    ? activeItems[0].type == 'file'
+                      ? activeItems[0].obj.folder.person.id
+                      : activeItems[0].obj.person.id
+                    : '') ||
+                this.state.options.some(usr => usr.key === user.id)
               ) {
                 return false // skip
               }
@@ -120,7 +148,9 @@ class ShareItemModal extends Component {
                 : ``
               return {
                 key: parseInt(`${user.id}`),
-                text: `${user.fullName} ${extra_text ? '('+ extra_text + ')' : ''}`,
+                text: `${user.fullName} ${
+                  extra_text ? '(' + extra_text + ')' : ''
+                }`,
                 value: parseInt(`${user.id}`)
               }
             })
@@ -151,17 +181,30 @@ class ShareItemModal extends Component {
     }
   }
 
-  handleSuccess = () => {
-    const { close, setActiveItems } = this.props
+  handleSuccess = newOjb => {
     this.setState({ isLoading: false, success: true })
-    setActiveItems([])
+    const { activeItems, setActiveItems, currentFolder } = this.props
+    const oldCurrentFolder = Object.assign({}, currentFolder)
+    const oldfiles = oldCurrentFolder.files
+    const oldFolders = oldCurrentFolder.folders
     const id = this.props.currentFolder.id
-    this.props.getFolder(id)
+    if (activeItems[0].type == 'file') {
+      const ind = oldfiles.findIndex(ele => ele.id === newOjb.id)
+      oldfiles[ind].sharedUsers = newOjb.sharedUsers
+      oldCurrentFolder.files = oldfiles
+      setCurrentFolder(oldCurrentFolder)
+      setActiveItems([{ type: ITEM_TYPE.file, obj: newOjb }])
+    } else {
+      const ind = oldFolders.findIndex(ele => ele.id === newOjb.id)
+      oldFolders[ind].sharedUsers = newOjb.sharedUsers
+      oldCurrentFolder.folders = oldFolders
+      setCurrentFolder(oldCurrentFolder)
+      setActiveItems([{ type: ITEM_TYPE.folder, obj: newOjb }])
+    }
     toast({
       type: 'success',
       description: 'Shared succesfully!'
     })
-    close()
   }
 
   handleClick = () => {
@@ -171,7 +214,7 @@ class ShareItemModal extends Component {
     document.execCommand('copy')
   }
 
-  render() {
+  render () {
     const {
       activeItems,
       showModal,
@@ -363,7 +406,8 @@ const mapDispatchToProps = dispatch => {
     getFolder: id => {
       return dispatch(getFolder(id))
     },
-    setActiveItems: items => dispatch(setActiveItems(items))
+    setActiveItems: items => dispatch(setActiveItems(items)),
+    setCurrentFolder: data => dispatch(setCurrentFolder(data))
   }
 }
 
