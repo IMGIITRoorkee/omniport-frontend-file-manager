@@ -36,7 +36,9 @@ class ItemDetailsModal extends Component {
     const { active_item } = this.state
     return (
       <Modal
-        onClick={(e) => {e.stopPropagation()}}
+        onClick={e => {
+          e.stopPropagation()
+        }}
         size='tiny'
         open={showModal}
         closeOnEscape={true}
@@ -97,6 +99,10 @@ class ItemDetailsModal extends Component {
                   {currentFolder
                     ? currentFolder.type == 'shared'
                       ? 'shared_items'
+                      : currentFolder.type == 'starred'
+                      ? active_item ? active_item.type === 'file'
+                        ? active_item.obj.folder.folderName
+                        : active_item.obj.parent.folderName : ''
                       : currentFolder.folderName
                     : ''}
                 </Table.Cell>
