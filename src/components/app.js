@@ -36,7 +36,7 @@ class App extends Component {
   componentDidMount() {
     store.dispatch(whoami())
     this.props.getIsUserAdmin()
-    window.addEventListener('keypress', (event) => {
+    window.addEventListener('keydown', (event) => {
       if (event.key === EASTEREGG[this.state.index]) {
         this.setState({
           index: this.state.index + 1
@@ -70,7 +70,7 @@ class App extends Component {
             <div styleName="blocks.easter-egg">
               <iframe
                 src="https://www.youtube.com/embed/AnxrJiS5uKU?start=134&autoplay=1"
-                frameborder="0"
+                frameBorder="0"
                 allow="autoplay"
               >
               </iframe>
