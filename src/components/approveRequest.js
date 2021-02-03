@@ -84,21 +84,21 @@ class RequestCard extends Component {
               <>
                 Requesting{' '}
                 <strong>{formatStorage(request.additionalSpace)}</strong> in{' '}
-                <strong>{request.filemanagername}</strong>
+                <strong>{request.filemanager.filemanagerName}</strong>
               </>
             )}
             {request.dataRequestStatus === REQUEST_STATUS.ACCEPT && (
               <>
                 Request of{' '}
                 <strong>{formatStorage(request.additionalSpace)}</strong> in{' '}
-                <strong>{request.filemanagername} is Accepted</strong>
+                <strong>{request.filemanager.filemanagerName} is Accepted</strong>
               </>
             )}
             {request.dataRequestStatus === REQUEST_STATUS.REJECT && (
               <>
                 Request of{' '}
                 <strong>{formatStorage(request.additionalSpace)}</strong> in{' '}
-                <strong>{request.filemanagername} is Declined</strong>
+                <strong>{request.filemanager.filemanagerName} is Declined</strong>
               </>
             )}
           </Card.Description>
@@ -118,7 +118,7 @@ class RequestCard extends Component {
                 : 'Approve'}
             </Button>
             <Button
-              disabled={request.dataRequestStatus === REQUEST_STATUS.REJECT}
+              disabled={request.dataRequestStatus === REQUEST_STATUS.REJECT || request.dataRequestStatus == REQUEST_STATUS.ACCEPT}
               basic={request.dataRequestStatus !== REQUEST_STATUS.REJECT}
               color="red"
               onClick={() => {

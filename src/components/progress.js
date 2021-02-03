@@ -54,7 +54,6 @@ class Progress extends Component {
     }
 
     if (parents.length > 0) {
-      console.log(match)
       if (match.params.id === 'shared_with_me') {
         setParentFolders([])
       } else if (match.params.id === 'all_starred_items') {
