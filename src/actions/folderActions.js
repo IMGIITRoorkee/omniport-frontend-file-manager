@@ -358,3 +358,8 @@ export const getParentFolders = (id, callback = () => {}) => {
       })
   }
 }
+export const setParentFolders = (data, callback = () => {}) => {
+  return dispatch => {
+    dispatch(apiDispatch(GET_PARENT_FOLDERS, data))
+  }
+}
