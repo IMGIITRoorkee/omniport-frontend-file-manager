@@ -9,6 +9,7 @@ import {
 import axios from 'axios'
 import {
   Button,
+  Checkbox,
   Form,
   Icon,
   Input,
@@ -31,7 +32,7 @@ import file from './css/share-item.css'
 import { toast } from 'react-semantic-toasts'
 
 class ShareItemModal extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       isLoading: false,
@@ -39,6 +40,7 @@ class ShareItemModal extends Component {
       selectedUsersFinally: [],
       initialOptions: [],
       options: [],
+      shareWithAll: false,
       success: false
     }
   }
@@ -63,6 +65,7 @@ class ShareItemModal extends Component {
           selectedUsersFinally: users,
           initialOptions: init_options,
           options: init_options,
+          shareWithAll: activeItems[0].obj.shareWithAll,
           success: false
         })
       }
@@ -140,15 +143,18 @@ class ShareItemModal extends Component {
   handleSubmit = e => {
     e.preventDefault()
     this.setState({ isLoading: true })
+    const { shareWithAll } = this.state
     const { selectedUsersFinally } = this.state
     const { activeItems, editFileUsers, editFolderUsers } = this.props
-    if (selectedUsersFinally != []) {
+    if (selectedUsersFinally != [] || shareWithAll) {
       let formdata = new FormData()
-      if (selectedUsersFinally.length == 0) {
-        formdata.append('shared_users', selectedUsersFinally)
-      }
-      for (let i = 0; i < selectedUsersFinally.length; i++) {
-        formdata.append('shared_users', parseInt(selectedUsersFinally[i]))
+      formdata.append('share_with_all', shareWithAll)
+      if (shareWithAll || selectedUsersFinally.length == 0) {
+        formdata.append('shared_users', [])
+      } else {
+        for (let i = 0; i < selectedUsersFinally.length; i++) {
+          formdata.append('shared_users', parseInt(selectedUsersFinally[i]))
+        }
       }
       if (activeItems[0].type == 'file') {
         editFileUsers(activeItems[0].obj.id, formdata, this.handleSuccess)
@@ -191,7 +197,7 @@ class ShareItemModal extends Component {
     document.execCommand('copy')
   }
 
-  render() {
+  render () {
     const {
       activeItems,
       showModal,
@@ -199,7 +205,12 @@ class ShareItemModal extends Component {
       filemanager,
       isFilemanagerPublic
     } = this.props
-    const { isLoading, options, selectedUsersFinally } = this.state
+    const {
+      isLoading,
+      options,
+      selectedUsersFinally,
+      shareWithAll
+    } = this.state
     let link = ''
     const base_url = window.location.origin
     if (activeItems.length) {
@@ -263,14 +274,29 @@ class ShareItemModal extends Component {
               <Form.Select
                 search
                 multiple
-                placeholder='Type user name to search'
+                placeholder={
+                  shareWithAll
+                    ? 'Uncheck share with all to select users'
+                    : 'Type user name to search'
+                }
                 name='selectedUsers'
                 options={options}
+                disabled={shareWithAll}
                 value={selectedUsersFinally ? selectedUsersFinally : []}
                 onSearchChange={(e, data) => this.handleSearchChange(e, data)}
                 onChange={(e, data) => this.handleChange(e, data)}
                 minCharacters={1}
               />
+              )
+              <Form.Field>
+                <Checkbox
+                  onChange={(e, data) => {
+                    this.setState({ shareWithAll: data.checked })
+                  }}
+                  checked={shareWithAll}
+                  label='Share with all'
+                />
+              </Form.Field>
               <div styleName='file.share-description-div'>
                 <div styleName='file.share-div'>
                   {activeItems.length == 1 ? (
