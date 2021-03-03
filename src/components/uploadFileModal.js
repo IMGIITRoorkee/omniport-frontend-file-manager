@@ -2,7 +2,9 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { Modal, Icon, Button } from 'semantic-ui-react'
+import { FileIcon } from 'react-file-icon'
+import { Modal, Icon, Button, Card, Image, Grid } from 'semantic-ui-react'
+import { FILE_TYPES } from '../constants'
 
 import css from './css/uploadFileModal.css'
 
@@ -33,46 +35,61 @@ function MyDropzone(props) {
     .filter(file => file.type.match('image/'))
     .map((file, index) => {
       return (
-        <div key={index}>
-          <div styleName='css.thumb' key={file.name}>
-            <div>
-              <img src={file.preview} alt={file.name} styleName='css.image' />
-            </div>
-            <div style={{ position: 'relative' }}>
-              <Icon
-                name='remove'
-                styleName='css.thumb-cross'
-                circular
-                color='grey'
-                bordered={false}
-                disabled={isUploading}
-                onClick={() => {
-                  if (!isUploading) {
-                    const index = files.indexOf(file)
-                    const newFiles = files.slice(0)
-                    newFiles.splice(index, 1)
-                    URL.revokeObjectURL(file.preview)
-                    setFiles(newFiles)
-                  }
-                }}
-              />
-            </div>
-          </div>
-        </div>
+        <Card key={index} fluid>
+          <Card.Content styleName='css.card-content'>
+            <Grid styleName='css.card-grid' columns={2}>
+              <Grid.Row verticalAlign='middle' styleName='css.card-row'>
+                <Grid.Column width='7'>
+                  <Image src={file.preview} styleName='css.image-new' />
+                </Grid.Column>
+                <Grid.Column stretched>{file.name}</Grid.Column>
+              </Grid.Row>
+            </Grid>
+
+            <Icon
+              name='remove'
+              styleName='css.thumb-cross'
+              circular
+              color='grey'
+              bordered={false}
+              disabled={isUploading}
+              onClick={() => {
+                if (!isUploading) {
+                  const index = files.indexOf(file)
+                  const newFiles = files.slice(0)
+                  newFiles.splice(index, 1)
+                  URL.revokeObjectURL(file.preview)
+                  setFiles(newFiles)
+                }
+              }}
+            />
+          </Card.Content>
+        </Card>
       )
     })
 
   const fileNames = files
     .filter(file => !file.type.match('image/'))
     .map((file, index) => {
+      console.log(file)
+      const extension = file.name.split('.').pop()
       return (
-        <div key={index} styleName='css.file'>
-          <div style={{ paddingTop: '10px' }}>
-            <a href={file.url} styleName='css.fileName'>
-              {file.name}
-            </a>
-          </div>{' '}
-          <div style={{ position: 'relative' }}>
+        <Card key={index} fluid>
+          <Card.Content styleName='css.card-content'>
+            <Grid styleName='css.card-grid'>
+              <Grid.Row verticalAlign='middle' styleName='css.card-row'>
+                <Grid.Column width='4'>
+                  <div style={{ height: '3rem', width: '2.5rem' }}>
+                    <FileIcon
+                      {...FILE_TYPES[extension]}
+                      extension={extension}
+                    />
+                  </div>
+                </Grid.Column>
+                <Grid.Column stretched>{file.name}</Grid.Column>
+              </Grid.Row>
+            </Grid>
+
             <Icon
               name='remove'
               styleName='css.thumb-cross'
@@ -89,8 +106,8 @@ function MyDropzone(props) {
                 }
               }}
             />
-          </div>
-        </div>
+          </Card.Content>
+        </Card>
       )
     })
 
@@ -120,11 +137,21 @@ function MyDropzone(props) {
         </div>
       </Modal.Description>
       <Modal.Description>
-        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+        <div
+          style={{ overflowY: 'auto', overflowX: 'hidden', maxHeight: '50vh' }}
+        >
           {thumbs && thumbs.length !== 0 && (
-            <div styleName='css.thumb-container'>{thumbs}</div>
+            <div styleName='css.thumb-container'>
+              <Card.Group stackable itemsPerRow={2}>
+                {thumbs}
+              </Card.Group>
+            </div>
           )}
-          <div styleName='css.thumb-container'>{fileNames}</div>
+          <div styleName='css.thumb-container'>
+            <Card.Group stackable itemsPerRow={2}>
+              {fileNames}
+            </Card.Group>
+          </div>
         </div>
         {files.length > 0 && (
           <div>

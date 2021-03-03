@@ -32,7 +32,7 @@
   font-size: 0.625rem;
   background-color: white !important;
   border-radius: 100%;
-  left: -0.5rem;
+  right: -0.5rem;
   margin: 0;
   padding: 0;
   position: absolute;
@@ -58,4 +58,21 @@
   margin-bottom: 1rem;
   display: flex;
   flex-wrap: wrap;
+}
+
+.card-row{
+  height: 100%;
+  margin: auto;
+}
+.card-grid{
+  margin:auto !important;
+  height: 100%;
+}
+
+.card-content{
+  padding: 0 !important;
+}
+.image-new{
+  max-height: 100px;
+  max-width: 150px !important;
 }
