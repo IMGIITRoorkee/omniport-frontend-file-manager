@@ -30,16 +30,17 @@ class AppUpload extends Component {
     const { uploadFile, currentFolder } = this.props
     if (!checkFilesIfAlreadyExists(files, currentFolder, true)) {
       if (files.length) {
-        let formdata = new FormData()
-        for (const i in files) {
-          formdata.append(`upload`, files[i])
-          formdata.append('file_name', files[i].name)
-          formdata.append('extension', files[i].name.split('.').pop())
+        const mango = files.map(file => {
+          const formdata = new FormData()
+          formdata.append(`upload`, file)
+          formdata.append('file_name', file.name)
+          formdata.append('extension', file.name.split('.').pop())
           formdata.append('starred', false)
-          formdata.append('size', parseInt(files[i].size))
+          formdata.append('size', parseInt(file.size))
           formdata.append('folder', parseInt(currentFolder.id))
-        }
-        uploadFile(formdata, this.handleSuccess)
+          return formdata
+        })
+        uploadFile(mango, this.handleSuccess)
       }
     } else {
       toast({

@@ -3,7 +3,17 @@
 import React, { useEffect, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { FileIcon } from 'react-file-icon'
-import { Modal, Icon, Button, Card, Image, Grid } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import {
+  Modal,
+  Icon,
+  Button,
+  Card,
+  Image,
+  Grid,
+  Segment,
+  Progress
+} from 'semantic-ui-react'
 import { FILE_TYPES } from '../constants'
 
 import css from './css/uploadFileModal.css'
@@ -16,10 +26,10 @@ function MyDropzone(props) {
     acceptedFiles,
     handleUpload,
     isUploading,
-    label
+    label,
+    uploadingFileData
   } = props
   const [tempFiles, setTempFiles] = useState([])
-
   useEffect(() => {
     return () => {
       setFiles([])
@@ -40,9 +50,29 @@ function MyDropzone(props) {
             <Grid styleName='css.card-grid' columns={2}>
               <Grid.Row verticalAlign='middle' styleName='css.card-row'>
                 <Grid.Column width='7'>
-                  <Image src={file.preview} styleName='css.image-new' />
+                  <Image
+                    src={file.preview}
+                    styleName='css.image-new'
+                    disabled={
+                      uploadingFileData.length > index &&
+                      uploadingFileData[index].isUploaded == false
+                    }
+                  />
                 </Grid.Column>
-                <Grid.Column stretched>{file.name}</Grid.Column>
+                <Grid.Column width='9'>
+                  <Segment basic>
+                    {file.name}
+                    {uploadingFileData.length > index &&
+                      uploadingFileData[index].uploadingStarted == true && (
+                        <Progress
+                          label={`${uploadingFileData[index].progress}%`}
+                          percent={uploadingFileData[index].progress}
+                          size='tiny'
+                          color='blue'
+                        />
+                      )}
+                  </Segment>
+                </Grid.Column>
               </Grid.Row>
             </Grid>
 
@@ -86,7 +116,9 @@ function MyDropzone(props) {
                     />
                   </div>
                 </Grid.Column>
-                <Grid.Column stretched>{file.name}</Grid.Column>
+                <Grid.Column width='9'>
+                  <Segment>{file.name}</Segment>
+                </Grid.Column>
               </Grid.Row>
             </Grid>
 
@@ -185,4 +217,13 @@ const UploadFilesModal = props => {
   )
 }
 
-export default UploadFilesModal
+const mapStateToProps = state => {
+  return {
+    uploadingFileData: state.files.uploadingFileData
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return {}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(UploadFilesModal)
