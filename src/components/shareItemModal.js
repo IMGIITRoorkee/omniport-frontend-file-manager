@@ -287,7 +287,6 @@ class ShareItemModal extends Component {
                 onChange={(e, data) => this.handleChange(e, data)}
                 minCharacters={1}
               />
-              )
               <Form.Field>
                 <Checkbox
                   onChange={(e, data) => {

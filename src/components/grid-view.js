@@ -17,7 +17,7 @@ import {
 } from '../helpers/helperfunctions'
 
 class GridView extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.contextRef = React.createRef()
     this.state = {
@@ -35,7 +35,7 @@ class GridView extends Component {
     const {
       currentFolder,
       setActiveItems,
-      filemanagerIntegrationMode
+      filemanagerIntegrationMode,
     } = this.props
     if (filemanagerIntegrationMode) {
       window.opener.postMessage(
@@ -58,9 +58,26 @@ class GridView extends Component {
     }
   }
 
-  render() {
-    const { currentFolder } = this.props
+  render () {
+    const { currentFolder, showPublicSharedItems } = this.props
     const { isPopupOpen, isDetailViewOpen } = this.state
+    const folders =
+      currentFolder.type == 'shared'
+        ? currentFolder.folders.filter(folder => !folder.shareWithAll)
+        : currentFolder.folders
+    const public_folders =
+      currentFolder.type == 'shared'
+        ? currentFolder.folders.filter(folder => folder.shareWithAll)
+        : []
+    const files =
+      currentFolder.type == 'shared'
+        ? currentFolder.files.filter(file => !file.shareWithAll)
+        : currentFolder.files
+    const public_files =
+      currentFolder.type == 'shared'
+        ? currentFolder.files.filter(file => file.shareWithAll)
+        : []
+
     return (
       <div
         onContextMenu={e => {
@@ -76,46 +93,61 @@ class GridView extends Component {
         }}
       >
         <div styleName='grid.view-parent' onClick={this.handleReset}>
-          {currentFolder &&
-            currentFolder.folders &&
-            currentFolder.folders
-              .sort(
-                ({ id: previousID }, { id: currentID }) =>
-                  previousID - currentID
-              )
-              .map((folder, index) => (
-                <FolderCard
-                  key={index}
-                  index={index}
-                  id={folder.id}
-                  folderName={folder.folderName}
-                  isStarred={folder.starred}
-                  folder={folder}
-                />
-              ))}
+          {folders
+            .sort(
+              ({ id: previousID }, { id: currentID }) => previousID - currentID
+            )
+            .map((folder, index) => (
+              <FolderCard
+                key={index}
+                index={index}
+                id={folder.id}
+                folderName={folder.folderName}
+                isStarred={folder.starred}
+                folder={folder}
+              />
+            ))}
+          {showPublicSharedItems && public_folders
+            .sort(
+              ({ id: previousID }, { id: currentID }) => previousID - currentID
+            )
+            .map((folder, index) => (
+              <FolderCard
+                key={index}
+                index={index}
+                id={folder.id}
+                folderName={folder.folderName}
+                isStarred={folder.starred}
+                folder={folder}
+              />
+            ))}
         </div>
-        {currentFolder.folders.length == 0 ||
-        currentFolder.files.length == 0 ? (
-          ''
-        ) : (
-          <Divider />
-        )}
+        {(folders.length == 0 && public_folders.length==0) || (public_files.length==0 && files.length == 0) ? '' : <Divider />}
         <div styleName='grid.view-parent' onClick={this.handleReset}>
-          {currentFolder &&
-            currentFolder.files &&
-            currentFolder.files
-              .sort(
-                ({ id: previousID }, { id: currentID }) =>
-                  previousID - currentID
-              )
-              .map((file, index) => (
-                <Filecard
-                  key={index}
-                  index={index}
-                  file={file}
-                  handleDoubleClick={this.handleFileDoubleClick}
-                />
-              ))}
+          {files
+            .sort(
+              ({ id: previousID }, { id: currentID }) => previousID - currentID
+            )
+            .map((file, index) => (
+              <Filecard
+                key={index}
+                index={index}
+                file={file}
+                handleDoubleClick={this.handleFileDoubleClick}
+              />
+            ))}
+          {showPublicSharedItems && public_files
+            .sort(
+              ({ id: previousID }, { id: currentID }) => previousID - currentID
+            )
+            .map((file, index) => (
+              <Filecard
+                key={index}
+                index={index}
+                file={file}
+                handleDoubleClick={this.handleFileDoubleClick}
+              />
+            ))}
         </div>
         <PopupView
           contextRef={this.contextRef}
@@ -137,7 +169,8 @@ const mapStateToProps = state => {
   return {
     currentFolder: state.folders.selectedFolder,
     activeItems: state.items.activeItems,
-    filemanagerIntegrationMode: state.filemanagers.filemanagerIntegrationMode
+    filemanagerIntegrationMode: state.filemanagers.filemanagerIntegrationMode,
+    showPublicSharedItems: state.items.showPublicSharedItems,
   }
 }
 

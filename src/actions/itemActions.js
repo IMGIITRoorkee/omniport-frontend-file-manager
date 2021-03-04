@@ -6,7 +6,8 @@ import {
   ITEM_API_ERROR,
   VIEWING_SHARED_ITEMS,
   GET_STARRED_ITEMS_PENDING,
-  VIEWING_STARRED_ITEMS
+  VIEWING_STARRED_ITEMS,
+  SET_SHOW_PUBLIC_SHARED_ITEMS
 } from './itemActionType'
 import { GET_FOLDER } from './folderActionType'
 import { SHARED_ITEMS_APIS, FOLDER_APIS } from '../urls'
@@ -34,6 +35,11 @@ export const setActiveItems = items => {
 export const setActiveItem = item => {
   return dispatch => {
     dispatch(apiDispatch(SET_ACTIVE_ITEM, item))
+  }
+}
+export const setShowPublicSharedItems = data => {
+  return dispatch => {
+    dispatch(apiDispatch(SET_SHOW_PUBLIC_SHARED_ITEMS, data))
   }
 }
 export const tabulation = data => {
