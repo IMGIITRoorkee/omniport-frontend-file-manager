@@ -7,7 +7,8 @@ import {
   UPLOAD_FILE_PENDING,
   GET_FILE_DETAILS_PENDING,
   DELETE_FILE_PENDING,
-  UPDATE_FILE_PENDING
+  UPDATE_FILE_PENDING,
+  UPLOADING_FILE_DATA
 } from '../actions/fileActionType'
 
 const initialPendingState = {
@@ -24,7 +25,8 @@ const initialState = {
   addedFile: {},
   Files: [],
   uploadedFile: null,
-  activeFile: {}
+  activeFile: {},
+  uploadingFileData: []
 }
 const fileReducer = (state = initialState, action) => {
   const { type, payload, error } = action
@@ -37,6 +39,8 @@ const fileReducer = (state = initialState, action) => {
       return { ...state, updateFilePending: payload }
     case DELETE_FILE_PENDING:
       return { ...state, deleteFilePending: payload }
+    case UPLOADING_FILE_DATA:
+      return { ...state, uploadingFileData: payload }
     case FILE_API_ERROR:
       return { ...state, error: error }
     default:

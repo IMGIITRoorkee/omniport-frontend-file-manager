@@ -12,7 +12,8 @@ import {
   UPLOAD_FILE_PENDING,
   GET_FILE_DETAILS_PENDING,
   DELETE_FILE_PENDING,
-  UPDATE_FILE_PENDING
+  UPDATE_FILE_PENDING,
+  UPLOADING_FILE_DATA
 } from './fileActionType'
 
 const apiDispatch = (actionType = '', data) => {
@@ -177,16 +178,36 @@ export const bulkDeleteFiles = (obj, callback = () => {}) => {
   }
 }
 
-export const uploadFile = (data, callback) => {
-  const url = `${FILE_APIS.fileItem}/bulk_create/`
-  return dispatch => {
-    dispatch(apiDispatch(UPLOAD_FILE_PENDING, true))
+const mango = (dispatch, getState, files, callback) => {
+  const url = `${FILE_APIS.fileItem}/`
+  const updateProgress = (fileId, dispatch, getState) => progressEvent => {
+    const filesUploading = getState().files.uploadingFileData
+    const newData = Array.from(filesUploading)
+    let num = (progressEvent.loaded * 100) / progressEvent.total
+    let newProgress = Math.round(num * 100) / 100
+    newData[fileId].progress = newProgress
+    dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
+  }
+  const filesUploading = getState().files.uploadingFileData
+  const nextFile = filesUploading.findIndex(
+    elem => elem.uploadingStarted == false
+  )
+  let config = {
+    onUploadProgress: updateProgress(nextFile, dispatch, getState)
+  }
+  if (nextFile > -1) {
+    let filesUploading = getState().files.uploadingFileData
+    let newData = Array.from(filesUploading)
+    newData[nextFile].uploadingStarted = true
+    dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
     apiClient
-      .post(url, data)
+      .post(url, files[nextFile], config)
       .then(res => {
-        dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
-        dispatch(apiDispatch(UPLOAD_FILE, res.data))
-        callback()
+        const filesUploading = getState().files.uploadingFileData
+        const newData = Array.from(filesUploading)
+        newData[nextFile].isUploaded = true
+        dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
+        mango(dispatch, getState, files, callback)
       })
       .catch(error => {
         dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
@@ -196,5 +217,26 @@ export const uploadFile = (data, callback) => {
           description: error.response.data
         })
       })
+  } else {
+    dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
+    callback()
+  }
+}
+
+export const uploadFile = (files, callback) => {
+  return (dispatch, getState) => {
+    let temp = [0, 2]
+    dispatch(apiDispatch(UPLOAD_FILE_PENDING, true))
+    const initialData = files.map((elem, index) => ({
+      index,
+      isUploaded: false,
+      uploadingStarted: false,
+      progress: 0
+    }))
+    dispatch(apiDispatch(UPLOADING_FILE_DATA, initialData))
+
+    Array.from(Array(Math.min(5, files.length))).forEach(async (a, index) => {
+      mango(dispatch, getState, files, callback)
+    })
   }
 }
