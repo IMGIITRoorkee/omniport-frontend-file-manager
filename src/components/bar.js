@@ -12,7 +12,8 @@ import {
 import {
   getStarredItems,
   tabulation,
-  setActiveItems
+  setActiveItems,
+  setShowPublicSharedItems
 } from '../actions/itemActions'
 import Upload from './app-upload'
 import ConfirmModal from './confirmModal'
@@ -100,6 +101,11 @@ class Bar extends Component {
     setActiveItems([])
   }
 
+  toggleShowPublicSharedItems = data => {
+    const {setShowPublicSharedItems} = this.props
+    setShowPublicSharedItems(data)
+  }
+
   handleDelete = () => {
     const {
       deleteFolder,
@@ -152,7 +158,8 @@ class Bar extends Component {
       currentFolder,
       viewingSharedItems,
       viewingStarredItems,
-      isFilemanagerPublic
+      isFilemanagerPublic,
+      showPublicSharedItems
     } = this.props
     const {
       isDelete,
@@ -316,6 +323,18 @@ class Bar extends Component {
               />
             </div>
           )}
+          {currentFolder.type=='shared' && (
+            <div styleName='file.crud-icon'>
+              <Button
+                onClick={() => this.toggleShowPublicSharedItems(!showPublicSharedItems)}
+                icon={showPublicSharedItems ? 'eye' : 'eye slash'}
+                color='blue'
+                title={showPublicSharedItems ? 'Hide public folders and files' : 'Show public folders and files'}
+                inverted
+                circular
+              />
+            </div>
+          )}
           <div styleName='file.crud-icon'>
             <Button
               circular
@@ -381,7 +400,8 @@ const mapStateToProps = state => {
     activeItems: state.items.activeItems,
     viewingSharedItems: state.items.viewingSharedItems,
     viewingStarredItems: state.items.viewingStarredItems,
-    isFilemanagerPublic: state.filemanagers.isFilemanagerPublic
+    isFilemanagerPublic: state.filemanagers.isFilemanagerPublic,
+    showPublicSharedItems : state.items.showPublicSharedItems
   }
 }
 
@@ -418,6 +438,9 @@ const mapDispatchToProps = dispatch => {
     },
     bulkDeleteFiles: data => {
       dispatch(bulkDeleteFiles(data))
+    },
+    setShowPublicSharedItems: data => {
+      dispatch(setShowPublicSharedItems(data))
     }
   }
 }
