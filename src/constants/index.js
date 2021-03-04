@@ -464,3 +464,10 @@ export const creators = [
     link: 'https://github.com/ayu023ban'
   }
 ]
+
+export const fileUploadingStatus = Object.freeze({
+  NOT_STARTED: 'notStarted',
+  STARTED: 'started',
+  FINISHED: 'finished',
+  ERROR_OCCURED: 'errorOccured'
+})

@@ -12,9 +12,11 @@ import {
   Image,
   Grid,
   Segment,
-  Progress
+  Progress,
+  Message
 } from 'semantic-ui-react'
-import { FILE_TYPES } from '../constants'
+import { fileUploadingStatus, FILE_TYPES } from '../constants'
+import { createId } from '../helpers/helperfunctions'
 
 import css from './css/uploadFileModal.css'
 
@@ -43,9 +45,9 @@ function MyDropzone(props) {
 
   const thumbs = files
     .filter(file => file.type.match('image/'))
-    .map((file, index) => {
+    .map(file => {
       return (
-        <Card key={index} fluid>
+        <Card key={file.unique_id} fluid>
           <Card.Content styleName='css.card-content'>
             <Grid styleName='css.card-grid' columns={2}>
               <Grid.Row verticalAlign='middle' styleName='css.card-row'>
@@ -54,45 +56,65 @@ function MyDropzone(props) {
                     src={file.preview}
                     styleName='css.image-new'
                     disabled={
-                      uploadingFileData.length > index &&
-                      uploadingFileData[index].isUploaded == false
+                      uploadingFileData[file.unique_id] !== undefined &&
+                      uploadingFileData[file.unique_id].status !==
+                        fileUploadingStatus.FINISHED
                     }
                   />
                 </Grid.Column>
                 <Grid.Column width='9'>
                   <Segment basic>
                     {file.name}
-                    {uploadingFileData.length > index &&
-                      uploadingFileData[index].uploadingStarted == true && (
-                        <Progress
-                          label={`${uploadingFileData[index].progress}%`}
-                          percent={uploadingFileData[index].progress}
-                          size='tiny'
-                          color='blue'
-                        />
-                      )}
+                    {uploadingFileData[file.unique_id] !== undefined &&
+                    uploadingFileData[file.unique_id].status ===
+                      fileUploadingStatus.STARTED ? (
+                      <Progress
+                        label={`${uploadingFileData[file.unique_id].progress}%`}
+                        percent={uploadingFileData[file.unique_id].progress}
+                        size='tiny'
+                        color='blue'
+                      />
+                    ) : uploadingFileData[file.unique_id] !== undefined &&
+                      uploadingFileData[file.unique_id].status ===
+                        fileUploadingStatus.NOT_STARTED ? (
+                      <div>
+                        <em>In Queue...</em>
+                      </div>
+                    ) : uploadingFileData[file.unique_id] !== undefined &&
+                      uploadingFileData[file.unique_id].status ===
+                        fileUploadingStatus.ERROR_OCCURED ? (
+                      <Message compact error>
+                        {'Error in Uploading File'}
+                      </Message>
+                    ) : uploadingFileData[file.unique_id] !== undefined &&
+                      uploadingFileData[file.unique_id].status ===
+                        fileUploadingStatus.FINISHED ? (
+                      <Message compact success>
+                        {'File uploaded successfully'}
+                      </Message>
+                    ) : null}
                   </Segment>
                 </Grid.Column>
               </Grid.Row>
             </Grid>
-
-            <Icon
-              name='remove'
-              styleName='css.thumb-cross'
-              circular
-              color='grey'
-              bordered={false}
-              disabled={isUploading}
-              onClick={() => {
-                if (!isUploading) {
-                  const index = files.indexOf(file)
-                  const newFiles = files.slice(0)
-                  newFiles.splice(index, 1)
-                  URL.revokeObjectURL(file.preview)
-                  setFiles(newFiles)
-                }
-              }}
-            />
+            {!isUploading && (
+              <Icon
+                name='remove'
+                styleName='css.thumb-cross'
+                circular
+                color='grey'
+                bordered={false}
+                onClick={() => {
+                  if (!isUploading) {
+                    const index = files.indexOf(file)
+                    const newFiles = files.slice(0)
+                    newFiles.splice(index, 1)
+                    URL.revokeObjectURL(file.preview)
+                    setFiles(newFiles)
+                  }
+                }}
+              />
+            )}
           </Card.Content>
         </Card>
       )
@@ -100,11 +122,10 @@ function MyDropzone(props) {
 
   const fileNames = files
     .filter(file => !file.type.match('image/'))
-    .map((file, index) => {
-      console.log(file)
+    .map(file => {
       const extension = file.name.split('.').pop()
       return (
-        <Card key={index} fluid>
+        <Card key={file.unique_id} fluid>
           <Card.Content styleName='css.card-content'>
             <Grid styleName='css.card-grid'>
               <Grid.Row verticalAlign='middle' styleName='css.card-row'>
@@ -117,27 +138,58 @@ function MyDropzone(props) {
                   </div>
                 </Grid.Column>
                 <Grid.Column width='9'>
-                  <Segment>{file.name}</Segment>
+                  <Segment basic>
+                    {file.name}
+                    {uploadingFileData[file.unique_id] !== undefined &&
+                    uploadingFileData[file.unique_id].status ===
+                      fileUploadingStatus.STARTED ? (
+                      <Progress
+                        label={`${uploadingFileData[file.unique_id].progress}%`}
+                        percent={uploadingFileData[file.unique_id].progress}
+                        size='tiny'
+                        color='blue'
+                      />
+                    ) : uploadingFileData[file.unique_id] !== undefined &&
+                      uploadingFileData[file.unique_id].status ===
+                        fileUploadingStatus.NOT_STARTED ? (
+                      <div>
+                        <em>In Queue...</em>
+                      </div>
+                    ) : uploadingFileData[file.unique_id] !== undefined &&
+                      uploadingFileData[file.unique_id].status ===
+                        fileUploadingStatus.ERROR_OCCURED ? (
+                      <Message compact error>
+                        {'Error in Uploading File'}
+                      </Message>
+                    ) : uploadingFileData[file.unique_id] !== undefined &&
+                      uploadingFileData[file.unique_id].status ===
+                        fileUploadingStatus.FINISHED ? (
+                      <Message compact success>
+                        {'File uploaded successfully'}
+                      </Message>
+                    ) : null}
+                  </Segment>
                 </Grid.Column>
               </Grid.Row>
             </Grid>
-
-            <Icon
-              name='remove'
-              styleName='css.thumb-cross'
-              circular
-              color='grey'
-              disabled={isUploading}
-              onClick={() => {
-                if (!isUploading) {
-                  const index = files.indexOf(file)
-                  const newFiles = files.slice(0)
-                  newFiles.splice(index, 1)
-                  URL.revokeObjectURL(file.preview)
-                  setFiles(newFiles)
-                }
-              }}
-            />
+            {!isUploading && (
+              <Icon
+                name='remove'
+                styleName='css.thumb-cross'
+                circular
+                color='grey'
+                disabled={isUploading}
+                onClick={() => {
+                  if (!isUploading) {
+                    const index = files.indexOf(file)
+                    const newFiles = files.slice(0)
+                    newFiles.splice(index, 1)
+                    URL.revokeObjectURL(file.preview)
+                    setFiles(newFiles)
+                  }
+                }}
+              />
+            )}
           </Card.Content>
         </Card>
       )
@@ -147,7 +199,8 @@ function MyDropzone(props) {
     setTempFiles(
       acceptedFiles.map(file => {
         return Object.assign(file, {
-          preview: URL.createObjectURL(file)
+          preview: URL.createObjectURL(file),
+          unique_id: createId()
         })
       })
     )
@@ -161,24 +214,24 @@ function MyDropzone(props) {
 
   return (
     <Modal.Content>
-      <Modal.Description>
-        <div {...getRootProps()} styleName='css.dropzone'>
-          <input {...getInputProps()} />
-          <Icon name='cloud upload' color='grey' />
-          {label}
-        </div>
-      </Modal.Description>
+      {!isUploading && (
+        <Modal.Description>
+          <div {...getRootProps()} styleName='css.dropzone'>
+            <input {...getInputProps()} />
+            <Icon name='cloud upload' color='grey' />
+            {label}
+          </div>
+        </Modal.Description>
+      )}
       <Modal.Description>
         <div
           style={{ overflowY: 'auto', overflowX: 'hidden', maxHeight: '50vh' }}
         >
-          {thumbs && thumbs.length !== 0 && (
-            <div styleName='css.thumb-container'>
-              <Card.Group stackable itemsPerRow={2}>
-                {thumbs}
-              </Card.Group>
-            </div>
-          )}
+          <div styleName='css.thumb-container'>
+            <Card.Group stackable itemsPerRow={2}>
+              {thumbs}
+            </Card.Group>
+          </div>
           <div styleName='css.thumb-container'>
             <Card.Group stackable itemsPerRow={2}>
               {fileNames}
@@ -211,7 +264,16 @@ const UploadFilesModal = props => {
   } = props
 
   return (
-    <Modal open={show} centered onClose={onHide} closeIcon>
+    <Modal
+      open={show}
+      centered
+      onClose={() => {
+        if (!props.isUploading) {
+          onHide
+        }
+      }}
+      closeIcon={!props.isUploading}
+    >
       <MyDropzone label={label} {...restProps} />
     </Modal>
   )
@@ -223,7 +285,5 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {}
-}
+const mapDispatchToProps = () => ({})
 export default connect(mapStateToProps, mapDispatchToProps)(UploadFilesModal)

@@ -2,11 +2,10 @@ import { toast } from 'react-semantic-toasts'
 
 import apiClient from '../helpers/apiClient'
 import { FILE_APIS, FOLDER_APIS } from '../urls'
-import { getFolder, setCurrentFolder } from './folderActions'
+import { setCurrentFolder } from './folderActions'
 import {
   GET_ALL_FILES,
   FILE_API_ERROR,
-  UPLOAD_FILE,
   GET_FILE_DETAILS,
   GET_ALL_FILES_PENDING,
   UPLOAD_FILE_PENDING,
@@ -15,6 +14,7 @@ import {
   UPDATE_FILE_PENDING,
   UPLOADING_FILE_DATA
 } from './fileActionType'
+import { fileUploadingStatus } from '../constants'
 
 const apiDispatch = (actionType = '', data) => {
   return {
@@ -178,65 +178,122 @@ export const bulkDeleteFiles = (obj, callback = () => {}) => {
   }
 }
 
-const mango = (dispatch, getState, files, callback) => {
-  const url = `${FILE_APIS.fileItem}/`
-  const updateProgress = (fileId, dispatch, getState) => progressEvent => {
-    const filesUploading = getState().files.uploadingFileData
-    const newData = Array.from(filesUploading)
-    let num = (progressEvent.loaded * 100) / progressEvent.total
-    let newProgress = Math.round(num * 100) / 100
-    newData[fileId].progress = newProgress
-    dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
-  }
+// code to dynamically send file create request and track progress
+
+/**
+ * updateProgress: it updates progress of each file being uploading
+ */
+const updateProgress = (fileId, dispatch, getState) => progressEvent => {
   const filesUploading = getState().files.uploadingFileData
-  const nextFile = filesUploading.findIndex(
-    elem => elem.uploadingStarted == false
-  )
-  let config = {
-    onUploadProgress: updateProgress(nextFile, dispatch, getState)
+  const newData = Object.assign({}, filesUploading)
+  const newProgressObject = Object.assign({}, newData[fileId])
+  let num = (progressEvent.loaded * 100) / progressEvent.total
+  let newProgress = Math.round(num * 100) / 100
+  newProgressObject.progress = newProgress
+  newData[fileId] = newProgressObject
+  dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
+}
+
+/**
+ * afterRequest: handles after request is completed or error is occured
+ */
+const afterRequest = ({
+  getState,
+  status,
+  dispatch,
+  callback,
+  postFileDynamically,
+  nextFile,
+  files
+}) => {
+  const filesUploading = getState().files.uploadingFileData
+  const newData = Object.assign({}, filesUploading)
+  newData[nextFile].status = status
+  dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
+  if (
+    Object.values(newData).reduce(
+      (a, b) =>
+        a &&
+        (b.status === fileUploadingStatus.FINISHED ||
+          b.status === fileUploadingStatus.ERROR_OCCURED),
+      true
+    )
+  ) {
+    dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
+    dispatch(apiDispatch(UPLOADING_FILE_DATA, {}))
+    callback()
   }
-  if (nextFile > -1) {
+  postFileDynamically(dispatch, getState, files, callback)
+}
+
+/**
+ *
+ * postFileDynamically: make create request of files which previously has not been made recursively
+ */
+const postFileDynamically = (dispatch, getState, files, callback) => {
+  const url = `${FILE_APIS.fileItem}/`
+
+  const filesUploading = getState().files.uploadingFileData
+  const nextFile = Object.keys(filesUploading).find(
+    elem => filesUploading[elem].status === fileUploadingStatus.NOT_STARTED
+  )
+
+  if (nextFile !== undefined) {
+    let config = {
+      onUploadProgress: updateProgress(nextFile, dispatch, getState)
+    }
     let filesUploading = getState().files.uploadingFileData
-    let newData = Array.from(filesUploading)
-    newData[nextFile].uploadingStarted = true
+    let newData = Object.assign({}, filesUploading)
+    newData[nextFile].status = fileUploadingStatus.STARTED
     dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
+    const fileToUpload = files.findIndex(
+      file => file.get('unique_id') === nextFile
+    )
     apiClient
-      .post(url, files[nextFile], config)
-      .then(res => {
-        const filesUploading = getState().files.uploadingFileData
-        const newData = Array.from(filesUploading)
-        newData[nextFile].isUploaded = true
-        dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
-        mango(dispatch, getState, files, callback)
-      })
-      .catch(error => {
-        dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
-        dispatch(apiError(error))
-        toast({
-          type: 'error',
-          description: error.response.data
+      .post(url, files[fileToUpload], config)
+      .then(() => {
+        afterRequest({
+          getState,
+          status: fileUploadingStatus.FINISHED,
+          dispatch,
+          callback,
+          postFileDynamically,
+          nextFile,
+          files
         })
       })
-  } else {
-    dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
-    callback()
+      .catch(() => {
+        afterRequest({
+          getState,
+          status: fileUploadingStatus.ERROR_OCCURED,
+          dispatch,
+          callback,
+          postFileDynamically,
+          nextFile,
+          files
+        })
+      })
   }
 }
 
+/**
+ * uploadFiles: Action to upload multiple files
+ */
+
 export const uploadFile = (files, callback) => {
   return (dispatch, getState) => {
-    let temp = [0, 2]
     dispatch(apiDispatch(UPLOAD_FILE_PENDING, true))
-    const initialData = files.map((elem, index) => ({
-      index,
-      isUploaded: false,
-      uploadingStarted: false,
-      progress: 0
-    }))
+    let initialData = {}
+    files.forEach((elem, index) => {
+      initialData[elem.get('unique_id')] = {
+        progress: 0,
+        status: fileUploadingStatus.NOT_STARTED
+      }
+    })
     dispatch(apiDispatch(UPLOADING_FILE_DATA, initialData))
 
-    Array.from(Array(Math.min(5, files.length))).forEach(async (a, index) => {
-      mango(dispatch, getState, files, callback)
+    Array.from(Array(Math.min(5, files.length))).forEach(() => {
+      postFileDynamically(dispatch, getState, files, callback)
     })
   }
 }
