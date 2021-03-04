@@ -26,7 +26,7 @@ const initialState = {
   Files: [],
   uploadedFile: null,
   activeFile: {},
-  uploadingFileData: []
+  uploadingFileData: {}
 }
 const fileReducer = (state = initialState, action) => {
   const { type, payload, error } = action

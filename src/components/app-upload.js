@@ -38,6 +38,7 @@ class AppUpload extends Component {
           formdata.append('starred', false)
           formdata.append('size', parseInt(file.size))
           formdata.append('folder', parseInt(currentFolder.id))
+          formdata.append('unique_id', file.unique_id)
           return formdata
         })
         uploadFile(mango, this.handleSuccess)
