@@ -21,7 +21,7 @@ import { editFolder, setCurrentFolder } from '../actions/folderActions'
 import MultipleImageModal from './multipleImageModal'
 
 class TabularView extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       isPopupOpen: false,
@@ -163,14 +163,31 @@ class TabularView extends Component {
     }
   }
 
-  render() {
+  render () {
     const {
       currentFolder,
       activeItems,
       viewingSharedItems,
-      viewingStarredItems
+      viewingStarredItems,
+      showPublicSharedItems
     } = this.props
     const { isPopupOpen, isDetailViewOpen } = this.state
+    const folders =
+      currentFolder.type == 'shared'
+        ? currentFolder.folders.filter(folder => !folder.shareWithAll)
+        : currentFolder.folders
+    const public_folders =
+      currentFolder.type == 'shared'
+        ? currentFolder.folders.filter(folder => folder.shareWithAll)
+        : []
+    const files =
+      currentFolder.type == 'shared'
+        ? currentFolder.files.filter(file => !file.shareWithAll)
+        : currentFolder.files
+    const public_files =
+      currentFolder.type == 'shared'
+        ? currentFolder.files.filter(file => file.shareWithAll)
+        : []
     return (
       <div
         onContextMenu={e => {
@@ -198,9 +215,56 @@ class TabularView extends Component {
           </Table.Header>
 
           <Table.Body>
-            {currentFolder &&
-              currentFolder.folders &&
-              currentFolder.folders
+            {folders
+              .sort(
+                ({ id: previousID }, { id: currentID }) =>
+                  previousID - currentID
+              )
+              .map((folder, index) => (
+                <Table.Row
+                  key={index}
+                  active={activeItems.some(elem => elem.obj.id == folder.id)}
+                  styleName='index.table-row'
+                  onClick={this.handleFolderClick(folder)}
+                  onDoubleClick={this.handleFolderDoubleClick(folder)}
+                  onContextMenu={this.handleFolderContextSelect(folder)}
+                >
+                  <Table.Cell>
+                    <Icon size='large' name='folder open' color='grey' />
+                    {folder.folderName}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {getModifiedDate(folder.datetimeModified)}
+                  </Table.Cell>
+                  <Table.Cell>{formatStorage(folder.contentSize)}</Table.Cell>
+                  {!viewingSharedItems && (
+                    <Table.Cell>
+                      {folder.starred ? (
+                        <Icon
+                          name='star'
+                          title='Remove from starred'
+                          onClick={() =>
+                            this.handleStarClick('folder', folder.id, true)
+                          }
+                        />
+                      ) : (
+                        <Icon
+                          name='star outline'
+                          title='Add to starred'
+                          onClick={() =>
+                            this.handleStarClick('folder', folder.id, false)
+                          }
+                        />
+                      )}
+                    </Table.Cell>
+                  )}
+                  {viewingSharedItems && (
+                    <Table.Cell>{folder.person.fullName}</Table.Cell>
+                  )}
+                </Table.Row>
+              ))}
+            {showPublicSharedItems &&
+              public_folders
                 .sort(
                   ({ id: previousID }, { id: currentID }) =>
                     previousID - currentID
@@ -249,9 +313,73 @@ class TabularView extends Component {
                   </Table.Row>
                 ))}
 
-            {currentFolder &&
-              currentFolder.files &&
-              currentFolder.files
+            {files
+              .sort(
+                ({ id: previousID }, { id: currentID }) =>
+                  previousID - currentID
+              )
+              .map((file, index) => (
+                <Table.Row
+                  key={index}
+                  active={activeItems.some(elem => elem.obj.id == file.id)}
+                  styleName='index.table-row'
+                  onClick={this.handleFileClick(file)}
+                  onContextMenu={this.handleFileContextSelect(file)}
+                  onDoubleClick={this.handleFileDoubleClick(file)}
+                >
+                  <Table.Cell>
+                    <div styleName='index.table-cell-file-icon-name'>
+                      <div styleName='index.table-cell-file-icon'>
+                        {!IMAGE_EXTENSIONS.includes(file.extension) ? (
+                          <FileIcon
+                            {...FILE_TYPES[file.extension]}
+                            extension={file.extension}
+                          />
+                        ) : (
+                          <img
+                            src={file.upload}
+                            alt={file.name}
+                            styleName='index.image'
+                          />
+                        )}
+                      </div>
+                      <div styleName='index.table-cell-file-name'>
+                        {file.fileName}
+                      </div>
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    {getModifiedDate(file.datetimeModified)}
+                  </Table.Cell>
+                  <Table.Cell>{formatStorage(file.size)}</Table.Cell>
+                  {!viewingSharedItems && (
+                    <Table.Cell>
+                      {file.starred ? (
+                        <Icon
+                          name='star'
+                          title='Remove from starred'
+                          onClick={() =>
+                            this.handleStarClick('file', file.id, true)
+                          }
+                        />
+                      ) : (
+                        <Icon
+                          name='star outline'
+                          title='Add to starred'
+                          onClick={() =>
+                            this.handleStarClick('file', file.id, false)
+                          }
+                        />
+                      )}
+                    </Table.Cell>
+                  )}
+                  {viewingSharedItems && (
+                    <Table.Cell>{file.folder.person.fullName}</Table.Cell>
+                  )}
+                </Table.Row>
+              ))}
+            {showPublicSharedItems &&
+              public_files
                 .sort(
                   ({ id: previousID }, { id: currentID }) =>
                     previousID - currentID
@@ -341,7 +469,8 @@ const mapStateToProps = state => {
     activeItems: state.items.activeItems,
     viewingSharedItems: state.items.viewingSharedItems,
     viewingStarredItems: state.items.viewingStarredItems,
-    filemanagerIntegrationMode: state.filemanagers.filemanagerIntegrationMode
+    filemanagerIntegrationMode: state.filemanagers.filemanagerIntegrationMode,
+    showPublicSharedItems: state.items.showPublicSharedItems
   }
 }
 
