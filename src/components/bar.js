@@ -50,9 +50,6 @@ class Bar extends Component {
   }
   componentDidUpdate(prevProps) {
     const { activeItems, currentFolder } = this.props
-    activeItems &&
-    activeItems[0] &&
-    activeItems[0].obj &&
     JSON.stringify(prevProps.activeItems) !== JSON.stringify(activeItems)
       ? this.setState({
           selectAllItems: currentFolder.files.length + currentFolder.folders.length === activeItems.length
