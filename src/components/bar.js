@@ -6,7 +6,8 @@ import {
   Icon,
   Modal,
   Dropdown,
-  TabPane
+  TabPane,
+  Checkbox
 } from 'semantic-ui-react'
 
 import {
@@ -35,7 +36,7 @@ import ItemDetailsModal from './item-detail-modal'
 import { handleDownload } from '../helpers/helperfunctions'
 
 class Bar extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       isDelete: false,
@@ -43,8 +44,20 @@ class Bar extends Component {
       showFolderFormModal: false,
       showShareItemModal: false,
       showDetailsModal: false,
+      selectAllItems: false,
       editFolder: {}
     }
+  }
+  componentDidUpdate(prevProps) {
+    const { activeItems, currentFolder } = this.props
+    activeItems &&
+    activeItems[0] &&
+    activeItems[0].obj &&
+    JSON.stringify(prevProps.activeItems) !== JSON.stringify(activeItems)
+      ? this.setState({
+          selectAllItems: currentFolder.files.length + currentFolder.folders.length === activeItems.length
+        })
+      : ''
   }
   handleStarClick = e => {
     e.stopPropagation()
@@ -101,8 +114,33 @@ class Bar extends Component {
     setActiveItems([])
   }
 
+  selectAllItems = (data) => {
+    const { currentFolder, setActiveItems, activeItems } = this.props
+    if (data) {
+      this.setState({ selectAllItems: data })
+      let newActiveItems = []
+      setActiveItems([])
+      currentFolder.files.map(file => {
+        newActiveItems = [
+          ...newActiveItems,
+          { type: ITEM_TYPE.file, obj: file }
+        ]
+      })
+      currentFolder.folders.map(folder => {
+        newActiveItems = [
+          ...newActiveItems,
+          { type: ITEM_TYPE.folder, obj: folder }
+        ]
+      })
+      setActiveItems([...newActiveItems])
+    } else {
+      this.setState({ selectAllItems: data })
+      setActiveItems([])
+    }
+  }
+
   toggleShowPublicSharedItems = data => {
-    const {setShowPublicSharedItems} = this.props
+    const { setShowPublicSharedItems } = this.props
     setShowPublicSharedItems(data)
   }
 
@@ -151,7 +189,7 @@ class Bar extends Component {
       isDelete: false
     })
   }
-  render() {
+  render () {
     const {
       tabular,
       activeItems,
@@ -167,7 +205,8 @@ class Bar extends Component {
       showFolderFormModal,
       editFolder,
       showShareItemModal,
-      showDetailsModal
+      showDetailsModal,
+      selectAllItems
     } = this.state
     return (
       <Segment styleName='file.navbar'>
@@ -323,18 +362,37 @@ class Bar extends Component {
               />
             </div>
           )}
-          {currentFolder.type=='shared' && (
+          {currentFolder.type == 'shared' && (
             <div styleName='file.crud-icon'>
               <Button
-                onClick={() => this.toggleShowPublicSharedItems(!showPublicSharedItems)}
+                onClick={() =>
+                  this.toggleShowPublicSharedItems(!showPublicSharedItems)
+                }
                 icon={showPublicSharedItems ? 'eye' : 'eye slash'}
                 color='blue'
-                title={showPublicSharedItems ? 'Hide public folders and files' : 'Show public folders and files'}
+                title={
+                  showPublicSharedItems
+                    ? 'Hide public folders and files'
+                    : 'Show public folders and files'
+                }
                 inverted
                 circular
               />
             </div>
           )}
+          {currentFolder.type!='shared' && <div styleName='file.crud-icon'>
+            <Button
+              icon
+              labelPosition='left'
+              onClick={e => {
+                e.stopPropagation()
+                this.selectAllItems(!this.state.selectAllItems)
+              }}
+            >
+              <Icon name={this.state.selectAllItems ? 'check' : 'close'} color={this.state.selectAllItems ? 'green' : ''} />
+              Select All
+            </Button>
+          </div>}
           <div styleName='file.crud-icon'>
             <Button
               circular
@@ -401,7 +459,7 @@ const mapStateToProps = state => {
     viewingSharedItems: state.items.viewingSharedItems,
     viewingStarredItems: state.items.viewingStarredItems,
     isFilemanagerPublic: state.filemanagers.isFilemanagerPublic,
-    showPublicSharedItems : state.items.showPublicSharedItems
+    showPublicSharedItems: state.items.showPublicSharedItems
   }
 }
 
