@@ -228,12 +228,8 @@ function MyDropzone(props) {
           style={{ overflowY: 'auto', overflowX: 'hidden', maxHeight: '50vh' }}
         >
           <div styleName='css.thumb-container'>
-            <Card.Group stackable itemsPerRow={2}>
+            <Card.Group stackable itemsPerRow={2} style={{ width: '100%' }}>
               {thumbs}
-            </Card.Group>
-          </div>
-          <div styleName='css.thumb-container'>
-            <Card.Group stackable itemsPerRow={2}>
               {fileNames}
             </Card.Group>
           </div>
