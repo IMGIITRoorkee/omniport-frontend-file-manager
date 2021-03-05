@@ -265,7 +265,7 @@ const UploadFilesModal = props => {
       centered
       onClose={() => {
         if (!props.isUploading) {
-          onHide
+          onHide()
         }
       }}
       closeIcon={!props.isUploading}
