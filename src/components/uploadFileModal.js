@@ -86,12 +86,6 @@ function MyDropzone(props) {
                       <Message compact error>
                         {'Error in Uploading File'}
                       </Message>
-                    ) : uploadingFileData[file.unique_id] !== undefined &&
-                      uploadingFileData[file.unique_id].status ===
-                        fileUploadingStatus.FINISHED ? (
-                      <Message compact success>
-                        {'File uploaded successfully'}
-                      </Message>
                     ) : null}
                   </Segment>
                 </Grid.Column>
@@ -160,12 +154,6 @@ function MyDropzone(props) {
                         fileUploadingStatus.ERROR_OCCURED ? (
                       <Message compact error>
                         {'Error in Uploading File'}
-                      </Message>
-                    ) : uploadingFileData[file.unique_id] !== undefined &&
-                      uploadingFileData[file.unique_id].status ===
-                        fileUploadingStatus.FINISHED ? (
-                      <Message compact success>
-                        {'File uploaded successfully'}
                       </Message>
                     ) : null}
                   </Segment>
