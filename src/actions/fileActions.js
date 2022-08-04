@@ -297,3 +297,75 @@ export const uploadFile = (files, callback) => {
     })
   }
 }
+
+/**
+ *
+ * postZipFileDynamically: make create request of files which previously has not been made recursively
+ */
+const postZipFileDynamically = (dispatch, getState, files, callback) => {
+  const url = `${FILE_APIS.fileItem}/zip/`
+
+  const filesUploading = getState().files.uploadingFileData
+  const nextFile = Object.keys(filesUploading).find(
+    elem => filesUploading[elem].status === fileUploadingStatus.NOT_STARTED
+  )
+
+  if (nextFile !== undefined) {
+    let config = {
+      onUploadProgress: updateProgress(nextFile, dispatch, getState)
+    }
+    let filesUploading = getState().files.uploadingFileData
+    let newData = Object.assign({}, filesUploading)
+    newData[nextFile].status = fileUploadingStatus.STARTED
+    dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
+    const fileToUpload = files.findIndex(
+      file => file.get('unique_id') === nextFile
+    )
+    apiClient
+      .post(url, files[fileToUpload], config)
+      .then(() => {
+        afterRequest({
+          getState,
+          status: fileUploadingStatus.FINISHED,
+          dispatch,
+          callback,
+          postZipFileDynamically,
+          nextFile,
+          files
+        })
+      })
+      .catch(() => {
+        afterRequest({
+          getState,
+          status: fileUploadingStatus.ERROR_OCCURED,
+          dispatch,
+          callback,
+          postZipFileDynamically,
+          nextFile,
+          files
+        })
+      })
+  }
+}
+
+/**
+ * uploadZipFiles: Action to upload multiple zip files
+ */
+
+export const uploadZipFile = (files, callback) => {
+  return (dispatch, getState) => {
+    dispatch(apiDispatch(UPLOAD_FILE_PENDING, true))
+    let initialData = {}
+    files.forEach((elem, index) => {
+      initialData[elem.get('unique_id')] = {
+        progress: 0,
+        status: fileUploadingStatus.NOT_STARTED
+      }
+    })
+    dispatch(apiDispatch(UPLOADING_FILE_DATA, initialData))
+
+    Array.from(Array(Math.min(5, files.length))).forEach(() => {
+      postZipFileDynamically(dispatch, getState, files, callback)
+    })
+  }
+}

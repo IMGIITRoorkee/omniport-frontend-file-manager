@@ -128,3 +128,16 @@ export const createId =
       ? (a ^ ((Math.random() * 16) >> (a / 4))).toString(16)
       : ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, b)
   }
+
+export const checkIfZipFiles = (item) => {
+  for (const object of item) {
+    const extension = object.name.split('.').pop()
+    if (extension == 'zip') {
+      continue
+    }
+    else {
+      return false
+    }
+  }
+  return true
+}
