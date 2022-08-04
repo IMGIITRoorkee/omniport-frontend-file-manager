@@ -18,6 +18,7 @@ import {
 } from '../actions/itemActions'
 import Upload from './app-upload'
 import ConfirmModal from './confirmModal'
+import ZipUpload from './zip-upload'
 import file from './css/file.css'
 import FolderFormModal from './folderFormModal'
 import ShareItemModal from './shareItemModal'
@@ -243,6 +244,7 @@ class Bar extends Component {
                     text='Create folder'
                   />
                   <Upload />
+                  <ZipUpload />
                 </Dropdown.Menu>
               </Dropdown>
             </div>
