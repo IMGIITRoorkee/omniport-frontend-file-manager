@@ -462,6 +462,11 @@ export const creators = [
     name: 'Ayush Bansal',
     role: 'Frontend & Backend Developer',
     link: 'https://github.com/ayu023ban'
+  },
+  {
+    name: 'Sanjeet Manna',
+    role: 'Frontend & Backend Developer',
+    link: 'https://github.com/mrstark14'
   }
 ]
 
