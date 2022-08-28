@@ -299,6 +299,38 @@ export const uploadFile = (files, callback) => {
 }
 
 /**
+ * afterZipRequest: handles after zip request is completed or error is occured
+ */
+const afterZipRequest = ({
+  getState,
+  status,
+  dispatch,
+  callback,
+  postZipFileDynamically,
+  nextFile,
+  files
+}) => {
+  const filesUploading = getState().files.uploadingFileData
+  const newData = Object.assign({}, filesUploading)
+  newData[nextFile].status = status
+  dispatch(apiDispatch(UPLOADING_FILE_DATA, newData))
+  if (
+    Object.values(newData).reduce(
+      (a, b) =>
+        a &&
+        (b.status === fileUploadingStatus.FINISHED ||
+          b.status === fileUploadingStatus.ERROR_OCCURED),
+      true
+    )
+  ) {
+    dispatch(apiDispatch(UPLOAD_FILE_PENDING, false))
+    dispatch(apiDispatch(UPLOADING_FILE_DATA, {}))
+    callback()
+  }
+  postZipFileDynamically(dispatch, getState, files, callback)
+}
+
+/**
  *
  * postZipFileDynamically: make create request of files which previously has not been made recursively
  */
@@ -324,7 +356,7 @@ const postZipFileDynamically = (dispatch, getState, files, callback) => {
     apiClient
       .post(url, files[fileToUpload], config)
       .then(() => {
-        afterRequest({
+        afterZipRequest({
           getState,
           status: fileUploadingStatus.FINISHED,
           dispatch,
@@ -335,7 +367,7 @@ const postZipFileDynamically = (dispatch, getState, files, callback) => {
         })
       })
       .catch(() => {
-        afterRequest({
+        afterZipRequest({
           getState,
           status: fileUploadingStatus.ERROR_OCCURED,
           dispatch,
