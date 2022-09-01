@@ -26,6 +26,7 @@ class ZipUpload extends Component {
 
   handleSubmit = e => {
     e.preventDefault()
+    console.log("HELLO THERE")
     let { files } = this.state
     const { uploadZipFile, currentFolder } = this.props
     if (checkIfZipFiles(files)) {
@@ -74,7 +75,7 @@ class ZipUpload extends Component {
             isMultiple={true}
             files={files}
             isUploading={uploadFilePending}
-            acceptedFiles = 'application/zip'
+            acceptedFiles = '.zip'
             setFiles={files => {
               this.setState({ files: files })
             }}
