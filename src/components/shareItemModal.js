@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Search } from 'formula_one'
 import { editFileUsers } from '../actions/fileActions'
 import {
   editFolderUsers,
@@ -41,7 +42,8 @@ class ShareItemModal extends Component {
       initialOptions: [],
       options: [],
       shareWithAll: false,
-      success: false
+      success: false,
+      searchFilteredStudents: [],
     }
   }
 
@@ -144,16 +146,17 @@ class ShareItemModal extends Component {
     e.preventDefault()
     this.setState({ isLoading: true })
     const { shareWithAll } = this.state
-    const { selectedUsersFinally } = this.state
+    const { selectedUsersFinally, searchFilteredStudents } = this.state
+    var allSelectedStudents = Array.from(new Set(searchFilteredStudents.concat(selectedUsersFinally)))
     const { activeItems, editFileUsers, editFolderUsers } = this.props
-    if (selectedUsersFinally != [] || shareWithAll) {
+    if (allSelectedStudents != [] || shareWithAll) {
       let formdata = new FormData()
       formdata.append('share_with_all', shareWithAll)
-      if (shareWithAll || selectedUsersFinally.length == 0) {
+      if (shareWithAll || allSelectedStudents.length == 0) {
         formdata.append('shared_users', [])
       } else {
-        for (let i = 0; i < selectedUsersFinally.length; i++) {
-          formdata.append('shared_users', parseInt(selectedUsersFinally[i]))
+        for (let i = 0; i < allSelectedStudents.length; i++) {
+          formdata.append('shared_users', parseInt(allSelectedStudents[i]))
         }
       }
       if (activeItems[0].type == 'file') {
@@ -195,6 +198,12 @@ class ShareItemModal extends Component {
     copyText.select()
     copyText.setSelectionRange(0, 1000)
     document.execCommand('copy')
+  }
+
+  addSearchFilterStudents = (data) => {
+    this.setState({
+      searchFilteredStudents: data,
+    })
   }
 
   render () {
@@ -270,6 +279,7 @@ class ShareItemModal extends Component {
         )}
         {!isFilemanagerPublic && (
           <Modal.Content>
+            <Search ids shareWithAll={shareWithAll} addFilteredStudents={this.addSearchFilterStudents} />
             <Form onSubmit={this.handleSubmit}>
               <Form.Select
                 search
