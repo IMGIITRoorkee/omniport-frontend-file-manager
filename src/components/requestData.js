@@ -63,7 +63,7 @@ class RequestData extends Component {
           title='Request more space'
           color='blue'
         >
-          <Icon name='database' />
+          <Icon name='plus circle icon' />
           Request Space
         </Label>
         {showModal ? (

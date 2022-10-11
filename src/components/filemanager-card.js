@@ -7,7 +7,7 @@ import { withRouter } from 'react-router-dom'
 import RequestData from './requestData'
 import { setActiveFolder } from '../actions/folderActions'
 
-import main from './css/filemanager-card.css'
+import main from './css/filemanager-card.module.css'
 import {
   ONE_GB,
   REQUEST_STATUS,
@@ -50,13 +50,17 @@ class Filemanagercard extends Component {
           />
           <Card.Header>{folder.filemanager.filemanagerName}</Card.Header>
           <Card.Description>
-            <Progress percent={percentage} color='red' size='tiny'>
-              {percentage}%
+            <div className={main.memory}>
+              Storage used
+              <span className='right floated'>
+                <span className={main.percent}>{percentage}% </span>({content} of {maxSpace} GB used)
+              </span>
+            </div>
+            <Progress percent={percentage} color='blue' size='tiny'>
             </Progress>
           </Card.Description>
         </Card.Content>
-        <Card.Content extra color='black'>
-          {content} /{maxSpace} GB used
+        <Card.Content className={main.content}>
             <span className='right floated'>
               {folder.dataRequestStatus === REQUEST_STATUS.PENDING ? (
                 <Label

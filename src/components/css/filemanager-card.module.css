@@ -1,0 +1,18 @@
+.filemanager-card {
+  width: 37em !important;
+}
+
+.memory {
+  margin-bottom: 0.5rem;
+  color: #00000099 !important;
+  font-size: smaller;
+}
+
+.percent {
+  color: #000000 !important;
+}
+
+.content {
+  margin-top: -1.75rem !important;
+  border-top: none !important;
+}
