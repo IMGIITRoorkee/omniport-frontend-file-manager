@@ -4,6 +4,7 @@
   justify-content: start;
   flex-wrap: wrap;
   height: 100%;
+  margin-top: 0.5rem;
 }
 
 .file-card {

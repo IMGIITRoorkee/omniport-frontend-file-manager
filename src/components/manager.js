@@ -26,8 +26,8 @@ class Manager extends Component {
         <div styleName='manager.bar-progress-parent'>
           <ErrorBoundary>
             <Suspense fallback={Loading}>
-              <Bar />
               <Progress />
+              <Bar />
             </Suspense>
           </ErrorBoundary>
           <Divider styleName='manager.divider-margin' clearing />
