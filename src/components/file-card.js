@@ -72,20 +72,28 @@ class Filecard extends Component {
                   : 'grid.file-inactive'
               }
             >
-              {file.starred && !viewingSharedItems && (
+              {/* {file.starred && !viewingSharedItems && (
                 <Icon
                   corner='top right'
                   name='star'
                   styleName='grid.file-star-icon'
                   color='yellow'
                 />
-              )}
+              )} */}
               {!IMAGE_EXTENSIONS.includes(file.extension) ? (
                 <FileIcon {...FILE_TYPES[extension]} extension={extension} />
               ) : (
                 <img src={file.upload} alt={file.name} styleName='grid.image' />
               )}
-              <div styleName='grid.file-name'>{fileName}</div>
+              <div styleName='grid.file-name'>
+                {file.starred && !viewingSharedItems && (
+                  <Icon
+                    name='star'
+                    color='yellow'
+                  />
+                )}
+                {fileName}
+              </div>
             </div>
           }
           content={file.fileName}

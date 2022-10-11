@@ -6,6 +6,10 @@
 }
 .progress-parent {
   padding: 1rem;
+  color: #00000099 !important;
+  margin-bottom: -0.8rem;
+  padding-left: 4rem;
+  font-weight: 700;
 }
 .table-cell-file-icon-name {
   display: flex;

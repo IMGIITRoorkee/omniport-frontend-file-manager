@@ -4,21 +4,33 @@ import { Icon, Modal, Button, Header } from 'semantic-ui-react'
 const modalTypes = item => ({
   normal: {},
   remove: {
-    header: `Remove ${item}`,
+    // header: `Remove ${item}`,
+    header: {
+      main: (
+        <>
+          <Icon name='trash' color='blue' />
+          &nbsp;Delete
+        </>
+      )
+    },
     messeageObject: {
       main: (
         <>
-          <Icon name='trash' Color='red' />
-          Are you sure you want to remove following {item} ?
+          {/* <Icon name='trash' Color='red' />
+          Are you sure you want to remove following {item} ? */}
         </>
       ),
       extras: ''
     },
     buttonColor: 'negative',
-    buttonLabel: 'Remove'
+    buttonLabel: 'Delete'
   },
   save: {
-    header: `Save ${item}`,
+    header: {
+      main: (
+        `Save ${item}`
+      )
+    },
     messeageObject: {
       main: <>Are you sure you want to save {item} ?</>,
       extras: ''
@@ -69,7 +81,7 @@ const ConfirmModal = ({
   const stateObject = modalTypes(item)[type]
   return (
     <Modal onClick={(e) => {e.stopPropagation()}} open={show} onClose={handleClose}>
-      <Modal.Header>{stateObject.header}</Modal.Header>
+      <Modal.Header>{stateObject.header.main}</Modal.Header>
       <Modal.Content>
         <Modal.Description>
           {dialogMessage ? (

@@ -224,52 +224,59 @@ class Bar extends Component {
             </div>
           ) : (
             <div styleName='file.crud-icon'>
-              <Dropdown
-                text='New'
-                icon='add'
-                floating
-                labeled
-                button
-                className='icon'
-              >
-                <Dropdown.Menu>
-                  <Dropdown.Item
-                    onClick={() => {
-                      this.setState({
-                        editFolder: {},
-                        showFolderFormModal: true
-                      })
-                    }}
-                    icon='folder'
-                    text='Create folder'
-                  />
-                  <Upload />
-                  <ZipUpload />
-                </Dropdown.Menu>
-              </Dropdown>
+              <Button.Group color='blue'>
+                <Dropdown
+                  text='New'
+                  icon='plus circle icon'
+                  floating
+                  labeled
+                  button
+                  className='icon'
+                >
+                  <Dropdown.Menu>
+                    <Dropdown.Item
+                      onClick={() => {
+                        this.setState({
+                          editFolder: {},
+                          showFolderFormModal: true
+                        })
+                      }}
+                      icon='folder'
+                      text='Create folder'
+                    />
+                    <Upload />
+                    <ZipUpload />
+                  </Dropdown.Menu>
+                </Dropdown>
+              </Button.Group>
             </div>
           )}
-          <Button.Group>
-            {!isFilemanagerPublic && (
-              <Button
-                as={Link}
-                icon='share'
-                labelPosition='left'
-                to={`${BASE_URL}/${this.props.match.params.filemanager}/shared_with_me/`}
-                content='Shared With me'
-                active={viewingSharedItems}
-              />
+          <div styleName='file.options'>
+            {viewingSharedItems || viewingStarredItems ? (
+              <span styleName='file.non-active' onClick={e=>{
+                e.stopPropagation()
+                this.props.history.push(`${BASE_URL}/${this.props.match.params.filemanager}/`)
+              }}>All Files</span>
+            ) : (
+              <span styleName='file.active'>All Files</span>
             )}
-
-            <Button
-              as={Link}
-              icon='star'
-              labelPosition='left'
-              to={`${BASE_URL}/${this.props.match.params.filemanager}/all_starred_items/`}
-              content='Starred'
-              active={viewingStarredItems}
-            />
-          </Button.Group>
+            {viewingSharedItems ? (
+              <span styleName='file.active'>Shared With Me</span>
+            ) : (
+              <span styleName='file.non-active' onClick={e=>{
+                e.stopPropagation()
+                this.props.history.push(`${BASE_URL}/${this.props.match.params.filemanager}/shared_with_me/`)
+              }}>Shared With Me</span>
+            )}
+            {viewingStarredItems ? (
+              <span styleName='file.active'>Starred</span>
+            ) : (
+              <span styleName='file.non-active' onClick={e=>{
+                e.stopPropagation()
+                this.props.history.push(`${BASE_URL}/${this.props.match.params.filemanager}/all_starred_items/`)
+              }}>Starred</span>
+            )}
+          </div>
         </div>
 
         <div styleName='file.navbar-first'>
@@ -381,15 +388,16 @@ class Bar extends Component {
           )}
           {currentFolder.type!='shared' && <div styleName='file.crud-icon'>
             <Button
-              icon
-              labelPosition='left'
               onClick={e => {
                 e.stopPropagation()
                 this.selectAllItems(!this.state.selectAllItems)
               }}
+              color='blue'
             >
-              <Icon name={this.state.selectAllItems ? 'check' : 'close'} color={this.state.selectAllItems ? 'green' : ''} />
-              Select All
+              {this.state.selectAllItems && (
+                <Icon name='check' color = 'green' />
+              )}
+              Select all
             </Button>
           </div>}
           <div styleName='file.crud-icon'>
@@ -397,7 +405,7 @@ class Bar extends Component {
               circular
               onClick={this.handleTabulation}
               icon={tabular ? 'columns' : 'table'}
-              color='grey'
+              color='blue'
             />
           </div>
           {isDelete && (

@@ -5,6 +5,7 @@ import { Breadcrumb } from 'semantic-ui-react'
 import { getParentFolders, setParentFolders } from '../actions/folderActions'
 import { BASE_URL } from '../constants'
 import index from './css/index.css'
+import styles from './css/progress.module.css'
 
 class Progress extends Component {
   handleClick = data => {
@@ -73,7 +74,7 @@ class Progress extends Component {
     const arr = parents.slice(1)
     return (
       <div styleName='index.progress-parent'>
-        <Breadcrumb size='huge'>
+        <Breadcrumb size='large'>
           {!isParentsPending ? (
             <>
               <Breadcrumb.Section
@@ -81,11 +82,12 @@ class Progress extends Component {
                   this.props.history.push(`${BASE_URL}/`)
                 }}
                 link
+                className={styles.progress}
               >
                 Filemanager
               </Breadcrumb.Section>
               <React.Fragment>
-                <Breadcrumb.Divider icon='right chevron' />
+                <Breadcrumb.Divider icon='triangle right' />
               </React.Fragment>
 
               <Breadcrumb.Section
@@ -95,12 +97,13 @@ class Progress extends Component {
                   )
                 }}
                 link
+                className={styles.progress}
               >
                 {folder.filemanagername}
               </Breadcrumb.Section>
               {viewingSharedItems || viewingStarredItems ? (
                 <React.Fragment>
-                  <Breadcrumb.Divider icon='right chevron' />
+                  <Breadcrumb.Divider icon='triangle right' />
                 </React.Fragment>
               ) : (
                 ''
@@ -113,6 +116,7 @@ class Progress extends Component {
                     )
                   }}
                   link
+                  className={styles.progress}
                 >
                   shared with me
                 </Breadcrumb.Section>
@@ -124,6 +128,7 @@ class Progress extends Component {
                     )
                   }}
                   link
+                  className={styles.progress}
                 >
                   Starred
                 </Breadcrumb.Section>
@@ -135,12 +140,13 @@ class Progress extends Component {
                     <React.Fragment>
                       <React.Fragment key={index}>
                         {index >= 0 ? (
-                          <Breadcrumb.Divider icon='right chevron' />
+                          <Breadcrumb.Divider icon='triangle right' />
                         ) : null}
                       </React.Fragment>
                       <Breadcrumb.Section
                         link
                         onClick={() => this.handleClick(data)}
+                        className={styles.progress}
                       >
                         {data.folderName}
                       </Breadcrumb.Section>

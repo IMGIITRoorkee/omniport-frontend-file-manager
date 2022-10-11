@@ -204,12 +204,15 @@ class TabularView extends Component {
         <Table singleLine styleName='index.table-main' selectable>
           <Table.Header>
             <Table.Row>
-              <Table.HeaderCell>Title</Table.HeaderCell>
-              <Table.HeaderCell>Last Modified</Table.HeaderCell>
-              <Table.HeaderCell>Space Used</Table.HeaderCell>
               {!viewingSharedItems && (
                 <Table.HeaderCell>Starred</Table.HeaderCell>
               )}
+              <Table.HeaderCell>Title</Table.HeaderCell>
+              <Table.HeaderCell>Last Modified</Table.HeaderCell>
+              <Table.HeaderCell>Space Used</Table.HeaderCell>
+              {/* {!viewingSharedItems && (
+                <Table.HeaderCell>Starred</Table.HeaderCell>
+              )} */}
               {viewingSharedItems && <Table.HeaderCell>Owner</Table.HeaderCell>}
             </Table.Row>
           </Table.Header>
@@ -229,18 +232,11 @@ class TabularView extends Component {
                   onDoubleClick={this.handleFolderDoubleClick(folder)}
                   onContextMenu={this.handleFolderContextSelect(folder)}
                 >
-                  <Table.Cell>
-                    <Icon size='large' name='folder open' color='grey' />
-                    {folder.folderName}
-                  </Table.Cell>
-                  <Table.Cell>
-                    {getModifiedDate(folder.datetimeModified)}
-                  </Table.Cell>
-                  <Table.Cell>{formatStorage(folder.contentSize)}</Table.Cell>
                   {!viewingSharedItems && (
                     <Table.Cell>
                       {folder.starred ? (
                         <Icon
+                          color='yellow'
                           name='star'
                           title='Remove from starred'
                           onClick={() =>
@@ -258,6 +254,36 @@ class TabularView extends Component {
                       )}
                     </Table.Cell>
                   )}
+                  <Table.Cell>
+                    <Icon size='large' name='folder open' color='grey' />
+                    {folder.folderName}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {getModifiedDate(folder.datetimeModified)}
+                  </Table.Cell>
+                  <Table.Cell>{formatStorage(folder.contentSize)}</Table.Cell>
+                  {/* {!viewingSharedItems && (
+                    <Table.Cell>
+                      {folder.starred ? (
+                        <Icon
+                          color='yellow'
+                          name='star'
+                          title='Remove from starred'
+                          onClick={() =>
+                            this.handleStarClick('folder', folder.id, true)
+                          }
+                        />
+                      ) : (
+                        <Icon
+                          name='star outline'
+                          title='Add to starred'
+                          onClick={() =>
+                            this.handleStarClick('folder', folder.id, false)
+                          }
+                        />
+                      )}
+                    </Table.Cell>
+                  )} */}
                   {viewingSharedItems && (
                     <Table.Cell>{folder.person.fullName}</Table.Cell>
                   )}
@@ -278,18 +304,11 @@ class TabularView extends Component {
                     onDoubleClick={this.handleFolderDoubleClick(folder)}
                     onContextMenu={this.handleFolderContextSelect(folder)}
                   >
-                    <Table.Cell>
-                      <Icon size='large' name='folder open' color='grey' />
-                      {folder.folderName}
-                    </Table.Cell>
-                    <Table.Cell>
-                      {getModifiedDate(folder.datetimeModified)}
-                    </Table.Cell>
-                    <Table.Cell>{formatStorage(folder.contentSize)}</Table.Cell>
                     {!viewingSharedItems && (
                       <Table.Cell>
                         {folder.starred ? (
                           <Icon
+                            color='yellow'
                             name='star'
                             title='Remove from starred'
                             onClick={() =>
@@ -307,6 +326,36 @@ class TabularView extends Component {
                         )}
                       </Table.Cell>
                     )}
+                    <Table.Cell>
+                      <Icon size='large' name='folder open' color='grey' />
+                      {folder.folderName}
+                    </Table.Cell>
+                    <Table.Cell>
+                      {getModifiedDate(folder.datetimeModified)}
+                    </Table.Cell>
+                    <Table.Cell>{formatStorage(folder.contentSize)}</Table.Cell>
+                    {/* {!viewingSharedItems && (
+                      <Table.Cell>
+                        {folder.starred ? (
+                          <Icon
+                            color='yellow'
+                            name='star'
+                            title='Remove from starred'
+                            onClick={() =>
+                              this.handleStarClick('folder', folder.id, true)
+                            }
+                          />
+                        ) : (
+                          <Icon
+                            name='star outline'
+                            title='Add to starred'
+                            onClick={() =>
+                              this.handleStarClick('folder', folder.id, false)
+                            }
+                          />
+                        )}
+                      </Table.Cell>
+                    )} */}
                     {viewingSharedItems && (
                       <Table.Cell>{folder.person.fullName}</Table.Cell>
                     )}
@@ -327,6 +376,28 @@ class TabularView extends Component {
                   onContextMenu={this.handleFileContextSelect(file)}
                   onDoubleClick={this.handleFileDoubleClick(file)}
                 >
+                  {!viewingSharedItems && (
+                    <Table.Cell>
+                      {file.starred ? (
+                        <Icon
+                          color='yellow'
+                          name='star'
+                          title='Remove from starred'
+                          onClick={() =>
+                            this.handleStarClick('file', file.id, true)
+                          }
+                        />
+                      ) : (
+                        <Icon
+                          name='star outline'
+                          title='Add to starred'
+                          onClick={() =>
+                            this.handleStarClick('file', file.id, false)
+                          }
+                        />
+                      )}
+                    </Table.Cell>
+                  )}
                   <Table.Cell>
                     <div styleName='index.table-cell-file-icon-name'>
                       <div styleName='index.table-cell-file-icon'>
@@ -352,10 +423,11 @@ class TabularView extends Component {
                     {getModifiedDate(file.datetimeModified)}
                   </Table.Cell>
                   <Table.Cell>{formatStorage(file.size)}</Table.Cell>
-                  {!viewingSharedItems && (
+                  {/* {!viewingSharedItems && (
                     <Table.Cell>
                       {file.starred ? (
                         <Icon
+                          color='yellow'
                           name='star'
                           title='Remove from starred'
                           onClick={() =>
@@ -372,7 +444,7 @@ class TabularView extends Component {
                         />
                       )}
                     </Table.Cell>
-                  )}
+                  )} */}
                   {viewingSharedItems && (
                     <Table.Cell>{file.folder.person.fullName}</Table.Cell>
                   )}
@@ -393,6 +465,28 @@ class TabularView extends Component {
                     onContextMenu={this.handleFileContextSelect(file)}
                     onDoubleClick={this.handleFileDoubleClick(file)}
                   >
+                    {!viewingSharedItems && (
+                      <Table.Cell>
+                        {file.starred ? (
+                          <Icon
+                            color='yellow'
+                            name='star'
+                            title='Remove from starred'
+                            onClick={() =>
+                              this.handleStarClick('file', file.id, true)
+                            }
+                          />
+                        ) : (
+                          <Icon
+                            name='star outline'
+                            title='Add to starred'
+                            onClick={() =>
+                              this.handleStarClick('file', file.id, false)
+                            }
+                          />
+                        )}
+                      </Table.Cell>
+                    )}
                     <Table.Cell>
                       <div styleName='index.table-cell-file-icon-name'>
                         <div styleName='index.table-cell-file-icon'>
@@ -418,10 +512,11 @@ class TabularView extends Component {
                       {getModifiedDate(file.datetimeModified)}
                     </Table.Cell>
                     <Table.Cell>{formatStorage(file.size)}</Table.Cell>
-                    {!viewingSharedItems && (
+                    {/* {!viewingSharedItems && (
                       <Table.Cell>
                         {file.starred ? (
                           <Icon
+                            color='yellow'
                             name='star'
                             title='Remove from starred'
                             onClick={() =>
@@ -438,7 +533,7 @@ class TabularView extends Component {
                           />
                         )}
                       </Table.Cell>
-                    )}
+                    )} */}
                     {viewingSharedItems && (
                       <Table.Cell>{file.folder.person.fullName}</Table.Cell>
                     )}
