@@ -13,6 +13,7 @@ import {
   generateDataRequest
 } from '../actions/folderActions'
 import { formatStorage } from '../helpers/helperfunctions'
+import request from './css/requestData.css'
 
 class RequestData extends Component {
   constructor (props) {
@@ -71,34 +72,65 @@ class RequestData extends Component {
             onClick={e => {
               e.stopPropagation()
             }}
-            size='large'
+            size='small'
             open={showModal}
             closeOnEscape={true}
             closeOnDimmerClick={true}
             onClose={this.close}
             closeIcon
+            styleName='request.modal'
           >
-            <Modal.Header>Request More Space</Modal.Header>
+            <Modal.Header>
+              <Icon name='plus circle icon' color='blue' />
+              &nbsp;Request More Space
+            </Modal.Header>
             {currentFolder.filemanager.filemanagerExtraSpaceOptions.length ? (
               <Modal.Content>
-                <h4>Extra Data needed</h4>
+                <h4>Extra Space needed</h4>
                 <LabelGroup>
-                  {currentFolder.filemanager.filemanagerExtraSpaceOptions.map(
+                  {currentFolder.filemanager.filemanagerExtraSpaceOptions.map( 
                     opt => (
-                      <Label
-                        as='a'
-                        title={`add ${opt.label} extra`}
-                        onClick={() => this.handleChange(opt)}
-                        horizontal
-                        size='large'
-                      >
-                        {formatStorage(opt)}
-                      </Label>
+                      <>
+                        {!add_data ? (
+                          <Label
+                          as='a'
+                          title={`add ${opt.label} extra`}
+                          onClick={() => this.handleChange(opt)}
+                          horizontal
+                          size='large'
+                          basic
+                        >
+                          <span styleName='request.modal'>{formatStorage(opt)}</span>
+                        </Label>
+                        ) : (add_data == opt ? (
+                          <Label
+                          as='a'
+                          title={`add ${opt.label} extra`}
+                          onClick={() => this.handleChange(opt)}
+                          horizontal
+                          size='large'
+                          basic
+                          color = 'blue'
+                          >
+                            {formatStorage(opt)}
+                          </Label>
+                        ) : (
+                          <Label
+                          as='a'
+                          title={`add ${opt.label} extra`}
+                          onClick={() => this.handleChange(opt)}
+                          horizontal
+                          size='large'
+                          basic
+                          >
+                            <span styleName='request.modal'>{formatStorage(opt)}</span>
+                          </Label>
+                        ))}
+                      </>
                     )
                   )}
                 </LabelGroup>
-                <Divider />
-                {add_data ? (
+                {/* {add_data ? (
                   <div>
                     <Label color={labelColor} horizontal size='large'>
                       {`Request for ${formatStorage(add_data)} extra data on 
@@ -109,11 +141,12 @@ class RequestData extends Component {
                   </div>
                 ) : (
                   ''
-                )}
-                <Divider />
-                <Button primary onClick={() => this.handleSubmit()}>
-                  Submit
-                </Button>
+                )} */}
+                <div styleName='request.button'>
+                  <Button primary onClick={() => this.handleSubmit()}>
+                    Submit
+                  </Button>
+                </div>
               </Modal.Content>
             ) : (
               <Modal.Content>

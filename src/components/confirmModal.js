@@ -1,6 +1,8 @@
 import React from 'react'
 import { Icon, Modal, Button, Header } from 'semantic-ui-react'
 
+import modal from './css/confirmModal.css'
+
 const modalTypes = item => ({
   normal: {},
   remove: {
@@ -104,17 +106,18 @@ const ConfirmModal = ({
         ) : (
           ''
         )}
+        <div styleName='modal.actions'>
+          <Button onClick={handleClose} styleName='modal.action-button'>Cancel</Button>
+          <Button
+            onClick={handleSubmit}
+            positive={stateObject.buttonColor === 'positive'}
+            negative={stateObject.buttonColor === 'negative'}
+            styleName='modal.action-button'
+          >
+            {stateObject.buttonLabel}
+          </Button>
+        </div>
       </Modal.Content>
-      <Modal.Actions>
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button
-          onClick={handleSubmit}
-          positive={stateObject.buttonColor === 'positive'}
-          negative={stateObject.buttonColor === 'negative'}
-        >
-          {stateObject.buttonLabel}
-        </Button>
-      </Modal.Actions>
     </Modal>
   )
 }
