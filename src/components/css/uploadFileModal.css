@@ -1,14 +1,17 @@
 .dropzone {
   align-items: center;
-  background: #eceff2;
+  /* background: #eceff2; */
+  background: #F0F9FF;
   border-radius: 4px;
+  border: 1px solid #2987CD;
+  box-shadow: 0px 0px 10px 10px #F3F6F8;;
   cursor: pointer;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   width: 100%;
   padding: 1rem;
-  height: 9rem;
-  color: #212121;
+  height: 6rem;
+  color: #2987CD;
 }
 .dropzone:active {
   outline: none;
