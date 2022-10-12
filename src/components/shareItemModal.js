@@ -30,6 +30,7 @@ import { USER_APIS } from '../urls'
 
 import file from './css/share-item.css'
 import { toast } from 'react-semantic-toasts'
+import { IMAGE_EXTENSIONS } from '../constants'
 
 class ShareItemModal extends Component {
   constructor (props) {
@@ -251,7 +252,6 @@ class ShareItemModal extends Component {
         closeOnEscape={true}
         closeOnDimmerClick={true}
         onClose={close}
-        closeIcon
       >
         {!isFilemanagerPublic && (
           <Modal.Header>
@@ -270,7 +270,88 @@ class ShareItemModal extends Component {
         )}
         {!isFilemanagerPublic && (
           <Modal.Content>
-            <Form onSubmit={this.handleSubmit}>
+            {activeItems.length == 1 ? (
+              activeItems[0].type == 'file' ? (
+                <div styleName='file.share-head'>
+                  File shared
+                </div>
+              ) : (
+                <div styleName='file.share-head'>
+                  Folder shared
+                </div>
+              )
+            ) : (
+              ''
+            )}
+            <div styleName='file.share-description-div'>
+              <div styleName='file.share-file-description'>
+                {activeItems.length == 1 ? (
+                  activeItems[0].type == 'file' ? (
+                    <div styleName='file.sharing-file-icon'>
+                      {!IMAGE_EXTENSIONS.includes(activeItems[0].obj.extension) ? (
+                        <FileIcon
+                          {...FILE_TYPES[activeItems[0].obj.extension]}
+                          extension={activeItems[0].obj.extension}
+                        />
+                      ) : (
+                        <img src={activeItems[0].obj.upload} alt={activeItems[0].obj.name} styleName='file.share-image' />
+                      )}
+                    </div>
+                  ) : (
+                    <Icon name='folder open' size='huge' color='grey' />
+                  )
+                ) : (
+                  ''
+                )}
+                {activeItems.length == 1 ? (
+                  activeItems[0].type == 'file' ? (
+                    <div>{activeItems[0].obj.fileName}</div>
+                  ) : (
+                    <div>{activeItems[0].obj.folderName}</div>
+                  )
+                ) : (
+                  ''
+                )}
+              </div>
+            </div>
+            <div styleName='file.share-head'>
+              Share link
+            </div>
+            <Segment styleName='file.share-link-div'>
+              <Input
+                styleName='file.share-link-input'
+                id='link'
+                value={link}
+                type='text'
+                transparent
+              />
+              <div className='right floated'>
+                <Popup
+                  trigger={
+                    <Button 
+                    onClick={this.handleClick}
+                    color='#D9D9D9'
+                    >
+                      <Icon
+                        styleName='file.share-link-copy-icon'
+                        name='copy'
+                        link
+                        title='Click to copy'
+                        onClick={this.handleClick}
+                        color='white'
+                      />
+                      Copy
+                    </Button>
+                  }
+                  content={`copied!`}
+                  on='click'
+                />
+              </div>
+            </Segment>
+            <div styleName='file.share-head'>
+              Share with
+            </div>
+            <Form onSubmit={this.handleSubmit} styleName='file.share-form'>
               <Form.Select
                 search
                 multiple
@@ -296,41 +377,14 @@ class ShareItemModal extends Component {
                   label='Share with all'
                 />
               </Form.Field>
-              <div styleName='file.share-description-div'>
-                <div styleName='file.share-div'>
-                  {activeItems.length == 1 ? (
-                    activeItems[0].type == 'file' ? (
-                      <div styleName='file.sharing-file-icon'>
-                        <FileIcon
-                          {...FILE_TYPES[activeItems[0].obj.extension]}
-                          extension={activeItems[0].obj.extension}
-                        />
-                      </div>
-                    ) : (
-                      <Icon name='folder open' size='large' color='grey' />
-                    )
-                  ) : (
-                    ''
-                  )}
-                  {activeItems.length == 1 ? (
-                    activeItems[0].type == 'file' ? (
-                      <p>{activeItems[0].obj.fileName}</p>
-                    ) : (
-                      <p>{activeItems[0].obj.folderName}</p>
-                    )
-                  ) : (
-                    ''
-                  )}
-                </div>
-                {!this.state.success ? (
+              {!this.state.success ? (
                   <div styleName='file.share-div'>
                     <Button
                       color='blue'
                       loading={isLoading}
-                      className='right floated'
                       type='submit'
                     >
-                      Submit
+                      Share
                     </Button>
                   </div>
                 ) : (
@@ -343,50 +397,9 @@ class ShareItemModal extends Component {
                     />
                   </div>
                 )}
-              </div>
             </Form>
           </Modal.Content>
         )}
-        <Modal.Header>
-          <div styleName='file.share-div'>
-            <div styleName='file.share-icon'>
-              <Button
-                circular
-                icon='share'
-                styleName='file.share-icon'
-                color='grey'
-              />
-            </div>
-            <div>Get Shareable Link</div>
-          </div>
-        </Modal.Header>
-        <Modal.Content>
-          <Segment styleName='file.share-div'>
-            <Input
-              styleName='file.share-link-input'
-              id='link'
-              value={link}
-              type='text'
-            />
-            <div className='right floated'>
-              <Popup
-                trigger={
-                  <Icon
-                    styleName='file.share-link-copy-icon'
-                    name='copy'
-                    link
-                    title='Click to copy'
-                    onClick={this.handleClick}
-                    color='grey'
-                    size='large'
-                  />
-                }
-                content={`copied!`}
-                on='click'
-              />
-            </div>
-          </Segment>
-        </Modal.Content>
       </Modal>
     )
   }
