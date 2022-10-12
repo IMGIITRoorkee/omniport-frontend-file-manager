@@ -2,21 +2,51 @@
   display: flex;
   align-items: center;
 }
+.share-file-description {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.share-link-div {
+  display: flex;
+  align-items: center;
+  width: 31.5%;
+  height: 6.5vh;
+}
 .share-description-div {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 1rem;
+  margin-top: 0.6rem;
 }
 .share-icon {
   padding-right: 0.4rem;
 }
 .share-link-input {
   width: -webkit-fill-available;
+  width: 12vw;
+  margin-right: 1rem;
 }
 .share-link-copy-icon {
   padding-left: 0.2rem;
 }
 .sharing-file-icon {
-  width: 1.5rem;
+  width: 5rem;
   padding-right: 0.2rem;
+}
+.share-head {
+  color: #000000;
+  font-weight: 700;
+  font-size: 16px;
+}
+.share-form {
+  margin-top: 1rem;
+}
+.share-image {
+  border-radius: 0.3125rem;
+  width: 100%;
+  display: block;
+  flex: 10;
+  height: 6rem;
 }
