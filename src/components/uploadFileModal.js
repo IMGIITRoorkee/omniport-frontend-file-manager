@@ -49,9 +49,9 @@ function MyDropzone(props) {
       return (
         <Card key={file.unique_id} fluid>
           <Card.Content styleName='css.card-content'>
-            <Grid styleName='css.card-grid' columns={2}>
-              <Grid.Row verticalAlign='middle' styleName='css.card-row'>
-                <Grid.Column width='7'>
+            <Grid styleName='css.card-grid' columns={1}>
+              <Grid.Column verticalAlign='middle' styleName='css.card-row'>
+                <Grid.Row width='7'>
                   <Image
                     src={file.preview}
                     styleName='css.image-new'
@@ -61,8 +61,8 @@ function MyDropzone(props) {
                         fileUploadingStatus.FINISHED
                     }
                   />
-                </Grid.Column>
-                <Grid.Column width='9'>
+                </Grid.Row>
+                <Grid.Row width='5'>
                   <Segment basic>
                     {file.name}
                     {uploadingFileData[file.unique_id] !== undefined &&
@@ -88,8 +88,8 @@ function MyDropzone(props) {
                       </Message>
                     ) : null}
                   </Segment>
-                </Grid.Column>
-              </Grid.Row>
+                </Grid.Row>
+              </Grid.Column>
             </Grid>
             {!isUploading && (
               <Icon
@@ -122,16 +122,16 @@ function MyDropzone(props) {
         <Card key={file.unique_id} fluid>
           <Card.Content styleName='css.card-content'>
             <Grid styleName='css.card-grid'>
-              <Grid.Row verticalAlign='middle' styleName='css.card-row'>
-                <Grid.Column width='4'>
+              <Grid.Column verticalAlign='middle' styleName='css.card-row'>
+                <Grid.Row width='4'>
                   <div style={{ height: '3rem', width: '2.5rem' }}>
                     <FileIcon
                       {...FILE_TYPES[extension]}
                       extension={extension}
                     />
                   </div>
-                </Grid.Column>
-                <Grid.Column width='9'>
+                </Grid.Row>
+                <Grid.Row width='5'>
                   <Segment basic>
                     {file.name}
                     {uploadingFileData[file.unique_id] !== undefined &&
@@ -157,8 +157,8 @@ function MyDropzone(props) {
                       </Message>
                     ) : null}
                   </Segment>
-                </Grid.Column>
-              </Grid.Row>
+                </Grid.Row>
+              </Grid.Column>
             </Grid>
             {!isUploading && (
               <Icon
@@ -206,8 +206,8 @@ function MyDropzone(props) {
         <Modal.Description>
           <div {...getRootProps()} styleName='css.dropzone'>
             <input {...getInputProps()} />
-            <Icon name='cloud upload' color='grey' />
-            {label}
+            <Icon name='upload' color='blue' />
+            &nbsp;{label}
           </div>
         </Modal.Description>
       )}
@@ -216,22 +216,33 @@ function MyDropzone(props) {
           style={{ overflowY: 'auto', overflowX: 'hidden', maxHeight: '50vh' }}
         >
           <div styleName='css.thumb-container'>
-            <Card.Group stackable itemsPerRow={2} style={{ width: '100%' }}>
+            <Card.Group stackable itemsPerRow={4} style={{ width: '100%' }}>
               {thumbs}
               {fileNames}
             </Card.Group>
           </div>
         </div>
-        {files.length > 0 && (
+        {files.length == 0 ? (
+          <div>
+          <Button
+            disabled={true}
+            icon='upload'
+            color='grey'
+          >
+            Upload
+          </Button>
+        </div>
+        ) : (
           <div>
             <Button
               loading={isUploading}
               disabled={isUploading}
               onClick={handleUpload}
-              label='Upload'
               icon='upload'
               primary
-            />
+            >
+              Upload
+            </Button>
           </div>
         )}
       </Modal.Description>
@@ -258,6 +269,10 @@ const UploadFilesModal = props => {
       }}
       closeIcon={!props.isUploading}
     >
+      <Modal.Header>
+        <Icon name='upload' color='blue' />
+        &nbsp;Upload
+      </Modal.Header>
       <MyDropzone label={label} {...restProps} />
     </Modal>
   )
