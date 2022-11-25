@@ -284,7 +284,6 @@ class ShareItemModal extends Component {
               <Form.Select
                 search
                 multiple
-                clearable
                 placeholder={
                   shareWithAll
                     ? 'Uncheck share with all to select users'
