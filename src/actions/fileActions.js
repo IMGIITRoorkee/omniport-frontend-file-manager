@@ -12,7 +12,8 @@ import {
   GET_FILE_DETAILS_PENDING,
   DELETE_FILE_PENDING,
   UPDATE_FILE_PENDING,
-  UPLOADING_FILE_DATA
+  UPLOADING_FILE_DATA,
+  FILE_TO_COPY
 } from './fileActionType'
 import { fileUploadingStatus } from '../constants'
 
@@ -399,5 +400,35 @@ export const uploadZipFile = (files, callback) => {
     Array.from(Array(Math.min(5, files.length))).forEach(() => {
       postZipFileDynamically(dispatch, getState, files, callback)
     })
+  }
+}
+
+/**
+ * addFileToCopy: Action to add the file which is to be copied
+ */
+export const addFileToCopy = (id) => {
+  return dispatch => {
+    dispatch({
+      type: FILE_TO_COPY,
+      payload: id
+    })
+  }
+}
+
+/**
+ * pasteActiveFile: Action to paste copied file 
+ */
+export const pasteActiveFile = (id,destination, callback) => {
+  const url = `${FILE_APIS.fileItem}/${FILE_APIS.copy}/`
+  return async dispatch => {
+    try {
+      const res = await apiClient.post(url, {file_id: id, destination: destination.id})
+      dispatch({
+        type: FILE_COPIED
+      })
+      callback(res.status)
+    } catch (err) {
+      callback(err)
+    }
   }
 }

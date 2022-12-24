@@ -31,7 +31,7 @@ import {
   bulkDeleteFolders,
   setCurrentFolder
 } from '../actions/folderActions'
-import { deleteFile, editFile, bulkDeleteFiles } from '../actions/fileActions'
+import { deleteFile, editFile, bulkDeleteFiles, addFileToCopy, pasteActiveFile } from '../actions/fileActions'
 import { BASE_URL, ITEM_TYPE } from '../constants'
 import ItemDetailsModal from './item-detail-modal'
 import { handleDownload } from '../helpers/helperfunctions'
@@ -67,6 +67,16 @@ class Bar extends Component {
     } else {
       editFolder(activeItems[0].obj.id, formdata, this.handleStarSuccess)
     }
+  }
+  handleCopy = e => {
+    e.stopPropagation()
+    const { activeItems, addFileToCopy } = this.props
+    addFileToCopy(activeItems[0].obj.id)
+  }
+  handlePaste = e => {
+    e.stopPropagation()
+    const { fileToCopy, currentFolder, pasteActiveFile } = this.props
+    pasteActiveFile(fileToCopy, currentFolder)
   }
   handleStarSuccess = newOjb => {
     const {
@@ -195,7 +205,8 @@ class Bar extends Component {
       viewingSharedItems,
       viewingStarredItems,
       isFilemanagerPublic,
-      showPublicSharedItems
+      showPublicSharedItems, 
+      fileToCopy
     } = this.props
     const {
       isDelete,
@@ -354,6 +365,30 @@ class Bar extends Component {
                 />
               </div>
             )}
+          {activeItems.length > 0 &&
+            !activeItems.some(item => item.type === ITEM_TYPE.folder) &&
+            !viewingSharedItems && (
+              <div styleName='file.crud-icon'>
+                <Button
+                  onClick={this.handleCopy}
+                  icon='copy'
+                  color='blue'
+                  inverted
+                  circular
+                />
+              </div>
+            )}
+          {activeItems.length == 0 && !viewingSharedItems && fileToCopy != null && (
+            <div styleName='file.crud-icon'>
+              <Button
+              onClick={this.handlePaste}
+                icon='paste'
+                color='blue'
+                inverted
+                circular
+              />
+            </div>
+          )}
           {activeItems.length > 0 && !viewingSharedItems && (
             <div styleName='file.crud-icon'>
               <Button
@@ -466,7 +501,8 @@ const mapStateToProps = state => {
     viewingSharedItems: state.items.viewingSharedItems,
     viewingStarredItems: state.items.viewingStarredItems,
     isFilemanagerPublic: state.filemanagers.isFilemanagerPublic,
-    showPublicSharedItems: state.items.showPublicSharedItems
+    showPublicSharedItems: state.items.showPublicSharedItems,
+    fileToCopy: state.files.fileToCopy
   }
 }
 
@@ -506,6 +542,12 @@ const mapDispatchToProps = dispatch => {
     },
     setShowPublicSharedItems: data => {
       dispatch(setShowPublicSharedItems(data))
+    },
+    addFileToCopy: id => {
+      dispatch(addFileToCopy(id))
+    },
+    pasteActiveFile: (id, destination) => {
+      dispatch(pasteActiveFile(id, destination))
     }
   }
 }
