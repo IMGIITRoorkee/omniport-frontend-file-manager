@@ -2,7 +2,8 @@
 export const FILE_APIS = {
   fileItem: '/files',
   filesShared: '/files/shared_with_me',
-  bulkDelete: 'bulk_delete/'
+  bulkDelete: 'bulk_delete/',
+  copy: 'copy_file/'
 }
 
 export const FOLDER_APIS = {
