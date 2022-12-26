@@ -15,7 +15,7 @@ import {
   UPLOADING_FILE_DATA,
   FILE_TO_COPY
 } from './fileActionType'
-import { fileUploadingStatus } from '../constants'
+import { fileUploadingStatus, ITEM_TYPE } from '../constants'
 
 const apiDispatch = (actionType = '', data) => {
   return {
@@ -406,11 +406,11 @@ export const uploadZipFile = (files, callback) => {
 /**
  * addFileToCopy: Action to add the file which is to be copied
  */
-export const addFileToCopy = (id) => {
+export const addFileToCopy = (id, type) => {
   return dispatch => {
     dispatch({
       type: FILE_TO_COPY,
-      payload: id
+      payload: { id: id, type: type }
     })
   }
 }
@@ -418,11 +418,16 @@ export const addFileToCopy = (id) => {
 /**
  * pasteActiveFile: Action to paste copied file 
  */
-export const pasteActiveFile = (id,destination, callback) => {
-  const url = `${FILE_APIS.fileItem}/${FILE_APIS.copy}/`
+export const pasteActiveFile = (fileToCopy,destination, callback) => {
+  let url = ''
+  if(fileToCopy.type === ITEM_TYPE.file){
+    url = `${FILE_APIS.fileItem}/${FILE_APIS.copy}`
+  } else {
+    url = `${FOLDER_APIS.folderItem}/${FOLDER_APIS.copy}`
+  }
   return async dispatch => {
     try {
-      const res = await apiClient.post(url, {file_id: id, destination: destination.id})
+      const res = await apiClient.post(url, {id: fileToCopy.id, destination: destination.id})
       dispatch({
         type: FILE_COPIED
       })

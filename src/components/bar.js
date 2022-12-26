@@ -71,7 +71,7 @@ class Bar extends Component {
   handleCopy = e => {
     e.stopPropagation()
     const { activeItems, addFileToCopy } = this.props
-    addFileToCopy(activeItems[0].obj.id)
+    addFileToCopy(activeItems[0].obj.id, activeItems[0].type)
   }
   handlePaste = e => {
     e.stopPropagation()
@@ -365,8 +365,7 @@ class Bar extends Component {
                 />
               </div>
             )}
-          {activeItems.length > 0 &&
-            !activeItems.some(item => item.type === ITEM_TYPE.folder) &&
+          {activeItems.length == 1 &&
             !viewingSharedItems && (
               <div styleName='file.crud-icon'>
                 <Button
@@ -543,8 +542,8 @@ const mapDispatchToProps = dispatch => {
     setShowPublicSharedItems: data => {
       dispatch(setShowPublicSharedItems(data))
     },
-    addFileToCopy: id => {
-      dispatch(addFileToCopy(id))
+    addFileToCopy: (id, type) => {
+      dispatch(addFileToCopy(id, type))
     },
     pasteActiveFile: (id, destination) => {
       dispatch(pasteActiveFile(id, destination))

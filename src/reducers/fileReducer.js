@@ -29,7 +29,7 @@ const initialState = {
   uploadedFile: null,
   activeFile: {},
   uploadingFileData: {},
-  fileToCopy: null
+  fileToCopy: {}
 }
 const fileReducer = (state = initialState, action) => {
   const { type, payload, error } = action
@@ -47,9 +47,9 @@ const fileReducer = (state = initialState, action) => {
     case FILE_API_ERROR:
       return { ...state, error: error }
     case FILE_TO_COPY:
-      return { ...state, fileToCopy: action.payload }
+      return { ...state, fileToCopy: payload }
     case FILE_COPIED:
-      return { ...state, fileToCopy: null }
+      return { ...state, fileToCopy: {} }
     default:
       return state
   }
