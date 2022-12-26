@@ -16,7 +16,8 @@ export const FOLDER_APIS = {
   foldersShared: '/folder/shared_with_me',
   starred_items: '/all_starred_items/',
   bulkDelete: 'bulk_delete/',
-  parents: 'parents/'
+  parents: 'parents/',
+  copy: 'copy_folder/'
 }
 
 export const SHARED_ITEMS_APIS = {
