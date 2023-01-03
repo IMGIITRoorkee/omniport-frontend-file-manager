@@ -400,6 +400,56 @@ class ShareItemModal extends Component {
             </Form>
           </Modal.Content>
         )}
+        {isFilemanagerPublic && (
+          <>
+          <Modal.Header>
+          <div styleName='file.share-div'>
+            <div styleName='file.share-icon'>
+              <Button
+                circular
+                icon='share'
+                color='blue'
+                styleName='file.share-icon'
+              />
+            </div>
+            <div>Get Shareable Link</div>
+          </div>
+        </Modal.Header>
+        <Modal.Content>
+        <Segment styleName='file.share-link-div'>
+          <Input
+            styleName='file.share-link-input'
+            id='link'
+            value={link}
+            type='text'
+            transparent
+          />
+          <div className='right floated'>
+            <Popup
+              trigger={
+                <Button 
+                onClick={this.handleClick}
+                color='#D9D9D9'
+                >
+                  <Icon
+                    styleName='file.share-link-copy-icon'
+                    name='copy'
+                    link
+                    title='Click to copy'
+                    onClick={this.handleClick}
+                    color='white'
+                  />
+                  Copy
+                </Button>
+              }
+              content={`copied!`}
+              on='click'
+            />
+          </div>
+        </Segment>
+        </Modal.Content>
+        </>
+        )}
       </Modal>
     )
   }
