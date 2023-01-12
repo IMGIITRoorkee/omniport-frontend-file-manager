@@ -5,6 +5,11 @@ export const ITEM_TYPE = Object.freeze({
   file: 'file'
 })
 
+export const ACTION_TYPE = {
+  COPY: 'copy',
+  CUT: 'cut'
+}
+
 export const FILE_TYPES = {
   '3dm': {
     labelColor: '#8D1A11',

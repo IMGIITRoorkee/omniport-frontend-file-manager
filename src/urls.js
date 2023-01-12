@@ -3,7 +3,8 @@ export const FILE_APIS = {
   fileItem: '/files',
   filesShared: '/files/shared_with_me',
   bulkDelete: 'bulk_delete/',
-  copy: 'copy_file/'
+  copy: 'copy_file/',
+  cut: 'cut_file/'
 }
 
 export const FOLDER_APIS = {
@@ -17,7 +18,8 @@ export const FOLDER_APIS = {
   starred_items: '/all_starred_items/',
   bulkDelete: 'bulk_delete/',
   parents: 'parents/',
-  copy: 'copy_folder/'
+  copy: 'copy_folder/',
+  cut: 'cut_folder/'
 }
 
 export const SHARED_ITEMS_APIS = {

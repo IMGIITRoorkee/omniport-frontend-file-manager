@@ -32,7 +32,7 @@ import {
   setCurrentFolder
 } from '../actions/folderActions'
 import { deleteFile, editFile, bulkDeleteFiles, addFileToCopy, pasteActiveFile } from '../actions/fileActions'
-import { BASE_URL, ITEM_TYPE } from '../constants'
+import { BASE_URL, ITEM_TYPE, ACTION_TYPE } from '../constants'
 import ItemDetailsModal from './item-detail-modal'
 import { handleDownload } from '../helpers/helperfunctions'
 
@@ -71,7 +71,12 @@ class Bar extends Component {
   handleCopy = e => {
     e.stopPropagation()
     const { activeItems, addFileToCopy } = this.props
-    addFileToCopy(activeItems[0].obj.id, activeItems[0].type)
+    addFileToCopy(activeItems[0].obj.id, activeItems[0].type, ACTION_TYPE.COPY)
+  }
+  handleCut = e => {
+    e.stopPropagation()
+    const { activeItems, addFileToCopy } = this.props
+    addFileToCopy(activeItems[0].obj.id, activeItems[0].type, ACTION_TYPE.CUT)
   }
   handlePaste = e => {
     e.stopPropagation()
@@ -377,7 +382,19 @@ class Bar extends Component {
                 />
               </div>
             )}
-          {activeItems.length == 0 && !viewingSharedItems && fileToCopy != null && (
+            {activeItems.length == 1 &&
+            !viewingSharedItems && (
+              <div styleName='file.crud-icon'>
+                <Button
+                  onClick={this.handleCut}
+                  icon='cut'
+                  color='blue'
+                  inverted
+                  circular
+                />
+              </div>
+            )}
+          {activeItems.length === 0 && !viewingSharedItems && JSON.stringify(fileToCopy) !== '{}' && (
             <div styleName='file.crud-icon'>
               <Button
               onClick={this.handlePaste}
@@ -542,8 +559,8 @@ const mapDispatchToProps = dispatch => {
     setShowPublicSharedItems: data => {
       dispatch(setShowPublicSharedItems(data))
     },
-    addFileToCopy: (id, type) => {
-      dispatch(addFileToCopy(id, type))
+    addFileToCopy: (id, type, action) => {
+      dispatch(addFileToCopy(id, type, action))
     },
     pasteActiveFile: (id, destination) => {
       dispatch(pasteActiveFile(id, destination))
