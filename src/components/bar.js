@@ -31,7 +31,8 @@ import {
   bulkDeleteFolders,
   setCurrentFolder
 } from '../actions/folderActions'
-import { deleteFile, editFile, bulkDeleteFiles, addFileToCopy, pasteActiveFile } from '../actions/fileActions'
+import { deleteFile, editFile, bulkDeleteFiles, addItemToCopyOrCut, pasteActiveItem } from '../actions/fileActions'
+import { getFolder } from '../actions/folderActions'
 import { BASE_URL, ITEM_TYPE, ACTION_TYPE } from '../constants'
 import ItemDetailsModal from './item-detail-modal'
 import { handleDownload } from '../helpers/helperfunctions'
@@ -70,18 +71,22 @@ class Bar extends Component {
   }
   handleCopy = e => {
     e.stopPropagation()
-    const { activeItems, addFileToCopy } = this.props
-    addFileToCopy(activeItems[0].obj.id, activeItems[0].type, ACTION_TYPE.COPY)
+    const { activeItems, addItemToCopyOrCut } = this.props
+    addItemToCopyOrCut(activeItems[0].obj.id, activeItems[0].type, ACTION_TYPE.COPY)
   }
   handleCut = e => {
     e.stopPropagation()
-    const { activeItems, addFileToCopy } = this.props
-    addFileToCopy(activeItems[0].obj.id, activeItems[0].type, ACTION_TYPE.CUT)
+    const { activeItems, addItemToCopyOrCut } = this.props
+    addItemToCopyOrCut(activeItems[0].obj.id, activeItems[0].type, ACTION_TYPE.CUT)
   }
   handlePaste = e => {
     e.stopPropagation()
-    const { fileToCopy, currentFolder, pasteActiveFile } = this.props
-    pasteActiveFile(fileToCopy, currentFolder)
+    const { fileToCopy, currentFolder, pasteActiveItem } = this.props
+    pasteActiveItem(fileToCopy, currentFolder, this.handleSuccess)
+  }
+  handleSuccess = () => {
+    const id = this.props.currentFolder.id
+    this.props.getFolder(id)
   }
   handleStarSuccess = newOjb => {
     const {
@@ -559,11 +564,14 @@ const mapDispatchToProps = dispatch => {
     setShowPublicSharedItems: data => {
       dispatch(setShowPublicSharedItems(data))
     },
-    addFileToCopy: (id, type, action) => {
-      dispatch(addFileToCopy(id, type, action))
+    addItemToCopyOrCut: (id, type, action) => {
+      dispatch(addItemToCopyOrCut(id, type, action))
     },
-    pasteActiveFile: (id, destination) => {
-      dispatch(pasteActiveFile(id, destination))
+    pasteActiveItem: (id, destination, callback) => {
+      dispatch(pasteActiveItem(id, destination, callback))
+    },
+    getFolder: (id) => {
+      dispatch(getFolder(id))
     }
   }
 }
