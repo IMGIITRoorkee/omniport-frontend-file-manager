@@ -406,7 +406,7 @@ export const uploadZipFile = (files, callback) => {
 /**
  * addFileToCopy: Action to add the file which is to be copied
  */
-export const addFileToCopy = (id, type, action) => {
+export const addItemToCopyOrCut = (id, type, action) => {
   return dispatch => {
     dispatch({
       type: FILE_TO_COPY,
@@ -418,7 +418,7 @@ export const addFileToCopy = (id, type, action) => {
 /**
  * pasteActiveFile: Action to paste copied file 
  */
-export const pasteActiveFile = (fileToCopy,destination, callback) => {
+export const pasteActiveItem = (fileToCopy,destination, callback) => {
   let url = ''
   if(fileToCopy.type === ITEM_TYPE.file && fileToCopy.action === ACTION_TYPE.COPY){
     url = `${FILE_APIS.fileItem}/${FILE_APIS.copy}`
@@ -435,9 +435,9 @@ export const pasteActiveFile = (fileToCopy,destination, callback) => {
       dispatch({
         type: FILE_COPIED
       })
-      callback(res.status)
+      callback()
     } catch (err) {
-      callback(err)
+      callback()
     }
   }
 }
