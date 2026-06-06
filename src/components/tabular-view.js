@@ -150,7 +150,7 @@ class TabularView extends Component {
           path: file.path,
           filemanager_name: currentFolder.filemanagername
         },
-        '*'
+        window.location.origin
       )
       window.close()
     } else {
