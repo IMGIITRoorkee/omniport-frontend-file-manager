@@ -95,30 +95,22 @@ class App extends Component {
               <PrivateRoute
                 exact
                 path={`${match.path}/`}
-                component={Instances}
-                guestAllowed={false}
-              />
+                component={Instances}              />
               <PrivateRoute
                 exact
                 key={2}
                 path={`${match.path}/:filemanager/:id`}
-                component={Root}
-                guestAllowed={false}
-              />
+                component={Root}              />
               <PrivateRoute
                 exact
                 key={3}
                 path={`${match.path}/:filemanager`}
-                component={Root}
-                guestAllowed={false}
-              />
+                component={Root}              />
               <PrivateRoute
                 exact
                 key={4}
                 path={`${match.path}/:filemanager/:uuid/:type_shared/:id/:type_access`}
-                component={Root}
-                guestAllowed={false}
-              />
+                component={Root}              />
             </Switch>
           )}
           </Scrollbars>
